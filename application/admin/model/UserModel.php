@@ -15,7 +15,7 @@ use think\Model;
 
 class UserModel extends Model {
     // 确定链接表名
-    protected $name = 'user';
+    protected $name = 's_user';
 
     /**
      * 根据搜索条件获取用户列表信息
