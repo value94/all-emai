@@ -136,8 +136,9 @@ class Email extends Base
                     try {
                         $Email->email_name = $c[0];
                         $Email->email_password = $c[1];
-                        $Email->pop3svr = $c[2];
-                        $Email->smtpsvr = $c[3];
+                        $Email->imapsvr = $c[2];
+                        $Email->pop3svr = $c[3];
+                        $Email->smtpsvr = $c[4];
                         $Email->save();
                     } catch (\Exception $e) {
                         $this->error('添加失败,请重试');
