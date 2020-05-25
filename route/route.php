@@ -8,7 +8,6 @@
 // +----------------------------------------------------------------------
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
+use think\facade\Route;
 
-return [
-
-];
+Route::any('api/getEmail', 'api/Email/getEmail');
