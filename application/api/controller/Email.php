@@ -13,6 +13,9 @@ use app\api\model\EmailModel;
 use app\api\model\MachineModel;
 use app\api\validate\GetCodeValidate;
 use app\api\validate\GetEmailValidate;
+use app\lib\exception\EmailException;
+use PhpImap\Mailbox;
+use PhpImap;
 use think\Controller;
 
 class Email extends Controller
@@ -41,11 +44,58 @@ class Email extends Controller
         $email_data = EmailModel::getEmailByWhere(['email_name' => $params['email_name']]);
 
         // 登录邮箱
+        // 为进一步操作创建 PhpImap 实例
+        $mailbox = new Mailbox(
+            '{' . $email_data['imapsvr'] . ':993/imap/ssl' . '}INBOX', // IMAP server and mailbox folder
+            $email_data['email_name'], // Username for the before configured mailbox
+            $email_data['email_password'], // Password for the before configured username
+            null, // Directory, where attachments will be saved (optional)
+            'UTF-8' // Server encoding (optional)
+        );
+        // 设置不接收附件
+        $mailbox->setAttachmentsIgnore(true);
 
-        // 获取邮件
+        // 获取所有邮件
+        try {
+            $mailsIds = $mailbox->searchMailbox('ALL');
+        } catch (PhpImap\Exceptions\ConnectionException $ex) {
+            throw new EmailException(['msg' => '该账号连接不上 imap 服务']);
+        }
 
-        // 解析邮件中的验证码
+        // 遍历所有邮件
+        $code = '';
+        foreach ($mailsIds as $mail_id) {
+            $email = $mailbox->getMail(
+                $mail_id, // ID of the email, you want to get
+                true // Do NOT mark emails as seen (optional)
+            );
+            // Apple
+            // appleid@id.apple.com
 
-        // 返回验证码
+//            if ($email->fromName == 'Apple' && $email->fromAddress == 'appleid@id.apple.com') {
+            if ($email->textHtml) {
+                $email_content = $email->textHtml;
+            } else {
+                $email_content = $email->textPlain;
+            }
+
+            preg_match_all("/<p><b>(\d*)<\/b><\/p><\/div>/U", $email_content, $pat_array);
+            if ($pat_array) {
+                $code = substr($pat_array[0][0], 6, 6);
+            }
+//            }
+        }
+
+        // 没有邮件
+        if (!$mailsIds) {
+            throw new EmailException(['msg' => '该账号收件箱空']);
+        } else {
+            if ($code != '') {
+                return ['status' => 'success', 'msg' => '成功获取验证码', 'code' => $code];
+            } else {
+                return ['status' => 'error', 'msg' => '获取验证码失败,请重试', 'code' => $code];
+            }
+        }
     }
+
 }
