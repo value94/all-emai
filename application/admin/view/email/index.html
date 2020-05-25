@@ -20,10 +20,15 @@
             <h5>{$title}列表</h5>
         </div>
         <div class="ibox-content">
-            <div class="form-group clearfix col-sm-1">
+            <div class="form-group clearfix col-sm-2">
                 {if authCheck('email/create') }
                 <a href="{:url('email/create')}">
                     <button class="btn btn-outline btn-primary" type="button">添加{$title}</button>
+                </a>
+                {/if}
+                {if authCheck('email/import_email') }
+                <a href="{:url('email/import_email')}">
+                    <button class="btn btn-outline btn-success" type="button">导入{$title}</button>
                 </a>
                 {/if}
             </div>
