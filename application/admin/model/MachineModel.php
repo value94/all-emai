@@ -1,0 +1,91 @@
+<?php
+
+namespace app\admin\model;
+
+use app\admin\validate\MachineValidate;
+use think\Model;
+use think\model\concern\SoftDelete;
+
+class MachineModel extends Model
+{
+    protected $table = 's_machine';
+    use SoftDelete;
+
+    /**
+     * 查询邮箱
+     * @param $where
+     * @param $offset
+     * @param $limit
+     * @return false|\PDOStatement|string|\think\Collection
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function getMachineByWhere($where, $offset, $limit)
+    {
+        return $this->where($where)->limit($offset, $limit)->order('id desc')->select();
+    }
+
+    /**
+     * 根据邮箱id获取邮箱信息
+     * @param $id
+     */
+    public function getOneMachine($id)
+    {
+        return $this->where('id', $id)->find();
+    }
+
+    /**
+     * 查询所有邮箱数量
+     * @param $where
+     * @return int|string
+     */
+    public function getAllMachine($where)
+    {
+        return $this->where($where)->count();
+    }
+
+    /**
+     * 添加一个邮箱
+     * @param $data
+     * @return mixed
+     */
+    public function insertMachine($param)
+    {
+        try {
+            $MachineValidate = new MachineValidate();
+            if (false === $MachineValidate->check($param)) {
+                // 验证失败 输出错误信息
+                return msg(-1, '', $MachineValidate->getError());
+            }
+
+            $this->save($param);
+            return msg(1, url('Machine/index'), '添加邮箱成功');
+
+        } catch (\Exception $e) {
+            return msg(-2, '', $e->getMessage());
+        }
+    }
+
+    /**
+     * 编辑商户
+     * @param $param
+     * @return array
+     */
+    public function editMachine($param)
+    {
+        try {
+            $MachineValidate = new MachineValidate();
+            if (false === $MachineValidate->check($param)) {
+                // 验证失败 输出错误信息
+                return msg(-1, '', $MachineValidate->getError());
+            }
+
+            $this->update($param, ['id' => $param['id']]);
+
+            return msg(1, url('Machine/index'), '修改邮箱成功');
+        } catch (\Exception $e) {
+            return msg(-2, '', $e->getMessage());
+        }
+    }
+}
