@@ -32,7 +32,7 @@ class Email extends Controller
         $params['email_id'] = $email_data['id'];
         MachineModel::create($params);
 
-        return ['email_name' => $email_data['email_name']];
+        return ['status' => 1, 'msg' => '成功获取邮箱', 'email_name' => $email_data['email_name']];
     }
 
     public function getCode()
@@ -90,10 +90,10 @@ class Email extends Controller
         if (!$mailsIds) {
             throw new EmailException(['msg' => '该账号收件箱空']);
         } else {
-            if ($code != '') {
-                return ['status' => 'success', 'msg' => '成功获取验证码', 'code' => $code];
+            if ($code == '') {
+                return ['status' => 1, 'msg' => '成功获取验证码', 'code' => $code];
             } else {
-                return ['status' => 'error', 'msg' => '获取验证码失败,请重试', 'code' => $code];
+                return ['status' => 0, 'msg' => '获取验证码失败,请重试', 'code' => $code];
             }
         }
     }
