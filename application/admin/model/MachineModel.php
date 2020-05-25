@@ -12,7 +12,7 @@ class MachineModel extends Model
     use SoftDelete;
 
     /**
-     * 查询邮箱
+     * 查询机器
      * @param $where
      * @param $offset
      * @param $limit
@@ -27,7 +27,7 @@ class MachineModel extends Model
     }
 
     /**
-     * 根据邮箱id获取邮箱信息
+     * 根据机器id获取机器信息
      * @param $id
      */
     public function getOneMachine($id)
@@ -36,7 +36,7 @@ class MachineModel extends Model
     }
 
     /**
-     * 查询所有邮箱数量
+     * 查询所有机器数量
      * @param $where
      * @return int|string
      */
@@ -46,7 +46,7 @@ class MachineModel extends Model
     }
 
     /**
-     * 添加一个邮箱
+     * 添加一个机器
      * @param $data
      * @return mixed
      */
@@ -60,7 +60,7 @@ class MachineModel extends Model
             }
 
             $this->save($param);
-            return msg(1, url('Machine/index'), '添加邮箱成功');
+            return msg(1, url('Machine/index'), '添加机器成功');
 
         } catch (\Exception $e) {
             return msg(-2, '', $e->getMessage());
@@ -83,7 +83,7 @@ class MachineModel extends Model
 
             $this->update($param, ['id' => $param['id']]);
 
-            return msg(1, url('Machine/index'), '修改邮箱成功');
+            return msg(1, url('Machine/index'), '修改机器成功');
         } catch (\Exception $e) {
             return msg(-2, '', $e->getMessage());
         }

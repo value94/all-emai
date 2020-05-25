@@ -23,7 +23,7 @@ class Machine extends Base
 
             $where = [];
             if (!empty($param['searchText'])) {
-                $where[] = ['Machine_name', 'like', '%' . $param['searchText'] . '%'];
+                $where[] = ['HWModelStr', 'like', '%' . $param['searchText'] . '%'];
             }
             $Machine = new MachineModel();
             $selectResult = $Machine->getMachineByWhere($where, $offset, $limit);
@@ -39,7 +39,7 @@ class Machine extends Base
             return json($return);
         }
         $this->assign([
-            'title' => '邮箱'
+            'title' => '机器'
         ]);
         return $this->fetch();
     }
@@ -110,14 +110,14 @@ class Machine extends Base
     {
         return [
             '编辑' => [
-                'auth' => 'Machine/edit',
-                'href' => url('Machine/edit', ['id' => $id]),
+                'auth' => 'machine/edit',
+                'href' => url('machine/edit', ['id' => $id]),
                 'btnStyle' => 'primary',
                 'icon' => 'fa fa-paste',
             ],
             '删除' => [
-                'auth' => 'Machine/delete',
-                'href' => "javascript:MachineDel(" . $id . ")",
+                'auth' => 'machine/delete',
+                'href' => "javascript:machineDel(" . $id . ")",
                 'btnStyle' => 'danger',
                 'icon' => 'fa fa-trash-o',
             ],

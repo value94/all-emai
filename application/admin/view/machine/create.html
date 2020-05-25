@@ -20,41 +20,61 @@
                     <h5>添加机器</h5>
                 </div>
                 <div class="ibox-content">
-                    <form class="form-horizontal m-t" id="commentForm" method="post" action="{:url('email/create')}">
+                    <form class="form-horizontal m-t" id="commentForm" method="post" action="{:url('machine/create')}">
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">机器名称：</label>
+                            <label class="col-sm-3 control-label">HWModelStr：</label>
                             <div class="input-group col-sm-4">
-                                <input id="email_name" type="text" class="form-control" name="email_name" required=""
-                                       aria-required="true">
+                                <input id="HWModelStr" type="text" class="form-control" name="HWModelStr" required="" aria-required="true">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">机器密码：</label>
+                            <label class="col-sm-3 control-label">ModelNumber：</label>
                             <div class="input-group col-sm-4">
-                                <input id="email_password" type="text" class="form-control" name="email_password"
-                                       required="" aria-required="true">
+                                <input id="ModelNumber" type="text" class="form-control" name="ModelNumber" required="" aria-required="true">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">接收服务器(POP3)：</label>
+                            <label class="col-sm-3 control-label">ProductType：</label>
                             <div class="input-group col-sm-4">
-                                <input id="pop3svr" type="text" class="form-control" name="pop3svr" required="" aria-required="true">
+                                <input id="ProductType" type="text" class="form-control" name="ProductType" required="" aria-required="true">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">发送服务器(SMTP)：</label>
+                            <label class="col-sm-3 control-label">bt：</label>
                             <div class="input-group col-sm-4">
-                                <input id="smtpsvr" type="text" class="form-control" name="smtpsvr" required="" aria-required="true">
+                                <input id="bt" type="text" class="form-control" name="bt" required="" aria-required="true">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">使用状态：</label>
+                            <label class="col-sm-3 control-label">imei：</label>
                             <div class="input-group col-sm-6">
-                                <div class="radio i-checks col-sm-6">
-                                    <label>
-                                        <input type="radio" value="0" name="use_status" checked> <i></i>未使用</label>
-                                        <input type="radio" value="1" name="use_status"> <i></i>已使用</label>
+                                <div class="input-group col-sm-4">
+                                    <input id="imei" type="text" class="form-control" name="imei" required="" aria-required="true">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">sn：</label>
+                            <div class="input-group col-sm-6">
+                                <div class="input-group col-sm-4">
+                                    <input id="sn" type="text" class="form-control" name="sn" required="" aria-required="true">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">udid：</label>
+                            <div class="input-group col-sm-6">
+                                <div class="input-group col-sm-4">
+                                    <input id="udid" type="text" class="form-control" name="udid" required="" aria-required="true">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">wifi：</label>
+                            <div class="input-group col-sm-6">
+                                <div class="input-group col-sm-4">
+                                    <input id="wifi" type="text" class="form-control" name="wifi" required="" aria-required="true">
                                 </div>
                             </div>
                         </div>

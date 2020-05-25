@@ -21,8 +21,8 @@
         </div>
         <div class="ibox-content">
             <div class="form-group clearfix col-sm-1">
-                {if authCheck('email/create') }
-                <a href="{:url('email/create')}">
+                {if authCheck('machine/create') }
+                <a href="{:url('machine/create')}">
                     <button class="btn btn-outline btn-primary" type="button">添加{$title}</button>
                 </a>
                 {/if}
@@ -32,10 +32,11 @@
                 <div class="content clearfix m-b">
                     <div class="form-group">
                         <label>机器名称：</label>
-                        <input type="text" class="form-control" id="email_name" name="email_name">
+                        <input type="text" class="form-control" id="machine_name" name="machine_name">
                     </div>
                     <div class="form-group">
-                        <button class="btn btn-primary" type="button" style="margin-top:5px" id="search"><strong>搜索</strong>
+                        <button class="btn btn-primary" type="button" style="margin-top:5px" id="search">
+                            <strong>搜索</strong>
                         </button>
                     </div>
                 </div>
@@ -46,12 +47,16 @@
                     <table id="cusTable">
                         <thead>
                         <th data-field="id">ID</th>
-                        <!--<th data-field="machine_id">机器编号</th>-->
-                        <th data-field="email_name">机器名称</th>
-                        <th data-field="email_password">机器密码</th>
-                        <th data-field="use_status">是否已用</th>
-                        <th data-field="pop3svr">接收服务器</th>
-                        <th data-field="smtpsvr">发送服务器</th>
+                        <th data-field="HWModelStr">HWModelStr</th>
+                        <th data-field="ModelNumber">ModelNumber</th>
+                        <th data-field="ProductType">ProductType</th>
+                        <th data-field="bt">bt</th>
+                        <th data-field="imei">imei</th>
+                        <th data-field="sn">sn</th>
+                        <th data-field="udid">udid</th>
+                        <th data-field="wifi">wifi</th>
+                        <th data-field="sn">sn</th>
+                        <th data-field="sn">sn</th>
                         <th data-field="create_time">创建时间</th>
                         <th data-field="update_time">更新时间</th>
                         <th data-field="operate">操作</th>
@@ -98,7 +103,7 @@
                 var param = {
                     pageNumber: params.pageNumber,
                     pageSize: params.pageSize,
-                    searchText: $('#email_name').val()
+                    searchText: $('#machine_name').val()
                 };
                 return param;
             },
@@ -122,10 +127,10 @@
         $("#search").bind("click", initTable);
     });
 
-    function emailDel(id) {
+    function machineDel(id) {
         layer.confirm('确认删除此机器?', {icon: 3, title: '提示'}, function (index) {
             //do something
-            $.getJSON("{:url('email/delete')}", {'id': id}, function (res) {
+            $.getJSON("{:url('machine/delete')}", {'id': id}, function (res) {
                 if (1 == res.code) {
                     layer.alert(res.msg, {title: '友情提示', icon: 1, closeBtn: 0}, function () {
                         initTable();
