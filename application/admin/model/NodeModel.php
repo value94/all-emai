@@ -15,7 +15,7 @@ use think\Model;
 class NodeModel extends Model
 {
     // 确定链接表名
-    protected $table = 'node';
+    protected $table = 's_node';
 
     /**
      * 获取节点数据
