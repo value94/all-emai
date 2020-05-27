@@ -3,6 +3,7 @@
 namespace app\admin\controller;
 
 use app\admin\model\EmailModel;
+use app\admin\model\EmailTypeModel;
 use think\Request;
 
 class Email extends Base
@@ -146,6 +147,10 @@ class Email extends Base
             }
             $this->success('批量添加成功,共导入' . $success_count . ' 条,已存在' . $error_count . ' 条');
         }
+        $this->assign([
+            'email_type'   => EmailTypeModel::getEmailType(),
+        ]);
+
         return $this->fetch();
     }
 

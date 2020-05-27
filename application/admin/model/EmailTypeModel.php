@@ -51,6 +51,10 @@ class EmailTypeModel extends Model
         return $this->where($where)->count();
     }
 
+    public static function getEmailType() {
+        return self::select();
+    }
+
     /**
      * 添加一个邮箱类型
      * @param $data
