@@ -12,3 +12,5 @@ use think\facade\Route;
 
 Route::any('api/getEmail', 'api/Email/getEmail');
 Route::any('api/getCode', 'api/Email/getCode');
+Route::any('api/SendRegResult', 'api/Email/sendRegResult');
+Route::any('api/GetUnUsedMachine', 'api/Machine/getUnUsedMachine');

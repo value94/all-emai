@@ -3,6 +3,7 @@
 namespace app\api\model;
 
 use app\admin\validate\MachineValidate;
+use app\lib\exception\MachineException;
 use think\Model;
 use think\model\concern\SoftDelete;
 
@@ -24,6 +25,17 @@ class MachineModel extends Model
     public function getMachineByWhere($where, $offset, $limit)
     {
         return $this->where($where)->limit($offset, $limit)->order('id desc')->select();
+    }
+
+    public static function getOneNotUseMachine()
+    {
+        $machine_data = self::where('use_status', '=', 0)->order('id asc')->find();
+        if ($machine_data) {
+            self::update(['use_status' => 1], ['id' => $machine_data['id']]);
+            return $machine_data;
+        } else {
+            throw new MachineException(['msg' => '没有可用机器']);
+        }
     }
 
     /**

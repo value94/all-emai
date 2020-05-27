@@ -13,7 +13,9 @@ use app\api\model\EmailModel;
 use app\api\model\MachineModel;
 use app\api\validate\GetCodeValidate;
 use app\api\validate\GetEmailValidate;
+use app\api\validate\SendRegResultValidate;
 use app\lib\exception\EmailException;
+use app\lib\exception\SuccessMessage;
 use PhpImap\Mailbox;
 use PhpImap;
 use think\Controller;
@@ -98,4 +100,18 @@ class Email extends Controller
         }
     }
 
+    public function sendRegResult()
+    {
+        // 数据验证
+        $params = (new SendRegResultValidate())->goCheck();
+
+        // 验证邮箱是否存在
+        $check = EmailModel::checkEmail($params['email_name']);
+        if (!$check) {
+            throw new EmailException(['msg' => '邮箱不存在']);
+        }
+        // 存储数据
+        EmailModel::update($params, ['email_name' => $params['email_name']]);
+        throw new  SuccessMessage(['msg' => '保存状态成功']);
+    }
 }
