@@ -30,6 +30,7 @@ class Machine extends Base
 
             // 拼装参数
             foreach ($selectResult as $key => $vo) {
+                $selectResult[$key]['email_name'] = $vo['email']['email_name'];
                 $selectResult[$key]['operate'] = showOperate($this->makeButton($vo['id']));
             }
 
@@ -136,7 +137,7 @@ class Machine extends Base
                     continue;
                 } else {
                     $machine->sn = $c[0];
-                    $machine->idfa	 = $c[1];
+                    $machine->imei	 = $c[1];
                     $machine->bt = $c[2];
                     $machine->wifi = $c[3];
                     $machine->udid	 = $c[4];

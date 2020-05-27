@@ -2,13 +2,13 @@
 
 namespace app\admin\model;
 
-use app\admin\validate\EmailValidate;
+use app\admin\validate\EmailTypeValidate;
 use think\Model;
 use think\model\concern\SoftDelete;
 
-class EmailModel extends Model
+class EmailTypeModel extends Model
 {
-    protected $table = 's_email';
+    protected $table = 's_email_type';
     use SoftDelete;
 
     public function getUseStatusAttr($value)
@@ -18,7 +18,7 @@ class EmailModel extends Model
     }
 
     /**
-     * 查询邮箱
+     * 查询邮箱类型
      * @param $where
      * @param $offset
      * @param $limit
@@ -27,46 +27,46 @@ class EmailModel extends Model
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
      */
-    public function getEmailByWhere($where, $offset, $limit)
+    public function getEmailTypeByWhere($where, $offset, $limit)
     {
         return $this->where($where)->limit($offset, $limit)->order('id desc')->select();
     }
 
     /**
-     * 根据邮箱id获取邮箱信息
+     * 根据邮箱类型id获取邮箱类型信息
      * @param $id
      */
-    public function getOneEmail($id)
+    public function getOneEmailType($id)
     {
         return $this->where('id', $id)->find();
     }
 
     /**
-     * 查询所有邮箱数量
+     * 查询所有邮箱类型数量
      * @param $where
      * @return int|string
      */
-    public function getAllEmail($where)
+    public function getAllEmailType($where)
     {
         return $this->where($where)->count();
     }
 
     /**
-     * 添加一个邮箱
+     * 添加一个邮箱类型
      * @param $data
      * @return mixed
      */
-    public function insertEmail($param)
+    public function insertEmailType($param)
     {
         try {
-            $EmailValidate = new EmailValidate();
-            if (false === $EmailValidate->check($param)) {
+            $EmailTypeValidate = new EmailTypeValidate();
+            if (false === $EmailTypeValidate->check($param)) {
                 // 验证失败 输出错误信息
-                return msg(-1, '', $EmailValidate->getError());
+                return msg(-1, '', $EmailTypeValidate->getError());
             }
 
             $this->save($param);
-            return msg(1, url('email/index'), '添加邮箱成功');
+            return msg(1, url('email_type/index'), '添加邮箱类型成功');
 
         } catch (\Exception $e) {
             return msg(-2, '', $e->getMessage());
@@ -78,18 +78,17 @@ class EmailModel extends Model
      * @param $param
      * @return array
      */
-    public function editEmail($param)
+    public function editEmailType($param)
     {
         try {
-            $EmailValidate = new EmailValidate();
-            if (false === $EmailValidate->check($param)) {
+            $EmailTypeValidate = new EmailTypeValidate();
+            if (false === $EmailTypeValidate->check($param)) {
                 // 验证失败 输出错误信息
-                return msg(-1, '', $EmailValidate->getError());
+                return msg(-1, '', $EmailTypeValidate->getError());
             }
+            $this->save($param, ['id' => $param['id']]);
 
-            $this->update($param, ['id' => $param['id']]);
-
-            return msg(1, url('email/index'), '修改邮箱成功');
+            return msg(1, url('email_type/index'), '修改邮箱类型成功');
         } catch (\Exception $e) {
             return msg(-2, '', $e->getMessage());
         }

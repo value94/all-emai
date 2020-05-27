@@ -11,6 +11,11 @@ class MachineModel extends Model
     protected $table = 's_machine';
     use SoftDelete;
 
+    public function email()
+    {
+        return $this->hasOne('EmailModel', 'id', 'email_id');
+    }
+
     /**
      * 查询机器
      * @param $where
@@ -23,7 +28,7 @@ class MachineModel extends Model
      */
     public function getMachineByWhere($where, $offset, $limit)
     {
-        return $this->where($where)->limit($offset, $limit)->order('id desc')->select();
+        return $this->where($where)->with('email')->limit($offset, $limit)->order('id desc')->select();
     }
 
     /**
