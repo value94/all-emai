@@ -13,7 +13,7 @@ class EmailTypeModel extends Model
 
     public function getUseStatusAttr($value)
     {
-        $status = [0=>'未使用',1=>'已使用'];
+        $status = [0 => '未使用', 1 => '已使用'];
         return $status[$value];
     }
 
@@ -51,8 +51,14 @@ class EmailTypeModel extends Model
         return $this->where($where)->count();
     }
 
-    public static function getEmailType() {
+    public static function getEmailType()
+    {
         return self::select();
+    }
+
+    public static function getEmailTypeById($id)
+    {
+        return self::where('id', '=', $id)->find();
     }
 
     /**

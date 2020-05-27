@@ -111,6 +111,13 @@ class Email extends Base
         if (request()->isPost()) {
             // 获取表单上传文件
             $file = request()->file('email_file');
+            $email_id = input('post.email_type');
+            if (!$email_id) {
+                $this->error('请选择邮箱类型');
+            } else {
+                $email_type = EmailTypeModel::getEmailTypeById($email_id);
+            }
+
             // 移动到框架应用根目录/public/uploads/ 目录下
             $info = $file->move('../uploads');
             if ($info) {
@@ -138,9 +145,10 @@ class Email extends Base
                 } else {
                     $Email->email_name = $c[0];
                     $Email->email_password = $c[1];
-                    $Email->imapsvr = $c[2];
-                    $Email->pop3svr = $c[3];
-                    $Email->smtpsvr = $c[4];
+                    $Email->email_type_id = $email_type->id;
+                    $Email->imapsvr = $email_type->imapsvr;
+                    $Email->pop3svr = $email_type->pop3svr;
+                    $Email->smtpsvr = $email_type->smtpsvr;
                     $Email->save();
                     $success_count++;
                 }
@@ -148,12 +156,11 @@ class Email extends Base
             $this->success('批量添加成功,共导入' . $success_count . ' 条,已存在' . $error_count . ' 条');
         }
         $this->assign([
-            'email_type'   => EmailTypeModel::getEmailType(),
+            'email_type' => EmailTypeModel::getEmailType(),
         ]);
 
         return $this->fetch();
     }
-
 
 
     /**

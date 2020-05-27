@@ -13,7 +13,13 @@ class EmailModel extends Model
 
     public function getUseStatusAttr($value)
     {
-        $status = [0=>'未使用',1=>'已使用'];
+        $status = [0 => '未使用', 1 => '<p style="color: blue">已使用</p>'];
+        return $status[$value];
+    }
+
+    public function getRegStatusAttr($value)
+    {
+        $status = [0 => '<p style="color: red">失败</p>', 1 => '成功', 2 => '未使用'];
         return $status[$value];
     }
 
