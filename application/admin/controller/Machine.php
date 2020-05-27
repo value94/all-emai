@@ -102,6 +102,59 @@ class Machine extends Base
     }
 
     /**
+     * 批量导入邮箱
+     * @return mixed
+     */
+    public function import_machine()
+    {
+        if (request()->isPost()) {
+            // 获取表单上传文件
+            $file = request()->file('machine_file');
+            // 移动到框架应用根目录/public/uploads/ 目录下
+            $info = $file->move('../uploads');
+            if ($info) {
+                // 获取数据,循环处理
+                $path = $info->getPathname();
+                // 读取数据
+                $orders_data = $this->data_import($path);
+                if (!$orders_data) {
+                    $this->error('excel解析失败,请检查格式');
+                }
+            } else {
+                // 上传失败获取错误信息
+                $this->error('上传文件失败,请重试!');
+            }
+            $success_count = 0;
+            $error_count = 0;
+            // 添加数据
+            foreach ($orders_data as $c) {
+                // 判断邮箱是否已存在
+                $machine = new MachineModel();
+                $res = $machine->where('udid', '=', $c[4])->find();
+                if ($res) {
+                    $error_count++;
+                    continue;
+                } else {
+                    $machine->sn = $c[0];
+                    $machine->idfa	 = $c[1];
+                    $machine->bt = $c[2];
+                    $machine->wifi = $c[3];
+                    $machine->udid	 = $c[4];
+                    $machine->PhoneModel = $c[5];
+                    $machine->ModelNumber = $c[6];
+                    $machine->HWModelStr = $c[7];
+                    $machine->ProductType = $c[8];
+
+                    $machine->save();
+                    $success_count++;
+                }
+            }
+            $this->success('批量添加成功,共导入' . $success_count . ' 条,已存在' . $error_count . ' 条');
+        }
+        return $this->fetch();
+    }
+
+    /**
      * 拼装操作按钮
      * @param $id
      * @return array

@@ -89,4 +89,20 @@ class Base extends Controller
             cache($value['id'], null);
         }
     }
+
+    //创建一个读取excel数据，可用于入库
+    public function data_import($filename)
+    {
+        try {
+            $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($filename);
+            $sheet = $spreadsheet->getActiveSheet();
+            $excel_array = $sheet->toArray();
+
+            array_shift($excel_array);  //删除第一个数组(标题);
+
+            return $excel_array;
+        } catch (\PhpOffice\PhpSpreadsheet\Exception $e) {
+            $this->error('excel解析错误,请重试!');
+        }
+    }
 }

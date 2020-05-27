@@ -124,47 +124,32 @@ class Email extends Base
                 // 上传失败获取错误信息
                 $this->error('上传文件失败,请重试!');
             }
-
+            $success_count = 0;
+            $error_count = 0;
             // 添加数据
             foreach ($orders_data as $c) {
                 // 判断邮箱是否已存在
                 $Email = new EmailModel();
                 $res = $Email->where('email_name', '=', $c[0])->find();
                 if ($res) {
+                    $error_count++;
                     continue;
                 } else {
-                    try {
-                        $Email->email_name = $c[0];
-                        $Email->email_password = $c[1];
-                        $Email->imapsvr = $c[2];
-                        $Email->pop3svr = $c[3];
-                        $Email->smtpsvr = $c[4];
-                        $Email->save();
-                    } catch (\Exception $e) {
-                        $this->error('添加失败,请重试');
-                    }
+                    $Email->email_name = $c[0];
+                    $Email->email_password = $c[1];
+                    $Email->imapsvr = $c[2];
+                    $Email->pop3svr = $c[3];
+                    $Email->smtpsvr = $c[4];
+                    $Email->save();
+                    $success_count++;
                 }
             }
-            $this->success('批量添加成功');
+            $this->success('批量添加成功,共导入' . $success_count . ' 条,已存在' . $error_count . ' 条');
         }
         return $this->fetch();
     }
 
-    //创建一个读取excel数据，可用于入库
-    function data_import($filename)
-    {
-        try {
-            $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($filename);
-            $sheet = $spreadsheet->getActiveSheet();
-            $excel_array = $sheet->toArray();
 
-            array_shift($excel_array);  //删除第一个数组(标题);
-
-            return $excel_array;
-        } catch (\PhpOffice\PhpSpreadsheet\Exception $e) {
-            $this->error('excel解析错误,请重试!');
-        }
-    }
 
     /**
      * 拼装操作按钮
