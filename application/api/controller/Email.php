@@ -123,6 +123,7 @@ class Email extends Controller
                 'use_status' => 1,
                 'email_id' => $check['id']
             ], ['udid' => $params['udid']]);
+            EmailModel::update(['use_status' => 1], ['email_name' => $params['email_name']]);
         }
 
         throw new  SuccessMessage(['msg' => '保存状态成功']);
