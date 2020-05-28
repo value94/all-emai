@@ -103,6 +103,41 @@ class Machine extends Base
     }
 
     /**
+     * 删除选中机器
+     * @return mixed
+     */
+    public function switch_status()
+    {
+        if (request()->isAjax()) {
+            $data = input('param.');
+            // 切换机器状态
+            $used_id = MachineModel::where([
+                ['use_status', '=', '1'],
+                ['id', 'in', $data['machine_id']]
+
+            ])->column('id');
+
+            $un_use = MachineModel::where([
+                ['use_status', '=', '0'],
+                ['id', 'in', $data['machine_id']]
+            ])->column('id');
+
+            if (!empty($used_id)) {
+                MachineModel::update(['use_status' => 0], ['id' => $used_id]);
+            }
+
+            if (!empty($un_use)) {
+                MachineModel::update(['use_status' => 1], ['id' => $un_use]);
+            }
+
+            $result['code'] = 1;
+            $result['msg'] = '切换成功';
+
+            return $result;
+        }
+    }
+
+    /**
      * 批量导入邮箱
      * @return mixed
      */
@@ -137,10 +172,10 @@ class Machine extends Base
                     continue;
                 } else {
                     $machine->sn = $c[0];
-                    $machine->imei	 = $c[1];
+                    $machine->imei = $c[1];
                     $machine->bt = $c[2];
                     $machine->wifi = $c[3];
-                    $machine->udid	 = $c[4];
+                    $machine->udid = $c[4];
                     $machine->PhoneModel = $c[5];
                     $machine->ModelNumber = $c[6];
                     $machine->HWModelStr = $c[7];
@@ -163,6 +198,12 @@ class Machine extends Base
     private function makeButton($id)
     {
         return [
+            '切换' => [
+                'auth' => 'machine/switch_status',
+                'href' => "javascript:switch_status(" . $id . ")",
+                'btnStyle' => 'info',
+                'icon' => 'fa fa-check-circle',
+            ],
             '编辑' => [
                 'auth' => 'machine/edit',
                 'href' => url('machine/edit', ['id' => $id]),
