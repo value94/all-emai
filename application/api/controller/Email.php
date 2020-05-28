@@ -115,7 +115,10 @@ class Email extends Controller
         EmailModel::update($params, ['email_name' => $params['email_name']]);
         // 修改机器状态
         if ($params['reg_status'] == 1) {
-            MachineModel::update(['use_status' => 1, 'email_id' => $check['id']], ['udid' => $params['udid']]);
+            MachineModel::update([
+                'use_status' => 1,
+                'email_id' => $check['id']
+            ], ['udid' => $params['udid']]);
         }
 
         throw new  SuccessMessage(['msg' => '保存状态成功']);

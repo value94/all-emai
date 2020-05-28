@@ -55,12 +55,23 @@ class Email extends Base
         if (request()->isPost()) {
 
             $param = input('post.');
+            $type_id = input('post.email_type');
+
+            $email_type = EmailTypeModel::getEmailTypeById($type_id);
+            $param['email_type_id'] = $type_id;
+            $param['imapsvr'] = $email_type['imapsvr'];
+            $param['pop3svr'] = $email_type['pop3svr'];
+            $param['smtpsvr'] = $email_type['smtpsvr'];
 
             $Email = new EmailModel();
             $flag = $Email->insertEmail($param);
 
             return json(msg($flag['code'], $flag['data'], $flag['msg']));
         }
+
+        $this->assign([
+            'email_type' => EmailTypeModel::getEmailType(),
+        ]);
 
         return $this->fetch();
     }
@@ -79,13 +90,22 @@ class Email extends Base
 
             $param = input('post.');
 
+            $type_id = input('post.email_type');
+
+            $email_type = EmailTypeModel::getEmailTypeById($type_id);
+            $param['email_type_id'] = $type_id;
+            $param['imapsvr'] = $email_type['imapsvr'];
+            $param['pop3svr'] = $email_type['pop3svr'];
+            $param['smtpsvr'] = $email_type['smtpsvr'];
+
             $flag = $Email->editEmail($param);
 
             return json(msg($flag['code'], $flag['data'], $flag['msg']));
         }
 
         $this->assign([
-            'data' => $Email->getOneEmail($id)
+            'data' => $Email->getOneEmail($id),
+            'email_type' => EmailTypeModel::getEmailType(),
         ]);
         return $this->fetch();
     }
@@ -111,11 +131,11 @@ class Email extends Base
         if (request()->isPost()) {
             // 获取表单上传文件
             $file = request()->file('email_file');
-            $email_id = input('post.email_type');
-            if (!$email_id) {
+            $type_id = input('post.email_type');
+            if (!$type_id) {
                 $this->error('请选择邮箱类型');
             } else {
-                $email_type = EmailTypeModel::getEmailTypeById($email_id);
+                $email_type = EmailTypeModel::getEmailTypeById($type_id);
             }
 
             // 移动到框架应用根目录/public/uploads/ 目录下
@@ -161,7 +181,6 @@ class Email extends Base
 
         return $this->fetch();
     }
-
 
     /**
      * 切换选中邮箱状态
