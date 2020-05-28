@@ -43,7 +43,7 @@ class Email extends Controller
     {
         // 数据验证
         $params = (new GetCodeValidate())->goCheck();
-        dump($params);die();
+        var_dump($params);die();
         // 获取邮箱数据
         $email_data = EmailModel::getEmailByWhere(['email_name' => $params['email_name']]);
 
