@@ -24,7 +24,7 @@ class EmailModel extends Model
 
     public static function checkEmail($email_name)
     {
-        return self::where('email_name', '=', $email_name)->count();
+        return self::where('email_name', '=', $email_name)->find();
     }
 
     /**
