@@ -16,11 +16,11 @@
         <div class="col-sm-2">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
-                    <span class="label label-primary pull-right">今天</span>
-                    <h5>正在咨询的人数</h5>
+                    <span class="label label-primary pull-right">所有</span>
+                    <h5>总注册量</h5>
                 </div>
                 <div class="ibox-content">
-                    <h1 class="no-margins">20</h1>
+                    <h1 class="no-margins">{$show_data['all_reg']}</h1>
                     <div class="stat-percent font-bold text-navy"></div>
                     <small></small>
                 </div>
@@ -29,11 +29,11 @@
         <div class="col-sm-2">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
-                    <span class="label label-primary pull-right">今天</span>
-                    <h5>正在排队的用户</h5>
+                    <span class="label label-primary pull-right">所有</span>
+                    <h5>成功数量</h5>
                 </div>
                 <div class="ibox-content">
-                    <h1 class="no-margins">10</h1>
+                    <h1 class="no-margins">{$show_data['success_reg']}</h1>
                     <div class="stat-percent font-bold text-danger"></div>
                     <small></small>
                 </div>
@@ -42,17 +42,17 @@
         <div class="col-sm-2">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
-                    <span class="label label-primary pull-right">今天</span>
-                    <h5>当前在线客服数</h5>
+                    <span class="label label-primary pull-right">所有</span>
+                    <h5>失败数量</h5>
                 </div>
                 <div class="ibox-content">
-                    <h1 class="no-margins">5</h1>
+                    <h1 class="no-margins">{$show_data['fail_reg']}</h1>
                     <div class="stat-percent font-bold text-danger"></div>
                     <small></small>
                 </div>
             </div>
         </div>
-        <div class="col-sm-2">
+        <!--<div class="col-sm-2">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
                     <span class="label label-primary pull-right">今天</span>
@@ -77,10 +77,10 @@
                     <small></small>
                 </div>
             </div>
-        </div>
+        </div>-->
     </div>
 
-    <div class="row">
+    <!--<div class="row">
         <div class="col-sm-8">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
@@ -107,74 +107,11 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div>-->
 </div>
 
 <script src="__JS__/jquery.min.js"></script>
 <script src="__JS__/plugins/echarts/echarts-all.js"></script>
-<script type="text/javascript">
-    var data = {$show_data | raw };
-    // 基于准备好的dom，初始化echarts实例
-    var myChart = echarts.init(document.getElementById('main'));
 
-    // 指定图表的配置项和数据
-    var option = {
-        tooltip: {
-            trigger: 'axis'
-        },
-        legend: {
-            data:['正在咨询的会员','排队的会员','接入会话量','总会话量']
-        },
-        grid: {
-            left: '3%',
-            right: '4%',
-            bottom: '3%',
-            containLabel: true
-        },
-        toolbox: {
-            feature: {
-                saveAsImage: {}
-            }
-        },
-        xAxis: {
-            type: 'category',
-            boundaryGap: false,
-            data: ['08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00',
-                '18:00','19:00','20:00','21:00','22:00']
-        },
-        yAxis: {
-            type: 'value'
-        },
-        series: [
-            {
-                name:'正在咨询的会员',
-                type:'line',
-                stack: '总量',
-                data: data.is_talking
-            },
-            {
-                name:'排队的会员',
-                type:'line',
-                stack: '总量',
-                data: data.in_queue
-            },
-            {
-                name:'接入会话量',
-                type:'line',
-                stack: '总量',
-                data: data.success_in
-            },
-            {
-                name:'总会话量',
-                type:'line',
-                stack: '总量',
-                data: data.total_in
-            }
-        ]
-    };
-
-    // 使用刚指定的配置项和数据显示图表。
-    myChart.setOption(option);
-</script>
 </body>
 </html>

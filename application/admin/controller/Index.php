@@ -10,6 +10,7 @@
 // +----------------------------------------------------------------------
 namespace app\admin\controller;
 
+use app\admin\model\EmailModel;
 use app\admin\model\NodeModel;
 
 class Index extends Base
@@ -38,38 +39,18 @@ class Index extends Base
      */
     public function indexPage()
     {
-        // 生成从 8点 到 22点的时间数组
-        $dateLine = array_map(function ($vo) {
-            if ($vo < 10) {
-                return '0' . $vo;
-            } else {
-                return $vo;
-            }
-        }, range(8, 22));
-
-        // 初始化数据
-        $line = [];
-        foreach ($dateLine as $key => $vo) {
-            $line[$vo] = [
-                'is_talking' => intval(rand(20, 120)),
-                'in_queue'   => intval(rand(0, 20)),
-                'success_in' => intval(rand(50, 200)),
-                'total_in'   => intval(rand(150, 300)),
-            ];
-        }
-
-        $showData = [];
-        foreach ($line as $key => $vo) {
-            $showData['is_talking'][] = $vo['is_talking'];
-            $showData['in_queue'][]   = $vo['in_queue'];
-            $showData['success_in'][] = $vo['success_in'];
-            $showData['total_in'][]   = $vo['total_in'];
-        }
+        // 查询 总注册量，成功数量，失败数量
+        $all_reg = EmailModel::where(['reg_status' => [0, 1]])->count('id');
+        $fail_reg = EmailModel::where(['reg_status' => 0])->count('id');
+        $success_reg = EmailModel::where(['reg_status' => 1])->count('id');
 
         $this->assign([
-            'show_data' => json_encode($showData, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE),
+            'show_data' => [
+                'all_reg' => $all_reg,
+                'fail_reg' => $fail_reg,
+                'success_reg' => $success_reg,
+            ]
         ]);
-
         return $this->fetch('index');
     }
 }
