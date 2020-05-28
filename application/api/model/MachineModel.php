@@ -27,11 +27,14 @@ class MachineModel extends Model
         return $this->where($where)->limit($offset, $limit)->order('id desc')->select();
     }
 
-    public static function getOneNotUseMachine()
+    public static function getOneNotUseMachine($force)
     {
         $machine_data = self::where('use_status', '=', 0)->order('id asc')->find();
         if ($machine_data) {
-            self::update(['use_status' => 1], ['id' => $machine_data['id']]);
+            if ($force) {
+                self::update(['use_status' => 1], ['id' => $machine_data['id']]);
+            }
+
             return $machine_data;
         } else {
             throw new MachineException(['msg' => '没有可用机器']);
