@@ -103,7 +103,7 @@ class Machine extends Base
     }
 
     /**
-     * 删除选中机器
+     * 切换选中机器状态
      * @return mixed
      */
     public function switch_status()

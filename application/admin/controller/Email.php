@@ -164,6 +164,40 @@ class Email extends Base
 
 
     /**
+     * 切换选中邮箱状态
+     * @return mixed
+     */
+    public function switch_status()
+    {
+        if (request()->isAjax()) {
+            $data = input('param.');
+            // 切换机器状态
+            $used_id = EmailModel::where([
+                ['use_status', '=', '1'],
+                ['id', 'in', $data['email_id']]
+            ])->column('id');
+
+            $un_use = EmailModel::where([
+                ['use_status', '=', '0'],
+                ['id', 'in', $data['email_id']]
+            ])->column('id');
+
+            if (!empty($used_id)) {
+                EmailModel::update(['use_status' => 0], ['id' => $used_id]);
+            }
+
+            if (!empty($un_use)) {
+                EmailModel::update(['use_status' => 1], ['id' => $un_use]);
+            }
+
+            $result['code'] = 1;
+            $result['msg'] = '切换成功';
+
+            return $result;
+        }
+    }
+
+    /**
      * 拼装操作按钮
      * @param $id
      * @return array
@@ -171,6 +205,12 @@ class Email extends Base
     private function makeButton($id)
     {
         return [
+            '切换' => [
+                'auth' => 'email/switch_status',
+                'href' => "javascript:switch_status(" . $id . ")",
+                'btnStyle' => 'info',
+                'icon' => 'fa fa-check-circle',
+            ],
             '编辑' => [
                 'auth' => 'email/edit',
                 'href' => url('email/edit', ['id' => $id]),

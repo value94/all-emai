@@ -31,6 +31,17 @@
                     <button class="btn btn-outline btn-success" type="button">导入{$title}</button>
                 </a>
                 {/if}
+                {if authCheck('email/switch_status')}
+                <form role="form" method="post" class="form-inline pull-left" style="margin-top: 5px">
+                    <div class="content clearfix m-b">
+                        <div class="form-group">
+                            <button class="btn btn-w-m btn-danger" type="button" id="switch_status">
+                                <strong>切换使用状态</strong>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+                {/if}
             </div>
             <!--搜索框开始-->
             <form id='commentForm' role="form" method="post" class="form-inline pull-right">
@@ -50,6 +61,7 @@
                 <div class="example">
                     <table id="cusTable">
                         <thead>
+                        <th data-field="box_id" data-checkbox="true"></th>
                         <th data-field="id">ID</th>
                         <!--<th data-field="machine_id">机器编号</th>-->
                         <th data-field="email_name">邮箱名称</th>
@@ -129,6 +141,61 @@
         //当点击查询按钮的时候执行
         $("#search").bind("click", initTable);
     });
+
+    // 切换选中邮箱状态
+    $switch_status = $('#switch_status');
+    var $table = $('#cusTable');
+    $(function () {
+        $switch_status.click(function () {
+            if ($table.bootstrapTable('getAllSelections').length == 0) {
+                layer.alert('请勾选邮箱', {title: '友情提示', icon: 2});
+                return;
+            }
+            layer.confirm('确认切换邮箱状态', {icon: 3, title: '提示'}, function (index) {
+                //do something
+                var email = $table.bootstrapTable('getAllSelections');
+                var email_id = [];
+                for (var i = 0; i < email.length; i++) {
+                    email_id[i] = email[i]['id'];
+                }
+                $.getJSON("{:url('email/switch_status')}", {
+                    'email_id': email_id
+                }, function (res) {
+                    if (1 == res.code) {
+                        layer.alert(res.msg, {title: '友情提示', icon: 1, closeBtn: 0}, function () {
+                            initTable();
+                        });
+                    } else if (111 == res.code) {
+                        window.location.reload();
+                    } else {
+                        layer.alert(res.msg, {title: '友情提示', icon: 2});
+                    }
+                });
+
+                layer.close(index);
+            })
+        });
+    });
+
+    function switch_status(id) {
+        layer.confirm('确认切换状态?', {icon: 3, title: '提示'}, function (index) {
+            //do something
+            $.getJSON("{:url('email/switch_status')}", {'email_id': id}, function (res) {
+                if (1 == res.code) {
+                    layer.alert(res.msg, {title: '友情提示', icon: 1, closeBtn: 0}, function () {
+                        initTable();
+                    });
+                } else if (111 == res.code) {
+                    window.location.reload();
+                } else {
+                    layer.alert(res.msg, {title: '友情提示', icon: 2});
+                }
+            });
+
+            layer.close(index);
+        })
+
+    }
 
     function emailDel(id) {
         layer.confirm('确认删除此邮箱?', {icon: 3, title: '提示'}, function (index) {
