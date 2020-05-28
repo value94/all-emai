@@ -10,3 +10,10 @@
 // +----------------------------------------------------------------------
 
 // 应用公共文件
+/**
+ * 生成JSON数据返回值
+ */
+function JSONReturn($result)
+{
+    return json_encode($result,JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES);
+}

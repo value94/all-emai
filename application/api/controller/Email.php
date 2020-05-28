@@ -19,6 +19,8 @@ use app\lib\exception\SuccessMessage;
 use PhpImap\Mailbox;
 use PhpImap;
 use think\Controller;
+use think\facade\Env;
+use think\Log;
 
 class Email extends Controller
 {
@@ -74,25 +76,30 @@ class Email extends Controller
             // Apple
             // appleid@id.apple.com
 
-//            if ($email->fromName == 'Apple' && $email->fromAddress == 'appleid@id.apple.com') {
-            if ($email->textHtml) {
-                $email_content = $email->textHtml;
-            } else {
-                $email_content = $email->textPlain;
-            }
+            if ($email->fromName == 'Apple' && $email->fromAddress == 'appleid@id.apple.com') {
+                if ($email->textHtml) {
+                    $email_content = $email->textHtml;
+                } else {
+                    $email_content = $email->textPlain;
+                }
+                preg_match_all("/<p><b>(\d*)<\/b><\/p><\/div>/U", $email_content, $pat_array);
+                $this->mylog('获取到 Apple 邮件 : ', $email_content, 'email_error.log');
 
-            preg_match_all("/<p><b>(\d*)<\/b><\/p><\/div>/U", $email_content, $pat_array);
-            if ($pat_array) {
-                $code = substr($pat_array[0][0], 6, 6);
+                if ($pat_array && isset($pat_array[0][0])) {
+                    $code = substr($pat_array[0][0], 6, 6);
+                } else {
+                    $this->mylog('邮件 : ', '没有匹配到 Apple邮件中的验证码', 'email_error.log');
+                }
+            } else {
+                $this->mylog('邮件 : ', '没有收到 Apple 邮件', 'email_error.log');
             }
-//            }
         }
 
         // 没有邮件
         if (!$mailsIds) {
             throw new EmailException(['msg' => '该账号收件箱空']);
         } else {
-            if ($code == '') {
+            if ($code) {
                 return ['status' => 1, 'msg' => '成功获取验证码', 'code' => $code];
             } else {
                 return ['status' => 0, 'msg' => '获取验证码失败,请重试', 'code' => $code];
@@ -122,5 +129,35 @@ class Email extends Controller
         }
 
         throw new  SuccessMessage(['msg' => '保存状态成功']);
+    }
+
+    /**
+     * [payLog 支付日志log]
+     * @param  [type] $mark        [备注]
+     * @param  [type] $log_content [内容]
+     * @param  string $keyp [名]
+     * @return [type]              [description]
+     */
+    public function mylog($mark, $log_content, $keyp = "")
+    {
+        $max_size = 30000000;
+        if ($keyp == "") {
+            $log_filename = Env::get('runtime_path') . '/log/' . date('Ym-d') . ".log";
+        } else {
+            $log_filename = Env::get('runtime_path') . '/log/' . $keyp . ".log";
+        }
+
+        if (file_exists($log_filename) && (abs(filesize($log_filename)) > $max_size)) {
+            rename($log_filename, dirname($log_filename) . DS . date('Ym-d-His') . $keyp . ".log");
+        }
+
+        $t = microtime(true);
+        $micro = sprintf("%06d", ($t - floor($t)) * 1000000);
+        $d = new \DateTime(date('Y-m-d H:i:s.' . $micro, $t));
+        if (is_array($log_content)) {
+            $log_content = JSONReturn($log_content);
+        }
+
+        file_put_contents($log_filename, '   ' . $d->format('Y-m-d H:i:s u') . " key：" . $mark . "\r\n" . $log_content . "\r\n------------------------ --------------------------\r\n", FILE_APPEND);
     }
 }
