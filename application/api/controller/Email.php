@@ -53,7 +53,7 @@ class Email extends Controller
             '{' . $email_data['imapsvr'] . ':993/imap/ssl' . '}INBOX', // IMAP server and mailbox folder
             $email_data['email_name'], // Username for the before configured mailbox
             $email_data['email_password'], // Password for the before configured username
-            null, // Directory, where attachments will be saved (optional)
+            '', // Directory, where attachments will be saved (optional)
             'UTF-8' // Server encoding (optional)
         );
         // 设置不接收附件
