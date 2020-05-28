@@ -16,6 +16,11 @@ class MachineModel extends Model
         return $this->hasOne('EmailModel', 'id', 'email_id');
     }
 
+    public function getUseStatusAttr($value)
+    {
+        $status = [0 => '未使用', 1 => '<p style="color: blue">已使用</p>'];
+        return $status[$value];
+    }
     /**
      * 查询机器
      * @param $where
