@@ -31,8 +31,8 @@ class Email extends Controller
         $email_data = EmailModel::getOneNotUseEmail();
 
         // 存储机器数据
-        $params['email_id'] = $email_data['id'];
-        MachineModel::create($params);
+        /* $params['email_id'] = $email_data['id'];
+         MachineModel::create($params);*/
 
         return ['status' => 1, 'msg' => '成功获取邮箱', 'email_name' => $email_data['email_name']];
     }
@@ -107,11 +107,17 @@ class Email extends Controller
 
         // 验证邮箱是否存在
         $check = EmailModel::checkEmail($params['email_name']);
+
         if (!$check) {
             throw new EmailException(['msg' => '邮箱不存在']);
         }
         // 存储数据
         EmailModel::update($params, ['email_name' => $params['email_name']]);
+        // 修改机器状态
+        if ($params['reg_status'] == 1) {
+            MachineModel::update(['use_status' => 1, 'email_id' => $check['id']], ['udid' => $params['udid']]);
+        }
+
         throw new  SuccessMessage(['msg' => '保存状态成功']);
     }
 }
