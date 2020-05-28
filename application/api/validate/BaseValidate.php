@@ -9,6 +9,7 @@ namespace app\api\validate;
 
 
 use app\lib\exception\ParameterException;
+use think\facade\Env;
 use think\Validate;
 
 class BaseValidate extends Validate
@@ -18,6 +19,7 @@ class BaseValidate extends Validate
     {
         //参数获取
         $params = @file_get_contents('php://input');
+        mylog('接口 ' . Env::get('log_path') . '接收参数:', $params, 'param.log');
         $params = json_decode($params, true);
 
         //根据token去数据库获取秘钥
