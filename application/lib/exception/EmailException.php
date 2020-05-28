@@ -12,7 +12,7 @@ namespace app\lib\exception;
 
 class EmailException extends BaseException
 {
-    public $code = 401;
+    public $code = 200;
     public $msg = '邮箱错误';
     public $errorCode = 30000;
     public $status = 0;

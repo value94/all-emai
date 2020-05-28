@@ -12,7 +12,7 @@ namespace app\lib\exception;
 
 class MachineException extends BaseException
 {
-    public $code = 401;
+    public $code = 200;
     public $msg = '机器错误';
     public $errorCode = 40000;
     public $status = 0;
