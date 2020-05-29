@@ -57,7 +57,7 @@ class BaseValidate extends Validate
         $result = $this->batch()->check($params);
         if (!$result) {
             throw new ParameterException([
-                'msg' => $this->error,
+                'msg' => json_encode($this->error),
             ]);
         } else {
             return $params;
