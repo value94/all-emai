@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50726
 File Encoding         : 65001
 
-Date: 2020-05-27 17:57:28
+Date: 2020-06-02 13:14:03
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -40,8 +40,8 @@ CREATE TABLE `s_email` (
 -- ----------------------------
 -- Records of s_email
 -- ----------------------------
-INSERT INTO `s_email` VALUES ('1', '0', null, 'djeimibrainina1988@rambler.ru', 'Oy9urh17', '0', '1', '失败了', 'imap.rambler.ru', 'pop.rambler.ru', 'smtp.rambler.ru', '2020-05-25 09:25:42', '2020-05-27 17:35:26', null);
-INSERT INTO `s_email` VALUES ('4', '1', null, 'djeimibrainina1989@rambler.ru', 'Oy9urh17', '0', '0', null, 'imap.rambler.ru', 'pop.rambler.ru', 'smtp.rambler.ru', '2020-05-27 17:10:41', '2020-05-27 17:10:41', null);
+INSERT INTO `s_email` VALUES ('1', '0', null, 'djeimibrainina1988@rambler.ru', 'Oy9urh17', '1', '1', '失败了', 'imap.rambler.ru', 'pop.rambler.ru', 'smtp.rambler.ru', '2020-05-25 09:25:42', '2020-05-29 16:47:48', null);
+INSERT INTO `s_email` VALUES ('4', '1', null, 'djeimibrainina1989@rambler.ru', 'Oy9urh17', '0', '0', null, 'imap.rambler.ru', 'pop.rambler.ru', 'smtp.rambler.ru', '2020-05-27 17:10:41', '2020-05-28 13:28:21', null);
 
 -- ----------------------------
 -- Table structure for s_email_type
@@ -90,16 +90,16 @@ CREATE TABLE `s_machine` (
 -- ----------------------------
 -- Records of s_machine
 -- ----------------------------
-INSERT INTO `s_machine` VALUES ('11', '1', null, 'ME342LL/A', 'iphone5s', 'iPhone6,2', '1', 'e4:98:d6:55:ba:8b', null, 'DNPLHRHCFNJK', 'bc5beec36e81753f31bce97ec3ec7cf006f3a071', 'e4:98:d6:55:ba:8a', '2020-05-27 16:18:13', '2020-05-27 17:56:29', null);
-INSERT INTO `s_machine` VALUES ('12', '1', null, 'ME306LL/A', 'iphone5s', 'iPhone6,2', '0', 'f8:27:93:2e:b5:06', null, 'DNPLHRCHFF9V', '79ef9d61290fae584354dd230c9eee787e2d8437', 'f8:27:93:2e:b5:05', '2020-05-27 16:18:13', '2020-05-27 16:18:13', null);
-INSERT INTO `s_machine` VALUES ('13', '1', null, 'ME306LL/A', 'iphone5s', 'iPhone6,2', '0', '04:db:56:1a:0a:99', null, 'DNPLHSZDFF9V', 'd8bd46bb39e07e91b4a6974ce1ec43e79db27ae8', '04:db:56:1a:0a:98', '2020-05-27 16:18:13', '2020-05-27 16:18:13', null);
-INSERT INTO `s_machine` VALUES ('14', '1', null, 'ME415RU/A', 'iphone5s', 'iPhone6,2', '0', '28:e1:4c:cf:92:34', null, 'DNPLHSZTFFG9', 'b502a335fd77ae2047afc33de1dcedd08e7de23d', '28:e1:4c:cf:91:d9', '2020-05-27 16:18:13', '2020-05-27 16:18:13', null);
-INSERT INTO `s_machine` VALUES ('15', null, null, 'ME342LL/A', 'iphone5s', 'iPhone6,2', '0', 'e4:98:d6:4d:95:1f', null, 'DNPLHT5EFNJK', 'b4606ad8b93d253f11003effe0b2de39854b1923', 'e4:98:d6:4d:95:1e', '2020-05-27 16:18:13', '2020-05-27 16:18:13', null);
+INSERT INTO `s_machine` VALUES ('11', null, null, 'ME342LL/A', 'iphone5s', 'iPhone6,2', '0', 'e4:98:d6:55:ba:8b', null, 'DNPLHRHCFNJK', 'bc5beec36e81753f31bce97ec3ec7cf006f3a071', 'e4:98:d6:55:ba:8a', '2020-05-27 16:18:13', '2020-05-28 21:41:27', null);
+INSERT INTO `s_machine` VALUES ('12', null, null, 'ME306LL/A', 'iphone5s', 'iPhone6,2', '0', 'f8:27:93:2e:b5:06', null, 'DNPLHRCHFF9V', '79ef9d61290fae584354dd230c9eee787e2d8437', 'f8:27:93:2e:b5:05', '2020-05-27 16:18:13', '2020-05-28 21:24:29', null);
+INSERT INTO `s_machine` VALUES ('13', null, null, 'ME306LL/A', 'iphone5s', 'iPhone6,2', '0', '04:db:56:1a:0a:99', null, 'DNPLHSZDFF9V', 'd8bd46bb39e07e91b4a6974ce1ec43e79db27ae8', '04:db:56:1a:0a:98', '2020-05-27 16:18:13', '2020-05-28 21:39:59', null);
+INSERT INTO `s_machine` VALUES ('14', null, null, 'ME415RU/A', 'iphone5s', 'iPhone6,2', '0', '28:e1:4c:cf:92:34', null, 'DNPLHSZTFFG9', 'b502a335fd77ae2047afc33de1dcedd08e7de23d', '28:e1:4c:cf:91:d9', '2020-05-27 16:18:13', '2020-05-27 16:18:13', null);
+INSERT INTO `s_machine` VALUES ('15', '1', null, 'ME342LL/A', 'iphone5s', 'iPhone6,2', '1', 'e4:98:d6:4d:95:1f', null, 'DNPLHT5EFNJK', 'b4606ad8b93d253f11003effe0b2de39854b1923', 'e4:98:d6:4d:95:1e', '2020-05-27 16:18:13', '2020-05-29 16:47:48', null);
 INSERT INTO `s_machine` VALUES ('16', null, null, 'ME352LL/A', 'iphone5s', 'iPhone6,2', '0', 'f8:27:93:18:7b:69', null, 'DNPLJ0DLFFDR', 'fae5afc40bc245dc29bec8dc0e4831204d521fef', 'f8:27:93:18:7b:68', '2020-05-27 16:18:13', '2020-05-27 16:18:13', null);
 INSERT INTO `s_machine` VALUES ('17', null, null, 'ME415RU/A', 'iphone5s', 'iPhone6,2', '0', '28:e1:4c:d3:99:04', null, 'DNPLHSWSFFG9', 'd9c92d9ae7e70cf8b611f8ba9a74504c959e8fa7', '28:e1:4c:d3:99:03', '2020-05-27 16:18:13', '2020-05-27 16:18:13', null);
 INSERT INTO `s_machine` VALUES ('18', null, null, 'ME342LL/A', 'iphone5s', 'iPhone6,2', '0', 'e4:98:d6:58:06:a9', null, 'DNPLHRDBFNJK', '7882fd2064497faafd311fb7db7bc12d99cd6ae6', 'e4:98:d6:58:06:a8', '2020-05-27 16:18:13', '2020-05-27 16:18:13', null);
-INSERT INTO `s_machine` VALUES ('19', null, null, 'ME415LP/A', 'iphone5s', 'iPhone6,2', '0', '28:e1:4c:d1:57:13', null, 'DNPLHRRCFFG9', '52a017837d7dcc6763312aa70fee1e2c06f74c98', '28:e1:4c:d1:57:12', '2020-05-27 16:18:13', '2020-05-27 16:18:13', null);
-INSERT INTO `s_machine` VALUES ('20', null, null, 'ME415RU/A', 'iphone5s', 'iPhone6,2', '0', '28:e1:4c:d3:d6:82', null, 'DNPLHSWXFFG9', '3c33dd910880510ac56c21393b8371fc55b431e0', '28:e1:4c:d3:d6:63', '2020-05-27 16:18:13', '2020-05-27 16:18:13', null);
+INSERT INTO `s_machine` VALUES ('19', null, null, 'ME415LP/A', 'iphone5s', 'iPhone6,2', '0', '28:e1:4c:d1:57:13', null, 'DNPLHRRCFFG9', '52a017837d7dcc6763312aa70fee1e2c06f74c98', '28:e1:4c:d1:57:12', '2020-05-27 16:18:13', '2020-05-28 13:14:01', null);
+INSERT INTO `s_machine` VALUES ('20', null, null, 'ME415RU/A', 'iphone5s', 'iPhone6,2', '0', '28:e1:4c:d3:d6:82', null, 'DNPLHSWXFFG9', '3c33dd910880510ac56c21393b8371fc55b431e0', '28:e1:4c:d3:d6:63', '2020-05-27 16:18:13', '2020-05-28 13:21:11', null);
 
 -- ----------------------------
 -- Table structure for s_migrations
@@ -134,7 +134,7 @@ CREATE TABLE `s_node` (
   `type_id` int(11) NOT NULL COMMENT '父级节点id',
   `style` varchar(255) NOT NULL COMMENT '菜单样式',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of s_node
@@ -176,6 +176,8 @@ INSERT INTO `s_node` VALUES ('34', '导入邮箱', 'machine', 'import_machine', 
 INSERT INTO `s_node` VALUES ('35', '邮箱类型', 'emailType', 'index', '2', '23', '');
 INSERT INTO `s_node` VALUES ('36', '添加', 'emailType', 'create', '1', '35', '');
 INSERT INTO `s_node` VALUES ('37', '修改', 'emailType', 'update', '1', '35', '');
+INSERT INTO `s_node` VALUES ('38', '切换机器状态', 'machine', 'switch_status', '1', '30', '');
+INSERT INTO `s_node` VALUES ('39', '切换状态', 'email', 'switch_status', '1', '24', '');
 
 -- ----------------------------
 -- Table structure for s_role
