@@ -19,7 +19,7 @@ class BaseValidate extends Validate
     {
         //参数获取
         $params = @file_get_contents('php://input');
-        mylog('接口 ' . Env::get('log_path') . '接收参数:', $params, 'param.log');
+//        mylog('接口 ' . Env::get('log_path') . '接收参数:', $params, 'param.log');
         $params = json_decode($params, true);
 
         //根据token去数据库获取秘钥
