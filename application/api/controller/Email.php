@@ -80,15 +80,15 @@ class Email extends Controller
                     $email_content = $email->textPlain;
                 }
                 preg_match_all("/<p><b>(\d*)<\/b><\/p><\/div>/U", $email_content, $pat_array);
-                mylog('获取到 Apple 邮件 : ', $email_content, 'email_error.log');
+//                mylog('获取到 Apple 邮件 : ', $email_content, 'email_error.log');
 
                 if ($pat_array && isset($pat_array[0][0])) {
                     $code = substr($pat_array[0][0], 6, 6);
                 } else {
-                    mylog('邮件 : ', '没有匹配到 Apple邮件中的验证码', 'email_error.log');
+                    mylog('邮件 : ', $params['email_name'] . '没有匹配到 Apple邮件中的验证码', 'email_error.log');
                 }
             } else {
-                mylog('邮件 : ', '没有收到 Apple 邮件', 'email_error.log');
+                mylog('邮件 : ', $params['email_name'] . '没有收到 Apple 邮件', 'email_error.log');
             }
         }
 
