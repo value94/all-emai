@@ -36,7 +36,7 @@ function mylog($mark, $log_content, $keyp = "")
     }
 
     if (file_exists($log_filename) && (abs(filesize($log_filename)) > $max_size)) {
-        rename($log_filename, dirname($log_filename) . DS . date('Ym-d-His') . $keyp . ".log");
+        rename($log_filename, dirname($log_filename) . '/' . date('Ym-d-His') . $keyp . ".log");
     }
 
     $t = microtime(true);
