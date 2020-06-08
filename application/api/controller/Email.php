@@ -45,25 +45,39 @@ class Email extends Controller
         $params = (new GetCodeValidate())->goCheck();
         // 获取邮箱数据
         $email_data = EmailModel::getEmailByWhere(['email_name' => $params['email_name']]);
-
+        $email_model = new EmailModel();
         // 登录邮箱
-        // 为进一步操作创建 PhpImap 实例
-        $mailbox = new Mailbox(
-            '{' . $email_data['imapsvr'] . ':993/imap/ssl' . '}INBOX', // IMAP server and mailbox folder
-            $email_data['email_name'], // Username for the before configured mailbox
-            $email_data['email_password'], // Password for the before configured username
-            '', // Directory, where attachments will be saved (optional)
-            'UTF-8' // Server encoding (optional)
-        );
+        try {
+            $mailbox = new Mailbox(
+                '{' . $email_data['imapsvr'] . ':993/imap/ssl' . '}INBOX', // IMAP server and mailbox folder
+                $email_data['email_name'], // Username for the before configured mailbox
+                $email_data['email_password'], // Password for the before configured username
+                '', // Directory, where attachments will be saved (optional)
+                'UTF-8' // Server encoding (optional)
+            );
+
+            //如果catch没有捕获到，才会执行到这里
+            set_exception_handler(function () use ($email_model ,$params) {
+                $email_model->where(['email_name' => $params['email_name']])->update(['use_status' => 2]);
+                // 捕捉到错误,账号密码不正确
+                echo json_encode(['status' => 0, 'msg' => '该账号密码不正确', 'email_name' => $params['email_name']]);
+                exit();
+            });
+        } catch (PhpImap\Exceptions\InvalidParameterException $ex) {
+            throw new EmailException(['msg' => '连接 IMAP服务参数设置错误']);
+        }
+
         // 设置不接收附件
         $mailbox->setAttachmentsIgnore(true);
-
         // 获取所有邮件
         try {
             $mailsIds = $mailbox->searchMailbox('ALL');
         } catch (PhpImap\Exceptions\ConnectionException $ex) {
+            // 登录不上,设置状态异常 user_status => 2
+            EmailModel::where(['email_name' => $params['email_name']])->save(['use_status' => 2]);
             throw new EmailException(['msg' => '该账号连接不上 imap 服务']);
         }
+
 
         // 遍历所有邮件
         $code = '';
@@ -130,5 +144,10 @@ class Email extends Controller
         }
 
         throw new  SuccessMessage(['msg' => '保存状态成功']);
+    }
+
+    function myException($exception)
+    {
+        echo "<b>Exception:</b> ", $exception->getMessage();
     }
 }

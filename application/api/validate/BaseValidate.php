@@ -10,6 +10,7 @@ namespace app\api\validate;
 
 use app\lib\exception\ParameterException;
 use think\facade\Env;
+use think\facade\Request;
 use think\Validate;
 
 class BaseValidate extends Validate
@@ -18,9 +19,10 @@ class BaseValidate extends Validate
     public function goCheck()
     {
         //参数获取
-        $params = @file_get_contents('php://input');
+        $params = Request::param();
 //        mylog('接口 ' . Env::get('log_path') . '接收参数:', $params, 'param.log');
-        $params = json_decode($params, true);
+        /*$params = @file_get_contents('php://input');
+        $params = json_decode($params, true);*/
 
         //根据token去数据库获取秘钥
         /*$token = Request::instance()->header('token');
