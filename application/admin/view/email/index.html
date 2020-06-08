@@ -57,9 +57,36 @@
             <form id='commentForm' role="form" method="post" class="form-inline pull-right">
                 <div class="content clearfix m-b">
                     <div class="form-group">
-                        <label>邮箱名称：</label>
-                        <input type="text" class="form-control" id="email_name" name="email_name">
+                        <input placeholder="开始时间" class="form-control layer-date" id="start_time" name="start_time">
+                        <input placeholder="结束时间" class="form-control layer-date" id="end_time" name="end_time">
                     </div>
+                    <div class="form-group">
+                        <input type="text" placeholder="邮箱名称" class="form-control" id="email_name" name="email_name">
+                    </div>
+                    <div class="form-group">
+                        <select type="text" class="form-control" id="use_status" name="use_status">
+                            <option value="">使用状态</option>
+                            <option value="0">未使用</option>
+                            <option value="1">已使用</option>
+                            <option value="2">停止使用</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <select type="text" class="form-control" id="reg_status" name="reg_status">
+                            <option value="">注册状态</option>
+                            <option value="0">失 败</option>
+                            <option value="1">成 功</option>
+                            <option value="2">未注册</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <select type="text" class="form-control" id="is_get" name="is_gets">
+                            <option value="">导出状态</option>
+                            <option value="0">未导出</option>
+                            <option value="1">已导出</option>
+                        </select>
+                    </div>
+
                     <div class="form-group">
                         <button class="btn btn-primary" type="button" style="margin-top:5px" id="search">
                             <strong>搜索</strong>
@@ -70,7 +97,7 @@
             <!--搜索框结束-->
             <div class="example-wrap">
                 <div class="example">
-                    <table id="cusTable"  data-show-jumpto="true">
+                    <table id="cusTable" data-show-jumpto="true">
                         <thead>
                         <th data-field="box_id" data-checkbox="true"></th>
                         <th data-field="id">ID</th>
@@ -96,7 +123,6 @@
     </div>
 </div>
 <!-- End Panel Other -->
-</div>
 <script src="__JS__/jquery.min.js?v=2.1.4"></script>
 <script src="__JS__/bootstrap.min.js?v=3.3.6"></script>
 <script src="__JS__/content.min.js?v=1.0.0"></script>
@@ -104,9 +130,9 @@
 <script src="__JS__/plugins/bootstrap-table/bootstrap-table-jumpto.js"></script>
 <script src="__JS__/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
 <script src="__JS__/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
-<script src="__JS__/plugins/suggest/bootstrap-suggest.min.js"></script>
+<!--<script src="__JS__/plugins/suggest/bootstrap-suggest.min.js"></script>-->
 <script src="__JS__/plugins/layer/laydate/laydate.js"></script>
-<script src="__JS__/plugins/sweetalert/sweetalert.min.js"></script>
+<!--<script src="__JS__/plugins/sweetalert/sweetalert.min.js"></script>-->
 <script src="__JS__/plugins/layer/layer.min.js"></script>
 <script type="text/javascript">
     function initTable() {
@@ -133,7 +159,12 @@
                 var param = {
                     pageNumber: params.pageNumber,
                     pageSize: params.pageSize,
-                    searchText: $('#email_name').val()
+                    searchText: $('#email_name').val(),
+                    start_time: $('#start_time').val(),
+                    end_time: $('#end_time').val(),
+                    use_status: $('#use_status').val(),
+                    reg_status: $('#reg_status').val(),
+                    is_get: $('#is_get').val(),
                 };
                 return param;
             },
@@ -231,6 +262,15 @@
         })
 
     }
+
+    laydate.render({
+        elem: "#start_time"
+        , type: 'datetime'
+    });
+    laydate.render({
+        elem: "#end_time"
+        , type: 'datetime'
+    });
 </script>
 </body>
 </html>

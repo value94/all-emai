@@ -23,9 +23,27 @@ class Email extends Base
             $offset = ($param['pageNumber'] - 1) * $limit;
 
             $where = [];
+            // 邮箱名搜索
             if (!empty($param['searchText'])) {
                 $where[] = ['email_name', 'like', '%' . $param['searchText'] . '%'];
             }
+            // 状态搜索
+            if ($param['use_status'] != '') {
+                $where[] = ['use_status', '=', $param['use_status']];
+            }
+            // 注册状态搜索
+            if ($param['reg_status'] != '') {
+                $where[] = ['reg_status', '=', $param['reg_status']];
+            }
+            // 导出状态搜索
+            if ($param['is_get'] != '') {
+                $where[] = ['is_get', '=', $param['is_get']];
+            }
+            //时间搜索
+            if (!empty($param['start_time']) && !empty($param['end_time'])) {
+                $where[] = ['update_time', 'between', [$param['start_time'], $param['end_time']]];
+            }
+
             $Email = new EmailModel();
             $selectResult = $Email->getEmailByWhere($where, $offset, $limit);
 

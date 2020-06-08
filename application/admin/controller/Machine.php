@@ -22,8 +22,17 @@ class Machine extends Base
             $offset = ($param['pageNumber'] - 1) * $limit;
 
             $where = [];
+            // 机器搜索
             if (!empty($param['searchText'])) {
                 $where[] = ['HWModelStr', 'like', '%' . $param['searchText'] . '%'];
+            }
+            // 状态搜索
+            if ($param['use_status'] != '') {
+                $where[] = ['use_status', '=', $param['use_status']];
+            }
+            //时间搜索
+            if (!empty($param['start_time']) && !empty($param['end_time'])) {
+                $where[] = ['update_time', 'between', [$param['start_time'], $param['end_time']]];
             }
             $Machine = new MachineModel();
             $selectResult = $Machine->getMachineByWhere($where, $offset, $limit);
