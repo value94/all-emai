@@ -11,6 +11,7 @@
 namespace app\admin\controller;
 
 use app\admin\model\EmailModel;
+use app\admin\model\MachineModel;
 use app\admin\model\NodeModel;
 
 class Index extends Base
@@ -43,12 +44,16 @@ class Index extends Base
         $all_reg = EmailModel::where(['reg_status' => [0, 1]])->count('id');
         $fail_reg = EmailModel::where(['reg_status' => 0])->count('id');
         $success_reg = EmailModel::where(['reg_status' => 1])->count('id');
+        $machine_left = MachineModel::where(['use_status' => 0])->count('id');
+        $email_left = EmailModel::where(['use_status' => 0])->count('id');
 
         $this->assign([
             'show_data' => [
                 'all_reg' => $all_reg,
                 'fail_reg' => $fail_reg,
                 'success_reg' => $success_reg,
+                'machine_left' => $machine_left,
+                'email_left' => $email_left,
             ]
         ]);
         return $this->fetch('index');

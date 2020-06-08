@@ -20,7 +20,7 @@
                     <h5>总注册量</h5>
                 </div>
                 <div class="ibox-content">
-                    <h1 class="no-margins">{$show_data['all_reg']}</h1>
+                    <h1 class="no-margins">{$show_data['all_reg']} 个</h1>
                     <div class="stat-percent font-bold text-navy"></div>
                     <small></small>
                 </div>
@@ -33,7 +33,7 @@
                     <h5>成功数量</h5>
                 </div>
                 <div class="ibox-content">
-                    <h1 class="no-margins">{$show_data['success_reg']}</h1>
+                    <h1 class="no-margins">{$show_data['success_reg']} 个</h1>
                     <div class="stat-percent font-bold text-danger"></div>
                     <small></small>
                 </div>
@@ -46,7 +46,33 @@
                     <h5>失败数量</h5>
                 </div>
                 <div class="ibox-content">
-                    <h1 class="no-margins">{$show_data['fail_reg']}</h1>
+                    <h1 class="no-margins">{$show_data['fail_reg']} 个</h1>
+                    <div class="stat-percent font-bold text-danger"></div>
+                    <small></small>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-primary pull-right">所有</span>
+                    <h5>剩余机器量</h5>
+                </div>
+                <div class="ibox-content">
+                    <h1 class="no-margins">{$show_data['machine_left']} 台</h1>
+                    <div class="stat-percent font-bold text-danger"></div>
+                    <small></small>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-primary pull-right">所有</span>
+                    <h5>剩余邮箱量</h5>
+                </div>
+                <div class="ibox-content">
+                    <h1 class="no-margins">{$show_data['email_left']} 个</h1>
                     <div class="stat-percent font-bold text-danger"></div>
                     <small></small>
                 </div>

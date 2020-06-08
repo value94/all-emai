@@ -17,6 +17,12 @@ class EmailModel extends Model
         return $status[$value];
     }
 
+    public function getIsGetAttr($value)
+    {
+        $status = [0 => '未导出', 1 => '<p style="color: blue">已导出</p>'];
+        return $status[$value];
+    }
+
     public function getRegStatusAttr($value)
     {
         $status = [0 => '<p style="color: red">失败</p>', 1 => '成功', 2 => '未使用'];

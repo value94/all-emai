@@ -22,6 +22,7 @@ use think\Controller;
 
 class Email extends Controller
 {
+    // 获取未使用邮箱
     public function getEmail()
     {
         // 数据验证
@@ -37,6 +38,7 @@ class Email extends Controller
         return ['status' => 1, 'msg' => '成功获取邮箱', 'email_name' => $email_data['email_name']];
     }
 
+    // 获取注册验证码
     public function getCode()
     {
         // 数据验证
@@ -104,6 +106,7 @@ class Email extends Controller
         }
     }
 
+    // 返回注册结果
     public function sendRegResult()
     {
         // 数据验证
@@ -116,7 +119,7 @@ class Email extends Controller
             throw new EmailException(['msg' => '邮箱不存在']);
         }
         // 存储数据
-        EmailModel::update($params, ['email_name' => $params['email_name']]);
+        EmailModel::update($params, ['email_name' => $params['email_name'], 'udid' => $params['udid']]);
         // 修改机器状态
         if ($params['reg_status'] == 1 && !empty($params['udid'])) {
             MachineModel::update([
@@ -128,6 +131,4 @@ class Email extends Controller
 
         throw new  SuccessMessage(['msg' => '保存状态成功']);
     }
-
-
 }
