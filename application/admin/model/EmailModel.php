@@ -39,7 +39,7 @@ class EmailModel extends Model
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
      */
-    public function getEmailByWhere($where, $offset, $limit)
+    public function getEmailByWhere($where, $offset = '', $limit = '')
     {
         return $this->where($where)->limit($offset, $limit)->order('id desc')->select();
     }

@@ -48,3 +48,34 @@ function mylog($mark, $log_content, $keyp = "")
 
     file_put_contents($log_filename, '   ' . $d->format('Y-m-d H:i:s u') . " key：" . $mark . "\r\n" . $log_content . "\r\n------------------------ --------------------------\r\n", FILE_APPEND);
 }
+
+//公共文件，用来传入xls并下载
+function downloadExcel($newExcel, $filename, $format)
+{
+    // $format只能为 Xlsx 或 Xls
+    if ($format == 'Xlsx') {
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    } elseif ($format == 'Xls') {
+        header('Content-Type: application/vnd.ms-excel');
+    }
+    header('Access-Control-Expose-Headers: Content-Disposition');
+    header("Content-Disposition: attachment;filename="
+        . $filename . date('Y-m-d') . '.' . strtolower($format));
+    header('Cache-Control: max-age=0');
+    $objWriter = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($newExcel, $format);
+
+    $objWriter->save('php://output');
+
+    //通过php保存在本地的时候需要用到
+    //$objWriter->save($dir.'/demo.xlsx');
+
+    //以下为需要用到IE时候设置
+    // If you're serving to IE 9, then the following may be needed
+    //header('Cache-Control: max-age=1');
+    // If you're serving to IE over SSL, then the following may be needed
+    //header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
+    //header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT'); // always modified
+    //header('Cache-Control: cache, must-revalidate'); // HTTP/1.1
+    //header('Pragma: public'); // HTTP/1.0
+    exit;
+}

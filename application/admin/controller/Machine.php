@@ -154,10 +154,7 @@ class Machine extends Base
         }
     }
 
-    /**
-     * 批量导入邮箱
-     * @return mixed
-     */
+    // 批量导入邮箱
     public function import_machine()
     {
         if (request()->isPost()) {

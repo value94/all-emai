@@ -4,6 +4,7 @@ namespace app\admin\controller;
 
 use app\admin\model\EmailModel;
 use app\admin\model\EmailTypeModel;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use think\Request;
 
 class Email extends Base
@@ -22,27 +23,8 @@ class Email extends Base
             $limit = $param['pageSize'];
             $offset = ($param['pageNumber'] - 1) * $limit;
 
-            $where = [];
-            // 邮箱名搜索
-            if (!empty($param['searchText'])) {
-                $where[] = ['email_name', 'like', '%' . $param['searchText'] . '%'];
-            }
-            // 状态搜索
-            if ($param['use_status'] != '') {
-                $where[] = ['use_status', '=', $param['use_status']];
-            }
-            // 注册状态搜索
-            if ($param['reg_status'] != '') {
-                $where[] = ['reg_status', '=', $param['reg_status']];
-            }
-            // 导出状态搜索
-            if ($param['is_get'] != '') {
-                $where[] = ['is_get', '=', $param['is_get']];
-            }
-            //时间搜索
-            if (!empty($param['start_time']) && !empty($param['end_time'])) {
-                $where[] = ['update_time', 'between', [$param['start_time'], $param['end_time']]];
-            }
+            $where = $this->getWhereByParams($param);
+
 
             $Email = new EmailModel();
             $selectResult = $Email->getEmailByWhere($where, $offset, $limit);
@@ -61,6 +43,33 @@ class Email extends Base
             'title' => '邮箱'
         ]);
         return $this->fetch();
+    }
+
+    protected function getWhereByParams($params)
+    {
+        $where = [];
+        // 邮箱名搜索
+        if (!empty($params['searchText'])) {
+            $where[] = ['email_name', 'like', '%' . $params['searchText'] . '%'];
+        }
+        // 状态搜索
+        if ($params['use_status'] != '') {
+            $where[] = ['use_status', '=', $params['use_status']];
+        }
+        // 注册状态搜索
+        if ($params['reg_status'] != '') {
+            $where[] = ['reg_status', '=', $params['reg_status']];
+        }
+        // 导出状态搜索
+        if ($params['is_get'] != '') {
+            $where[] = ['is_get', '=', $params['is_get']];
+        }
+        //时间搜索
+        if (!empty($params['start_time']) && !empty($params['end_time'])) {
+            $where[] = ['update_time', 'between', [$params['start_time'], $params['end_time']]];
+        }
+
+        return $where;
     }
 
     /**
@@ -198,6 +207,78 @@ class Email extends Base
         ]);
 
         return $this->fetch();
+    }
+
+    // 导出搜索的邮箱
+    public function download_excel()
+    {
+        // 获取搜索参数
+        $params = input('param.');
+
+        $where = $this->getWhereByParams($params);
+
+        // 导出文件
+        if (!empty($where)) {
+            // 搜索数据
+            $Email = new EmailModel();
+            $excel_data = $Email->getEmailByWhere($where);
+            if ($excel_data) {
+                // 创建表
+                $newExcel = new Spreadsheet();  //创建一个新的excel文档
+                $objSheet = $newExcel->getActiveSheet();  //获取当前操作sheet的对象
+                $objSheet->setTitle('邮箱信息表');  //设置当前sheet的标题
+
+                //设置宽度为true,不然太窄了
+                $newExcel->getActiveSheet()->getColumnDimension('A')->setAutoSize(true);
+                $newExcel->getActiveSheet()->getColumnDimension('B')->setWidth(20);
+                $newExcel->getActiveSheet()->getColumnDimension('C')->setWidth(20);
+                $newExcel->getActiveSheet()->getColumnDimension('D')->setAutoSize(true);
+                $newExcel->getActiveSheet()->getColumnDimension('E')->setAutoSize(true);
+                $newExcel->getActiveSheet()->getColumnDimension('F')->setWidth(30);
+                $newExcel->getActiveSheet()->getColumnDimension('G')->setWidth(10);
+                $newExcel->getActiveSheet()->getColumnDimension('H')->setWidth(30);
+                $newExcel->getActiveSheet()->getColumnDimension('I')->setWidth(10);
+                $newExcel->getActiveSheet()->getColumnDimension('J')->setWidth(30);
+                $newExcel->getActiveSheet()->getColumnDimension('K')->setWidth(10);
+
+                //设置第一栏的标题
+                $objSheet->setCellValue('A1', '邮箱')
+                    ->setCellValue('B1', '')
+                    ->setCellValue('C1', '')
+                    ->setCellValue('D1', '密码')
+                    ->setCellValue('E1', '出生年月')
+                    ->setCellValue('F1', '问题1')
+                    ->setCellValue('G1', '答案1')
+                    ->setCellValue('H1', '问题2')
+                    ->setCellValue('I1', '答案2')
+                    ->setCellValue('J1', '问题3')
+                    ->setCellValue('K1', '答案3');
+
+                //第二行起，每一行的值,setCellValueExplicit是用来导出文本格式的。
+                //->setCellValueExplicit('C' . $k, $val['admin_password']PHPExcel_Cell_DataType::TYPE_STRING),可以用来导出数字不变格式
+                foreach ($excel_data as $k => $val) {
+                    $k = $k + 2;
+                    $objSheet->setCellValue('A' . $k, $val['email_name'])
+                        ->setCellValue('B' . $k, '')
+                        ->setCellValue('C' . $k, '')
+                        ->setCellValue('D' . $k, 'Tt778899')
+                        ->setCellValue('E' . $k, '1981/1/1')
+                        ->setCellValue('F' . $k, '你少年时代最好的朋友叫什么名字？')
+                        ->setCellValue('G' . $k, 'aa1')
+                        ->setCellValue('H' . $k, '你的理想工作是什么？')
+                        ->setCellValue('I' . $k, 'aa2')
+                        ->setCellValue('J' . $k, '你的父母是在哪里认识的？')
+                        ->setCellValue('K' . $k, 'aa3');
+                }
+                // 修改邮箱下载状态
+                EmailModel::update(['is_get' => 1], $where);
+                downloadExcel($newExcel, '邮箱数据表', 'Xls');
+            } else {
+                $this->error('该搜索条件没有能导出的数据');
+            }
+        } else {
+            $this->error('请选择搜索条件');
+        }
     }
 
     /**
