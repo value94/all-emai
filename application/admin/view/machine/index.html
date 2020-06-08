@@ -67,7 +67,7 @@
                         <th data-field="id">ID</th>
                         <th data-field="email_name">邮箱名</th>
                         <th data-field="udid">udid</th>
-                        <th data-field="use_status">是否使用</th>
+                        <th data-field="use_status">使用状态</th>
                         <th data-field="HWModelStr">HWModelStr</th>
                         <th data-field="ModelNumber">ModelNumber</th>
                         <th data-field="ProductType">ProductType</th>
@@ -175,10 +175,10 @@
         });
     });
 
-    function switch_status(id) {
+    function switch_status(id, use_status) {
         layer.confirm('确认切换状态?', {icon: 3, title: '提示'}, function (index) {
             //do something
-            $.getJSON("{:url('machine/switch_status')}", {'machine_id': id}, function (res) {
+            $.getJSON("{:url('machine/switch_status')}", {'machine_id': id, 'use_status': use_status}, function (res) {
                 if (1 == res.code) {
                     layer.alert(res.msg, {title: '友情提示', icon: 1, closeBtn: 0}, function () {
                         initTable();

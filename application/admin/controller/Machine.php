@@ -109,7 +109,17 @@ class Machine extends Base
     public function switch_status()
     {
         if (request()->isAjax()) {
+            $result = [
+                'code' => 1,
+                'msg' => '切换成功'
+            ];
+
             $data = input('param.');
+            if ($data['use_status'] == 2) {
+                // 切换成停止状态
+                MachineModel::update(['use_status' => 2], ['id' => $data['machine_id']]);
+                return $result;
+            }
             // 切换机器状态
             $used_id = MachineModel::where([
                 ['use_status', '=', '1'],
@@ -130,8 +140,6 @@ class Machine extends Base
                 MachineModel::update(['use_status' => 1], ['id' => $un_use]);
             }
 
-            $result['code'] = 1;
-            $result['msg'] = '切换成功';
 
             return $result;
         }
@@ -203,6 +211,12 @@ class Machine extends Base
                 'href' => "javascript:switch_status(" . $id . ")",
                 'btnStyle' => 'info',
                 'icon' => 'fa fa-check-circle',
+            ],
+            '停止' => [
+                'auth' => 'machine/switch_status',
+                'href' => "javascript:switch_status(" . $id . ",2)",
+                'btnStyle' => 'warning',
+                'icon' => 'fa fa-close',
             ],
             '编辑' => [
                 'auth' => 'machine/edit',

@@ -189,7 +189,19 @@ class Email extends Base
     public function switch_status()
     {
         if (request()->isAjax()) {
+            $result = [
+                'code' => 1,
+                'msg' => '切换成功'
+            ];
+
             $data = input('param.');
+            // 切换emial 状态为停止
+            if ($data['use_status'] == 2) {
+                // 切换成停止状态
+                EmailModel::update(['use_status' => 2], ['id' => $data['email_id']]);
+                return $result;
+            }
+
             // 切换机器状态
             $used_id = EmailModel::where([
                 ['use_status', '=', '1'],
@@ -209,9 +221,6 @@ class Email extends Base
                 EmailModel::update(['use_status' => 1], ['id' => $un_use]);
             }
 
-            $result['code'] = 1;
-            $result['msg'] = '切换成功';
-
             return $result;
         }
     }
@@ -229,6 +238,12 @@ class Email extends Base
                 'href' => "javascript:switch_status(" . $id . ")",
                 'btnStyle' => 'info',
                 'icon' => 'fa fa-check-circle',
+            ],
+            '停止' => [
+                'auth' => 'machine/switch_status',
+                'href' => "javascript:switch_status(" . $id . ",2)",
+                'btnStyle' => 'warning',
+                'icon' => 'fa fa-close',
             ],
             '编辑' => [
                 'auth' => 'email/edit',
