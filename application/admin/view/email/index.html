@@ -12,6 +12,16 @@
     <link href="__CSS__/style.min.css?v=4.1.0" rel="stylesheet">
     <link href="__CSS__/plugins/sweetalert/sweetalert.css" rel="stylesheet">
 </head>
+<style>
+    .jumpto input {
+        height: 31px;
+        width: 50px;
+        margin-left: 5px;
+        margin-right: 5px;
+        text-align: center;
+        display: inline-block;
+    }
+</style>
 <body class="gray-bg">
 <div class="wrapper wrapper-content animated fadeInRight">
     <!-- Panel Other -->
@@ -60,7 +70,7 @@
             <!--搜索框结束-->
             <div class="example-wrap">
                 <div class="example">
-                    <table id="cusTable">
+                    <table id="cusTable"  data-show-jumpto="true">
                         <thead>
                         <th data-field="box_id" data-checkbox="true"></th>
                         <th data-field="id">ID</th>
@@ -91,6 +101,7 @@
 <script src="__JS__/bootstrap.min.js?v=3.3.6"></script>
 <script src="__JS__/content.min.js?v=1.0.0"></script>
 <script src="__JS__/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="__JS__/plugins/bootstrap-table/bootstrap-table-jumpto.js"></script>
 <script src="__JS__/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
 <script src="__JS__/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
 <script src="__JS__/plugins/suggest/bootstrap-suggest.min.js"></script>
@@ -111,6 +122,8 @@
             pageNumber: 1, //当前第几页
             pageList: [5, 10, 15, 20, 25],  //记录数可选列表
             sidePagination: "server", //表示服务端请求
+            search: false,
+            singleSelect: false,
             paginationFirstText: "首页",
             paginationPreText: "上一页",
             paginationNextText: "下一页",
