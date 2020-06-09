@@ -157,7 +157,7 @@ class Email extends Base
     }
 
     // 删除搜索数据
-    public function delete_search_email()
+    public function delete_by_search()
     {
         $result = [
             'code' => 1,
@@ -180,7 +180,7 @@ class Email extends Base
     }
 
     // 切换搜索数据
-    public function switch_search_status()
+    public function switch_by_search()
     {
         $result = [
             'code' => 1,

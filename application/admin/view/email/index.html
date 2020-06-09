@@ -107,17 +107,17 @@
                         </button>
                         <ul class="dropdown-menu" style="left: 0">
                             <li>
-                                <a href="javascript:" onclick="switch_search_status(0)">未使用</a>
+                                <a href="javascript:" onclick="switch_by_search(0)">未使用</a>
                             </li>
                             <li>
-                                <a href="javascript:" onclick="switch_search_status(1)">已使用</a>
+                                <a href="javascript:" onclick="switch_by_search(1)">已使用</a>
                             </li>
                             <li>
-                                <a href="javascript:" onclick="switch_search_status(2)">停止使用</a>
+                                <a href="javascript:" onclick="switch_by_search(2)">停止使用</a>
                             </li>
                             <li class="divider"></li>
                             <li>
-                                <a href="javascript:" onclick="delete_search_email()">删除</a>
+                                <a href="javascript:" onclick="delete_by_search()">删除</a>
                             </li>
                         </ul>
                     </div>
@@ -281,8 +281,36 @@
         })
     }
 
+    // 删除选中邮箱
+    function emailDelMore() {
+        if ($table.bootstrapTable('getAllSelections').length == 0) {
+            layer.alert('请勾选邮箱', {title: '友情提示', icon: 2});
+            return;
+        }
+        layer.confirm('确认删除邮箱', {icon: 3, title: '提示'}, function (index) {
+            //do something
+            let email = $table.bootstrapTable('getAllSelections');
+            let email_id = [];
+            for (let i = 0; i < email.length; i++) {
+                email_id[i] = email[i]['id'];
+            }
+            $.getJSON("{:url('email/delete')}", {'ids': email_id}, function (res) {
+                if (1 == res.code) {
+                    layer.alert(res.msg, {title: '友情提示', icon: 1, closeBtn: 0}, function () {
+                        window.location.reload();
+                    });
+                } else if (111 == res.code) {
+                    window.location.reload();
+                } else {
+                    layer.alert(res.msg, {title: '友情提示', icon: 2});
+                }
+            });
+            layer.close(index);
+        })
+    }
+
     // 切换搜索邮箱状态
-    function switch_search_status(change_use_status = '') {
+    function switch_by_search(change_use_status = '') {
         layer.confirm('确认切换搜素邮箱状态', {icon: 3, title: '提示'}, function (index) {
             // 获取搜索条件
             let start_time = $('#start_time').val();
@@ -292,7 +320,7 @@
             let reg_status = $('#reg_status').val();
             let is_get     = $('#is_get').val();
 
-            $.getJSON("{:url('email/switch_search_status')}", {
+            $.getJSON("{:url('email/switch_by_search')}", {
                 'change_use_status': change_use_status
                 , 'start_time': start_time
                 , 'end_time': end_time
@@ -317,7 +345,7 @@
     }
 
     // 删除搜索邮箱
-    function delete_search_email() {
+    function delete_by_search() {
         layer.confirm('确认删除搜索邮箱', {icon: 3, title: '提示'}, function (index) {
             // 获取搜索条件
             let start_time = $('#start_time').val();
@@ -326,7 +354,7 @@
             let use_status = $('#use_status').val();
             let reg_status = $('#reg_status').val();
             let is_get = $('#is_get').val();
-            $.getJSON("{:url('email/delete_search_email')}", {
+            $.getJSON("{:url('email/delete_by_search')}", {
                 'start_time': start_time
                 , 'end_time': end_time
                 , 'email_name': email_name
@@ -337,34 +365,6 @@
                 if (1 == res.code) {
                     layer.alert(res.msg, {title: '友情提示', icon: 1, closeBtn: 0}, function () {
                         initTable();
-                    });
-                } else if (111 == res.code) {
-                    window.location.reload();
-                } else {
-                    layer.alert(res.msg, {title: '友情提示', icon: 2});
-                }
-            });
-            layer.close(index);
-        })
-    }
-
-    // 删除选中邮箱
-    function emailDelMore() {
-        if ($table.bootstrapTable('getAllSelections').length == 0) {
-            layer.alert('请勾选邮箱', {title: '友情提示', icon: 2});
-            return;
-        }
-        layer.confirm('确认删除邮箱', {icon: 3, title: '提示'}, function (index) {
-            //do something
-            let email = $table.bootstrapTable('getAllSelections');
-            let email_id = [];
-            for (let i = 0; i < email.length; i++) {
-                email_id[i] = email[i]['id'];
-            }
-            $.getJSON("{:url('email/delete')}", {'ids': email_id}, function (res) {
-                if (1 == res.code) {
-                    layer.alert(res.msg, {title: '友情提示', icon: 1, closeBtn: 0}, function () {
-                        window.location.reload();
                     });
                 } else if (111 == res.code) {
                     window.location.reload();

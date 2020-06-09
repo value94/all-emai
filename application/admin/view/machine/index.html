@@ -30,39 +30,54 @@
             <h5>{$title}列表</h5>
         </div>
         <div class="ibox-content">
-            <div class="form-group clearfix col-sm-2">
-                {if authCheck('machine/create') }
-                <a href="{:url('machine/create')}">
-                    <button class="btn btn-outline btn-primary" type="button">添加{$title}</button>
-                </a>
-                {/if}
-                {if authCheck('machine/import_machine') }
-                <a href="{:url('machine/import_machine')}">
-                    <button class="btn btn-outline btn-success" type="button">导入{$title}</button>
-                </a>
-                {/if}
-                {if authCheck('machine/switch_status')}
-                <form role="form" method="post" class="form-inline pull-left" style="margin-top: 5px">
-                    <div class="content clearfix m-b">
-                        <div class="form-group">
-                            <button class="btn btn-w-m btn-danger" type="button" id="switch_status">
-                                <strong>切换使用状态</strong>
-                            </button>
-                        </div>
+            <div class="form-group clearfix">
+                <div class="form-group clearfix col-sm-3">
+                    {if authCheck('machine/switch_status')}
+                    <div class="btn-group">
+                        <button data-toggle="dropdown" class="btn btn-warning dropdown-toggle" aria-expanded="false">操作
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" style="left: 0">
+                            <li>
+                                <a href="javascript:" onclick="switch_choice_status(0)">未使用</a>
+                            </li>
+                            <li>
+                                <a href="javascript:" onclick="switch_choice_status(1)">已使用</a>
+                            </li>
+                            <li>
+                                <a href="javascript:" onclick="switch_choice_status(2)">停止使用</a>
+                            </li>
+                            <li class="divider"></li>
+                            <li>
+                                <a href="javascript:" onclick="machineDelMore()">删除</a>
+                            </li>
+                        </ul>
                     </div>
-                </form>
-                {/if}
+                    {/if}
+                </div>
+                <div class="form-group clearfix col-sm-2" style="float: right;">
+                    {if authCheck('machine/create') }
+                    <a href="{:url('machine/create')}">
+                        <button class="btn btn-outline btn-primary" type="button">添加{$title}</button>
+                    </a>
+                    {/if}
+                    {if authCheck('machine/import_machine') }
+                    <a href="{:url('machine/import_machine')}">
+                        <button class="btn btn-outline btn-success" type="button">导入{$title}</button>
+                    </a>
+                    {/if}
+                </div>
             </div>
 
             <!--搜索框开始-->
-            <form id='commentForm' role="form" method="post" class="form-inline pull-right">
-                <div class="content clearfix m-b">
+            <form id='commentForm' role="form" method="post" class="form-inline col-sm-12 pull-right">
+                <div class="content clearfix m-b pull-right">
                     <div class="form-group">
                         <input placeholder="开始时间" class="form-control layer-date" id="start_time" name="start_time">
                         <input placeholder="结束时间" class="form-control layer-date" id="end_time" name="end_time">
                     </div>
                     <div class="form-group">
-                        <input type="text" placeholder="机器名称" class="form-control" id="machine_name" name="machine_name">
+                        <input type="text" placeholder="机器udid" class="form-control" id="udid" name="udid">
                     </div>
                     <div class="form-group">
                         <select type="text" class="form-control" id="use_status" name="use_status">
@@ -71,6 +86,27 @@
                             <option value="1">已使用</option>
                             <option value="2">停止使用</option>
                         </select>
+                    </div>
+                    <div class="btn-group">
+                        <button data-toggle="dropdown" class="btn btn-warning dropdown-toggle" aria-expanded="false"
+                                style="margin: 0;">操作
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" style="left: 0">
+                            <li>
+                                <a href="javascript:" onclick="switch_by_search(0)">未使用</a>
+                            </li>
+                            <li>
+                                <a href="javascript:" onclick="switch_by_search(1)">已使用</a>
+                            </li>
+                            <li>
+                                <a href="javascript:" onclick="switch_by_search(2)">停止使用</a>
+                            </li>
+                            <li class="divider"></li>
+                            <li>
+                                <a href="javascript:" onclick="delete_by_search()">删除</a>
+                            </li>
+                        </ul>
                     </div>
                     <div class="form-group">
                         <button class="btn btn-primary" type="button" style="margin-top:5px" id="search">
@@ -82,7 +118,7 @@
             <!--搜索框结束-->
             <div class="example-wrap">
                 <div class="example">
-                    <table id="cusTable"  data-show-jumpto="true">
+                    <table id="cusTable" data-show-jumpto="true">
                         <thead>
                         <th data-field="box_id" data-checkbox="true"></th>
                         <th data-field="id">ID</th>
@@ -144,7 +180,7 @@
                 var param = {
                     pageNumber: params.pageNumber,
                     pageSize: params.pageSize,
-                    searchText: $('#machine_name').val(),
+                    udid: $('#udid').val(),
                     start_time: $('#start_time').val(),
                     end_time: $('#end_time').val(),
                     use_status: $('#use_status').val(),
@@ -163,40 +199,136 @@
         });
     }
 
-    // 切换选中机器状态
-    $switch_status = $('#switch_status');
-    var $table = $('#cusTable');
-    $(function () {
-        $switch_status.click(function () {
-            if ($table.bootstrapTable('getAllSelections').length == 0) {
-                layer.alert('请勾选机器', {title: '友情提示', icon: 2});
-                return;
-            }
-            layer.confirm('确认切换机器状态', {icon: 3, title: '提示'}, function (index) {
-                //do something
-                var machine = $table.bootstrapTable('getAllSelections');
-                var machine_id = [];
-                for (var i = 0; i < machine.length; i++) {
-                    machine_id[i] = machine[i]['id'];
-                }
-                $.getJSON("{:url('machine/switch_status')}", {
-                    'machine_id': machine_id
-                }, function (res) {
-                    if (1 == res.code) {
-                        layer.alert(res.msg, {title: '友情提示', icon: 1, closeBtn: 0}, function () {
-                            initTable();
-                        });
-                    } else if (111 == res.code) {
-                        window.location.reload();
-                    } else {
-                        layer.alert(res.msg, {title: '友情提示', icon: 2});
-                    }
-                });
+    // 初始化页面
+    $(document).ready(function () {
+        //调用函数，初始化表格
+        initTable();
 
-                layer.close(index);
-            })
-        });
+        //当点击查询按钮的时候执行
+        $("#search").bind("click", initTable);
     });
+
+    let $table = $('#cusTable');
+
+    // 切换选中机器状态
+    function switch_choice_status(change_use_status = '') {
+        if ($table.bootstrapTable('getAllSelections').length == 0) {
+            layer.alert('请勾选机器', {title: '友情提示', icon: 2});
+            return;
+        }
+        layer.confirm('确认切换机器状态', {icon: 3, title: '提示'}, function (index) {
+            //do something
+            let machine = $table.bootstrapTable('getAllSelections');
+            let machine_id = [];
+            for (let i = 0; i < machine.length; i++) {
+                machine_id[i] = machine[i]['id'];
+            }
+            $.getJSON("{:url('machine/switch_status')}", {
+                'machine_id': machine_id, 'change_use_status': change_use_status
+            }, function (res) {
+                if (1 == res.code) {
+                    layer.alert(res.msg, {title: '友情提示', icon: 1, closeBtn: 0}, function () {
+                        initTable();
+                    });
+                } else if (111 == res.code) {
+                    window.location.reload();
+                } else {
+                    layer.alert(res.msg, {title: '友情提示', icon: 2});
+                }
+            });
+
+            layer.close(index);
+        })
+    }
+
+    // 删除选中机器
+    function machineDelMore() {
+        if ($table.bootstrapTable('getAllSelections').length == 0) {
+            layer.alert('请勾选机器', {title: '友情提示', icon: 2});
+            return;
+        }
+        layer.confirm('确认删除机器', {icon: 3, title: '提示'}, function (index) {
+            //do something
+            let machine = $table.bootstrapTable('getAllSelections');
+            let machine_id = [];
+            for (let i = 0; i < machine.length; i++) {
+                machine_id[i] = machine[i]['id'];
+            }
+            $.getJSON("{:url('machine/delete')}", {'ids': machine_id}, function (res) {
+                if (1 == res.code) {
+                    layer.alert(res.msg, {title: '友情提示', icon: 1, closeBtn: 0}, function () {
+                        window.location.reload();
+                    });
+                } else if (111 == res.code) {
+                    window.location.reload();
+                } else {
+                    layer.alert(res.msg, {title: '友情提示', icon: 2});
+                }
+            });
+            layer.close(index);
+        })
+    }
+
+    // 切换搜索机器状态
+    function switch_by_search(change_use_status = '') {
+        layer.confirm('确认切换搜素机器状态', {icon: 3, title: '提示'}, function (index) {
+            // 获取搜索条件
+            let udid = $('#udid').val();
+            let start_time = $('#start_time').val();
+            let end_time = $('#end_time').val();
+            let use_status = $('#use_status').val();
+
+            $.getJSON("{:url('machine/switch_by_search')}", {
+                'change_use_status': change_use_status
+                , 'udid': udid
+                , 'start_time': start_time
+                , 'end_time': end_time
+                , 'use_status': use_status
+            }, function (res) {
+                if (1 == res.code) {
+                    layer.alert(res.msg, {title: '友情提示', icon: 1, closeBtn: 0}, function () {
+                        initTable()
+                    });
+                } else if (111 == res.code) {
+                    window.location.reload();
+                } else {
+                    layer.alert(res.msg, {title: '友情提示', icon: 2});
+                }
+            });
+
+            layer.close(index);
+        })
+    }
+
+    // 删除搜索机器
+    function delete_by_search() {
+        layer.confirm('确认删除搜索机器', {icon: 3, title: '提示'}, function (index) {
+            // 获取搜索条件
+            let udid = $('#udid').val();
+            let start_time = $('#start_time').val();
+            let end_time = $('#end_time').val();
+            let use_status = $('#use_status').val();
+
+            $.getJSON("{:url('machine/delete_by_search')}", {
+                'udid': udid
+                , 'start_time': start_time
+                , 'end_time': end_time
+                , 'use_status': use_status
+            }, function (res) {
+                if (1 == res.code) {
+                    layer.alert(res.msg, {title: '友情提示', icon: 1, closeBtn: 0}, function () {
+                        window.location.reload();
+                    });
+                } else if (111 == res.code) {
+                    window.location.reload();
+                } else {
+                    layer.alert(res.msg, {title: '友情提示', icon: 2});
+                }
+            });
+            layer.close(index);
+        })
+    }
+
 
     function switch_status(id, use_status) {
         layer.confirm('确认切换状态?', {icon: 3, title: '提示'}, function (index) {
@@ -218,14 +350,8 @@
 
     }
 
-    $(document).ready(function () {
-        //调用函数，初始化表格
-        initTable();
 
-        //当点击查询按钮的时候执行
-        $("#search").bind("click", initTable);
-    });
-
+    // 根据id 删除
     function machineDel(id) {
         layer.confirm('确认删除此机器?', {icon: 3, title: '提示'}, function (index) {
             //do something
@@ -245,13 +371,15 @@
         })
 
     }
+
+    // 时间控件
     laydate.render({
         elem: "#start_time"
-        ,type: 'datetime'
+        , type: 'datetime'
     });
     laydate.render({
         elem: "#end_time"
-        ,type: 'datetime'
+        , type: 'datetime'
     });
 </script>
 </body>

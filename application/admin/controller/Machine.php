@@ -21,19 +21,8 @@ class Machine extends Base
             $limit = $param['pageSize'];
             $offset = ($param['pageNumber'] - 1) * $limit;
 
-            $where = [];
-            // 机器搜索
-            if (!empty($param['searchText'])) {
-                $where[] = ['HWModelStr', 'like', '%' . $param['searchText'] . '%'];
-            }
-            // 状态搜索
-            if ($param['use_status'] != '') {
-                $where[] = ['use_status', '=', $param['use_status']];
-            }
-            //时间搜索
-            if (!empty($param['start_time']) && !empty($param['end_time'])) {
-                $where[] = ['update_time', 'between', [$param['start_time'], $param['end_time']]];
-            }
+            $where = $this->getWhereByParams($param);
+
             $Machine = new MachineModel();
             $selectResult = $Machine->getMachineByWhere($where, $offset, $limit);
 
@@ -53,6 +42,27 @@ class Machine extends Base
         ]);
         return $this->fetch();
     }
+
+    // 根据参数获取 where 数组
+    protected function getWhereByParams($params)
+    {
+        $where = [];
+        // 机器 udid 搜索
+        if (!empty($params['udid'])) {
+            $where[] = ['udid', 'like', '%' . $params['udid'] . '%'];
+        }
+        // 状态搜索
+        if ($params['use_status'] != '') {
+            $where[] = ['use_status', '=', $params['use_status']];
+        }
+        //时间搜索
+        if (!empty($params['start_time']) && !empty($params['end_time'])) {
+            $where[] = ['update_time', 'between', [$params['start_time'], $params['end_time']]];
+        }
+
+        return $where;
+    }
+
 
     /**
      * 显示创建资源表单页.
@@ -105,9 +115,15 @@ class Machine extends Base
      * @param  int $id
      * @return \think\Response
      */
-    public function delete($id)
+    public function delete()
     {
-        MachineModel::destroy($id);
+        $params = input('param.');
+        if (isset($params['ids'])) {
+            MachineModel::where('id', 'in', $params['ids'])->delete();
+        } else {
+            MachineModel::destroy($params['id']);
+        }
+
         return json(msg(1, '', '删除成功'));
     }
 
@@ -124,20 +140,26 @@ class Machine extends Base
             ];
 
             $data = input('param.');
-            if ($data['use_status'] == 2) {
-                // 切换成停止状态
+            // 切换成停止状态
+            if (isset($data['use_status']) && $data['use_status'] == 2) {
                 MachineModel::update(['use_status' => 2], ['id' => $data['machine_id']]);
                 return $result;
             }
+            // 切换成指定状态
+            if (isset($data['change_use_status'])) {
+                MachineModel::update(['use_status' => $data['change_use_status']], ['id' => $data['machine_id']]);
+                return $result;
+            }
+
             // 切换机器状态
             $used_id = MachineModel::where([
-                ['use_status', '=', '1'],
+                ['use_status', 'in', '1,2'],
                 ['id', 'in', $data['machine_id']]
 
             ])->column('id');
 
             $un_use = MachineModel::where([
-                ['use_status', '=', '0'],
+                ['use_status', 'in', '0,2'],
                 ['id', 'in', $data['machine_id']]
             ])->column('id');
 
@@ -152,6 +174,52 @@ class Machine extends Base
 
             return $result;
         }
+    }
+
+    // 删除搜索数据
+    public function delete_by_search()
+    {
+        $result = [
+            'code' => 1,
+            'msg' => '删除成功'
+        ];
+        // 获取搜索参数
+        $params = input('param.');
+
+        $where = $this->getWhereByParams($params);
+        if (!empty($where)) {
+            // 执行删除
+            MachineModel::where($where)->delete();
+        } else {
+            $result = [
+                'code' => 0,
+                'msg' => '请选择搜索条件'
+            ];
+        }
+        return $result;
+    }
+
+    // 切换搜索数据
+    public function switch_by_search()
+    {
+        $result = [
+            'code' => 1,
+            'msg' => '切换成功'
+        ];
+        // 获取搜索参数
+        $params = input('param.');
+
+        $where = $this->getWhereByParams($params);
+        if (!empty($where)) {
+            // 执行删除
+            MachineModel::where($where)->update(['use_status' => $params['change_use_status']]);
+        } else {
+            $result = [
+                'code' => 0,
+                'msg' => '请选择搜索条件'
+            ];
+        }
+        return $result;
     }
 
     // 批量导入邮箱

@@ -4,12 +4,10 @@ namespace app\admin\model;
 
 use app\admin\validate\EmailValidate;
 use think\Model;
-use think\model\concern\SoftDelete;
 
 class EmailModel extends Model
 {
     protected $table = 's_email';
-    use SoftDelete;
 
     public function getUseStatusAttr($value)
     {
