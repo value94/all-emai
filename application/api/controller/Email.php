@@ -133,7 +133,7 @@ class Email extends Controller
             throw new EmailException(['msg' => '邮箱不存在']);
         }
         // 存储数据
-        EmailModel::update($params, ['email_name' => $params['email_name'], 'udid' => $params['udid']]);
+        EmailModel::update($params, ['email_name' => $params['email_name']]);
         // 修改机器状态
         if ($params['reg_status'] == 1 && !empty($params['udid'])) {
             MachineModel::update([
