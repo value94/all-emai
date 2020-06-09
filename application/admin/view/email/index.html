@@ -31,6 +31,30 @@
         </div>
         <div class="ibox-content">
             <div class="form-group clearfix col-sm-3">
+                {if authCheck('email/switch_status')}
+                <div class="btn-group">
+                    <button data-toggle="dropdown" class="btn btn-warning dropdown-toggle" aria-expanded="false">操作
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" style="left: 0">
+                        <li>
+                            <a href="javascript:" onclick="switch_choice_status(0)">未使用</a>
+                        </li>
+                        <li>
+                            <a href="javascript:" onclick="switch_choice_status(1)">已使用</a>
+                        </li>
+                        <li>
+                            <a href="javascript:" onclick="switch_choice_status(2)">停止使用</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="javascript:" onclick="emailDelMore()">删除</a>
+                        </li>
+                    </ul>
+                </div>
+                {/if}
+            </div>
+            <div class="form-group clearfix col-sm-2" style="float: right;">
                 {if authCheck('email/create') }
                 <a href="{:url('email/create')}">
                     <button class="btn btn-outline btn-primary" type="button">添加{$title}</button>
@@ -41,33 +65,10 @@
                     <button class="btn btn-outline btn-success" type="button">导入{$title}</button>
                 </a>
                 {/if}
-                {if authCheck('email/switch_status')}
-                <form role="form" method="post" class="form-inline pull-left" style="margin-top: 5px">
-                    <div class="content clearfix m-b">
-                        <div class="form-group">
-                            <button class="btn btn-w-m btn-danger" type="button" id="switch_status">
-                                <strong>切换使用状态</strong>
-                            </button>
-                        </div>
-                    </div>
-                </form>
-                {/if}
-                {if authCheck('email/download_excel')}
-                <form id='excel_from' role="form"  method="post" action="{:url('email/download_excel')}" class="form-inline pull-left" style="margin-left: 5px;">
-                    <div class="form-group">
-                        <input type="hidden"  id="ex_start_time" name="start_time">
-                        <input  type="hidden" id="ex_end_time" name="end_time">
-                        <input  type="hidden" id="ex_email_name" name="email_name">
-                        <input  type="hidden" id="ex_use_status" name="use_status">
-                        <input  type="hidden" id="ex_reg_status" name="reg_status">
-                        <input  type="hidden" id="ex_is_get" name="is_get">
-                        <input class="btn btn-primary" type="button" style="margin-top:5px" id="downLodeInfo" value="导出搜索数据">
-                    </div>
-                </form>
-                {/if}
             </div>
             <!--搜索框开始-->
-            <form id='commentForm' role="form" method="post" class="form-inline pull-right">
+            <form id='commentForm' role="form" method="post" action="{:url('email/download_excel')}"
+                  class="form-inline pull-right">
                 <div class="content clearfix m-b">
                     <div class="form-group">
                         <input placeholder="开始时间" class="form-control layer-date" id="start_time" name="start_time">
@@ -99,7 +100,30 @@
                             <option value="1">已导出</option>
                         </select>
                     </div>
-
+                    <div class="btn-group">
+                        <button data-toggle="dropdown" class="btn btn-warning dropdown-toggle" aria-expanded="false"
+                                style="margin: 0;">操作
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" style="left: 0">
+                            <li>
+                                <a href="javascript:" onclick="switch_search_status(0)">未使用</a>
+                            </li>
+                            <li>
+                                <a href="javascript:" onclick="switch_search_status(1)">已使用</a>
+                            </li>
+                            <li>
+                                <a href="javascript:" onclick="switch_search_status(2)">停止使用</a>
+                            </li>
+                            <li class="divider"></li>
+                            <li>
+                                <a href="javascript:" onclick="delete_search_email()">删除</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="form-group">
+                        <input class="btn btn-info" type="submit" style="margin-top:5px" id="downLodeInfo" value="导出">
+                    </div>
                     <div class="form-group">
                         <button class="btn btn-primary" type="button" style="margin-top:5px" id="search">
                             <strong>搜索</strong>
@@ -110,7 +134,7 @@
             <!--搜索框结束-->
             <div class="example-wrap">
                 <div class="example">
-                    <table id="cusTable" data-show-jumpto="true">
+                    <table id="cusTable" data-show-jumpto="true" class="table table-hover">
                         <thead>
                         <th data-field="box_id" data-checkbox="true"></th>
                         <th data-field="id">ID</th>
@@ -193,10 +217,10 @@
         });
     }
 
+    // 页面初始化
     $(document).ready(function () {
         //调用函数，初始化表格
         initTable();
-
         //当点击查询按钮的时候执行
         $("#search").bind("click", initTable);
     });
@@ -208,57 +232,151 @@
             // 导出
             layer.confirm('确认导出搜素的订单?', {icon: 3, title: '提示'}, function (index) {
                 // 获取搜索数据
-                let ex_start_time = $('#start_time').val();
-                let ex_end_time   = $('#end_time').val();
-                let ex_email_name = $('#email_name').val();
-                let ex_use_status = $('#use_status').val();
-                let ex_reg_status = $('#reg_status').val();
-                let ex_is_get     = $('#is_get').val();
-                $('#ex_start_time').val(ex_start_time);
-                $('#ex_end_time').val(ex_end_time);
-                $('#ex_email_name').val(ex_email_name);
-                $('#ex_use_status').val(ex_use_status);
-                $('#ex_reg_status').val(ex_reg_status);
-                $('#ex_is_get').val(ex_is_get);
+                /* let ex_start_time = $('#start_time').val();
+                  let ex_end_time = $('#end_time').val();
+                  let ex_email_name = $('#email_name').val();
+                  let ex_use_status = $('#use_status').val();
+                  let ex_reg_status = $('#reg_status').val();
+                  let ex_is_get = $('#is_get').val();
+                  $('#ex_start_time').val(ex_start_time);
+                  $('#ex_end_time').val(ex_end_time);
+                  $('#ex_email_name').val(ex_email_name);
+                  $('#ex_use_status').val(ex_use_status);
+                  $('#ex_reg_status').val(ex_reg_status);
+                  $('#ex_is_get').val(ex_is_get);*/
                 $('#excel_from').submit();
                 layer.close(index);
             })
         });
     });
+
     // 切换选中邮箱状态
-    $switch_status = $('#switch_status');
-    $(function () {
-        $switch_status.click(function () {
-            if ($table.bootstrapTable('getAllSelections').length == 0) {
-                layer.alert('请勾选邮箱', {title: '友情提示', icon: 2});
-                return;
+    function switch_choice_status(change_use_status = '') {
+        if ($table.bootstrapTable('getAllSelections').length == 0) {
+            layer.alert('请勾选邮箱', {title: '友情提示', icon: 2});
+            return;
+        }
+        layer.confirm('确认切换邮箱状态', {icon: 3, title: '提示'}, function (index) {
+            //do something
+            let email = $table.bootstrapTable('getAllSelections');
+            let email_id = [];
+            for (let i = 0; i < email.length; i++) {
+                email_id[i] = email[i]['id'];
             }
-            layer.confirm('确认切换邮箱状态', {icon: 3, title: '提示'}, function (index) {
-                //do something
-                var email = $table.bootstrapTable('getAllSelections');
-                var email_id = [];
-                for (var i = 0; i < email.length; i++) {
-                    email_id[i] = email[i]['id'];
+            $.getJSON("{:url('email/switch_status')}", {
+                'email_id': email_id, 'change_use_status': change_use_status
+            }, function (res) {
+                if (1 == res.code) {
+                    layer.alert(res.msg, {title: '友情提示', icon: 1, closeBtn: 0}, function () {
+                        initTable();
+                    });
+                } else if (111 == res.code) {
+                    window.location.reload();
+                } else {
+                    layer.alert(res.msg, {title: '友情提示', icon: 2});
                 }
-                $.getJSON("{:url('email/switch_status')}", {
-                    'email_id': email_id
-                }, function (res) {
-                    if (1 == res.code) {
-                        layer.alert(res.msg, {title: '友情提示', icon: 1, closeBtn: 0}, function () {
-                            initTable();
-                        });
-                    } else if (111 == res.code) {
+            });
+
+            layer.close(index);
+        })
+    }
+
+    // 切换搜索邮箱状态
+    function switch_search_status(change_use_status = '') {
+        layer.confirm('确认切换搜素邮箱状态', {icon: 3, title: '提示'}, function (index) {
+            // 获取搜索条件
+            let start_time = $('#start_time').val();
+            let end_time   = $('#end_time').val();
+            let email_name = $('#email_name').val();
+            let use_status = $('#use_status').val();
+            let reg_status = $('#reg_status').val();
+            let is_get     = $('#is_get').val();
+
+            $.getJSON("{:url('email/switch_search_status')}", {
+                'change_use_status': change_use_status
+                , 'start_time': start_time
+                , 'end_time': end_time
+                , 'email_name': email_name
+                , 'use_status': use_status
+                , 'reg_status': reg_status
+                , 'is_get': is_get
+            }, function (res) {
+                if (1 == res.code) {
+                    layer.alert(res.msg, {title: '友情提示', icon: 1, closeBtn: 0}, function () {
                         window.location.reload();
-                    } else {
-                        layer.alert(res.msg, {title: '友情提示', icon: 2});
-                    }
-                });
+                    });
+                } else if (111 == res.code) {
+                    window.location.reload();
+                } else {
+                    layer.alert(res.msg, {title: '友情提示', icon: 2});
+                }
+            });
 
-                layer.close(index);
-            })
-        });
-    });
+            layer.close(index);
+        })
+    }
 
+    // 删除搜索邮箱
+    function delete_search_email() {
+        layer.confirm('确认删除搜索邮箱', {icon: 3, title: '提示'}, function (index) {
+            // 获取搜索条件
+            let start_time = $('#start_time').val();
+            let end_time = $('#end_time').val();
+            let email_name = $('#email_name').val();
+            let use_status = $('#use_status').val();
+            let reg_status = $('#reg_status').val();
+            let is_get = $('#is_get').val();
+            $.getJSON("{:url('email/delete_search_email')}", {
+                'start_time': start_time
+                , 'end_time': end_time
+                , 'email_name': email_name
+                , 'use_status': use_status
+                , 'reg_status': reg_status
+                , 'is_get': is_get
+            }, function (res) {
+                if (1 == res.code) {
+                    layer.alert(res.msg, {title: '友情提示', icon: 1, closeBtn: 0}, function () {
+                        initTable();
+                    });
+                } else if (111 == res.code) {
+                    window.location.reload();
+                } else {
+                    layer.alert(res.msg, {title: '友情提示', icon: 2});
+                }
+            });
+            layer.close(index);
+        })
+    }
+
+    // 删除选中邮箱
+    function emailDelMore() {
+        if ($table.bootstrapTable('getAllSelections').length == 0) {
+            layer.alert('请勾选邮箱', {title: '友情提示', icon: 2});
+            return;
+        }
+        layer.confirm('确认删除邮箱', {icon: 3, title: '提示'}, function (index) {
+            //do something
+            let email = $table.bootstrapTable('getAllSelections');
+            let email_id = [];
+            for (let i = 0; i < email.length; i++) {
+                email_id[i] = email[i]['id'];
+            }
+            $.getJSON("{:url('email/delete')}", {'ids': email_id}, function (res) {
+                if (1 == res.code) {
+                    layer.alert(res.msg, {title: '友情提示', icon: 1, closeBtn: 0}, function () {
+                        window.location.reload();
+                    });
+                } else if (111 == res.code) {
+                    window.location.reload();
+                } else {
+                    layer.alert(res.msg, {title: '友情提示', icon: 2});
+                }
+            });
+            layer.close(index);
+        })
+    }
+
+    // 切换状态
     function switch_status(id, use_status = '') {
         layer.confirm('确认切换状态?', {icon: 3, title: '提示'}, function (index) {
             //do something
@@ -279,6 +397,7 @@
 
     }
 
+    // 删除邮箱
     function emailDel(id) {
         layer.confirm('确认删除此邮箱?', {icon: 3, title: '提示'}, function (index) {
             //do something
@@ -299,10 +418,12 @@
 
     }
 
+    // 时间选择
     laydate.render({
         elem: "#start_time"
         , type: 'datetime'
     });
+
     laydate.render({
         elem: "#end_time"
         , type: 'datetime'

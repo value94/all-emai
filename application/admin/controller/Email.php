@@ -45,6 +45,7 @@ class Email extends Base
         return $this->fetch();
     }
 
+    // 根据搜索条件获取 where 数组
     protected function getWhereByParams($params)
     {
         $where = [];
@@ -143,12 +144,63 @@ class Email extends Base
      * @param  int $id
      * @return \think\Response
      */
-    public function delete($id)
+    public function delete()
     {
-        EmailModel::destroy($id);
+        $param = input('param.');
+        if (isset($param['ids'])) {
+            EmailModel::destroy($param['ids']);
+        } else {
+            EmailModel::destroy($param['id']);
+        }
+
         return json(msg(1, '', '删除成功'));
     }
 
+    // 删除搜索数据
+    public function delete_search_email()
+    {
+        $result = [
+            'code' => 1,
+            'msg' => '删除成功'
+        ];
+        // 获取搜索参数
+        $params = input('param.');
+
+        $where = $this->getWhereByParams($params);
+        if (!empty($where)) {
+            // 执行删除
+            EmailModel::where($where)->delete();
+        } else {
+            $result = [
+                'code' => 0,
+                'msg' => '请选择搜索条件'
+            ];
+        }
+        return $result;
+    }
+
+    // 切换搜索数据
+    public function switch_search_status()
+    {
+        $result = [
+            'code' => 1,
+            'msg' => '切换成功'
+        ];
+        // 获取搜索参数
+        $params = input('param.');
+
+        $where = $this->getWhereByParams($params);
+        if (!empty($where)) {
+            // 执行删除
+            EmailModel::where($where)->update(['use_status' => $params['change_use_status']]);
+        } else {
+            $result = [
+                'code' => 0,
+                'msg' => '请选择搜索条件'
+            ];
+        }
+        return $result;
+    }
     /**
      * 批量导入邮箱
      * @return mixed
@@ -294,21 +346,28 @@ class Email extends Base
             ];
 
             $data = input('param.');
-            // 切换emial 状态为停止
-            if ($data['use_status'] == 2) {
-                // 切换成停止状态
+
+            // 切换成停止状态
+            if (isset($data['use_status']) && $data['use_status'] == 2) {
                 EmailModel::update(['use_status' => 2], ['id' => $data['email_id']]);
+                return $result;
+            }
+
+            // 切换选中机器状态
+            if (isset($data['change_use_status'])) {
+                EmailModel::update(['use_status' => $data['change_use_status']],
+                    ['id' => $data['email_id']]);
                 return $result;
             }
 
             // 切换机器状态
             $used_id = EmailModel::where([
-                ['use_status', '=', '1'],
+                ['use_status', 'in', '1,2'],
                 ['id', 'in', $data['email_id']]
             ])->column('id');
 
             $un_use = EmailModel::where([
-                ['use_status', '=', '0'],
+                ['use_status', 'in', '0,2'],
                 ['id', 'in', $data['email_id']]
             ])->column('id');
 
