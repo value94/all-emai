@@ -26,7 +26,7 @@ class Email extends Controller
     public function getEmail()
     {
         // 数据验证
-        $params = (new GetEmailValidate())->goCheck();
+//        $params = (new GetEmailValidate())->goCheck();
 
         // 获取一个未使用邮箱
         $email_data = EmailModel::getOneNotUseEmail();
