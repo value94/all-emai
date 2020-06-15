@@ -27,6 +27,11 @@ class EmailModel extends Model
         return $status[$value];
     }
 
+    public function EmailType()
+    {
+        return $this->belongsTo('EmailTypeModel', 'email_type_id', 'id');
+    }
+
     /**
      * 查询邮箱
      * @param $where
@@ -39,7 +44,7 @@ class EmailModel extends Model
      */
     public function getEmailByWhere($where, $offset = '', $limit = '')
     {
-        return $this->where($where)->limit($offset, $limit)->order('id desc')->select();
+        return $this->with('EmailType')->where($where)->limit($offset, $limit)->order('id desc')->select();
     }
 
     /**

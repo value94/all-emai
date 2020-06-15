@@ -53,6 +53,10 @@ class Email extends Base
         if (!empty($params['searchText'])) {
             $where[] = ['email_name', 'like', '%' . $params['searchText'] . '%'];
         }
+        // 失败原因搜索
+        if (!empty($params['fail_msg'])) {
+            $where[] = ['fail_msg', 'like', '%' . $params['fail_msg'] . '%'];
+        }
         // 状态搜索
         if ($params['use_status'] != '') {
             $where[] = ['use_status', '=', $params['use_status']];
@@ -201,6 +205,7 @@ class Email extends Base
         }
         return $result;
     }
+
     /**
      * 批量导入邮箱
      * @return mixed
