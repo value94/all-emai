@@ -35,7 +35,13 @@ class Email extends Controller
         /* $params['email_id'] = $email_data['id'];
          MachineModel::create($params);*/
 
-        return ['status' => 1, 'msg' => '成功获取邮箱', 'email_name' => $email_data['email_name']];
+        return [
+            'status' => 1,
+            'msg' => '成功获取邮箱',
+            'email_name' => $email_data['email_name'],
+            'email_password' => $email_data['email_password'],
+            'email_type' => $email_data['email_type']['name']
+        ];
     }
 
     // 获取注册验证码

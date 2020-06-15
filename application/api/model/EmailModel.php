@@ -11,9 +11,16 @@ class EmailModel extends Model
     use SoftDelete;
     protected $table = 's_email';
 
+    // 邮箱类型关联
+    public function EmailType()
+    {
+        return $this->belongsTo('EmailTypeModel', 'email_type_id', 'id');
+    }
+
+
     public static function getOneNotUseEmail()
     {
-        $email_data = self::where('use_status', '=', 0)->order('id asc')->find();
+        $email_data = self::with('EmailType')->where('use_status', '=', 0)->order('id asc')->find();
         if ($email_data) {
             self::where('id', '=', $email_data['id'])->update(['use_status' => 1]);
             return $email_data;
