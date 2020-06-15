@@ -73,8 +73,8 @@
             <form id='commentForm' role="form" method="post" class="form-inline col-sm-12 pull-right">
                 <div class="content clearfix m-b pull-right">
                     <div class="form-group">
-                        <input placeholder="开始时间" class="form-control layer-date" id="start_time" name="start_time">
-                        <input placeholder="结束时间" class="form-control layer-date" id="end_time" name="end_time">
+                        <input placeholder="开始时间" class="form-control layer-date" id="start_time" name="start_time" autocomplete="off">
+                        <input placeholder="结束时间" class="form-control layer-date" id="end_time" name="end_time" autocomplete="off">
                     </div>
                     <div class="form-group">
                         <input type="text" placeholder="机器udid" class="form-control" id="udid" name="udid">
@@ -85,6 +85,13 @@
                             <option value="0">未使用</option>
                             <option value="1">已使用</option>
                             <option value="2">停止使用</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <select type="text" class="form-control" id="time_field" name="time_field">
+                            <option value="">时间字段</option>
+                            <option value="1">创建时间</option>
+                            <option value="2">更新时间</option>
                         </select>
                     </div>
                     <div class="btn-group">
@@ -184,6 +191,8 @@
                     start_time: $('#start_time').val(),
                     end_time: $('#end_time').val(),
                     use_status: $('#use_status').val(),
+                    time_field: $('#time_field').val(),
+
                 };
                 return param;
             },
@@ -277,6 +286,7 @@
             let start_time = $('#start_time').val();
             let end_time = $('#end_time').val();
             let use_status = $('#use_status').val();
+            let time_field = $('#time_field').val();
 
             $.getJSON("{:url('machine/switch_by_search')}", {
                 'change_use_status': change_use_status
@@ -284,6 +294,8 @@
                 , 'start_time': start_time
                 , 'end_time': end_time
                 , 'use_status': use_status
+                , 'time_field': time_field
+
             }, function (res) {
                 if (1 == res.code) {
                     layer.alert(res.msg, {title: '友情提示', icon: 1, closeBtn: 0}, function () {
@@ -308,12 +320,14 @@
             let start_time = $('#start_time').val();
             let end_time = $('#end_time').val();
             let use_status = $('#use_status').val();
+            let time_field = $('#time_field').val();
 
             $.getJSON("{:url('machine/delete_by_search')}", {
                 'udid': udid
                 , 'start_time': start_time
                 , 'end_time': end_time
                 , 'use_status': use_status
+                , 'time_field': time_field
             }, function (res) {
                 if (1 == res.code) {
                     layer.alert(res.msg, {title: '友情提示', icon: 1, closeBtn: 0}, function () {

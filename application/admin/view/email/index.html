@@ -72,8 +72,8 @@
                 <input type="hidden" name="rows" id="rows">
                 <div class="content clearfix m-b">
                     <div class="form-group">
-                        <input placeholder="开始时间" class="form-control layer-date" id="start_time" name="start_time">
-                        <input placeholder="结束时间" class="form-control layer-date" id="end_time" name="end_time">
+                        <input placeholder="开始时间" class="form-control layer-date" id="start_time" name="start_time" autocomplete="off">
+                        <input placeholder="结束时间" class="form-control layer-date" id="end_time" name="end_time" autocomplete="off">
                     </div>
                     <div class="form-group">
                         <input type="text" placeholder="邮箱名称" class="form-control" id="email_name" name="email_name">
@@ -104,9 +104,15 @@
                             <option value="1">已导出</option>
                         </select>
                     </div>
+                    <div class="form-group">
+                        <select type="text" class="form-control" id="time_field" name="time_field">
+                            <option value="">时间字段</option>
+                            <option value="1">创建时间</option>
+                            <option value="2">更新时间</option>
+                        </select>
+                    </div>
                     <div class="btn-group">
-                        <button data-toggle="dropdown" class="btn btn-warning dropdown-toggle" aria-expanded="false"
-                                style="margin: 0;">操作
+                        <button data-toggle="dropdown" class="btn btn-warning dropdown-toggle" aria-expanded="false" style="margin: 0;">操作
                             <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu" style="left: 0">
@@ -208,6 +214,7 @@
                     reg_status: $('#reg_status').val(),
                     is_get: $('#is_get').val(),
                     fail_msg: $('#fail_msg').val(),
+                    time_field: $('#time_field').val(),
                 };
                 return param;
             },
@@ -323,6 +330,7 @@
             let use_status = $('#use_status').val();
             let reg_status = $('#reg_status').val();
             let is_get = $('#is_get').val();
+            let time_field = $('#time_field').val();
 
             $.getJSON("{:url('email/switch_by_search')}", {
                 'change_use_status': change_use_status
@@ -332,6 +340,7 @@
                 , 'use_status': use_status
                 , 'reg_status': reg_status
                 , 'is_get': is_get
+                , 'time_field': time_field
             }, function (res) {
                 if (1 == res.code) {
                     layer.alert(res.msg, {title: '友情提示', icon: 1, closeBtn: 0}, function () {
@@ -358,6 +367,8 @@
             let use_status = $('#use_status').val();
             let reg_status = $('#reg_status').val();
             let is_get = $('#is_get').val();
+            let time_field = $('#time_field').val();
+
             $.getJSON("{:url('email/delete_by_search')}", {
                 'start_time': start_time
                 , 'end_time': end_time
@@ -365,6 +376,7 @@
                 , 'use_status': use_status
                 , 'reg_status': reg_status
                 , 'is_get': is_get
+                , 'time_field': time_field
             }, function (res) {
                 if (1 == res.code) {
                     layer.alert(res.msg, {title: '友情提示', icon: 1, closeBtn: 0}, function () {

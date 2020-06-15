@@ -57,7 +57,15 @@ class Machine extends Base
         }
         //时间搜索
         if (!empty($params['start_time']) && !empty($params['end_time'])) {
-            $where[] = ['update_time', 'between', [$params['start_time'], $params['end_time']]];
+            if ($params['time_field'] != '') {
+                $time_field = [
+                    1 => 'create_time',
+                    2 => 'update_time',
+                ];
+                $where[] = [$time_field[$params['time_field']], 'between', [$params['start_time'], $params['end_time']]];
+            } else {
+                $where[] = ['update_time', 'between', [$params['start_time'], $params['end_time']]];
+            }
         }
 
         return $where;
