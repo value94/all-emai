@@ -278,7 +278,14 @@ class Email extends Base
         if (!empty($where)) {
             // 搜索数据
             $Email = new EmailModel();
-            $excel_data = $Email->getEmailByWhere($where);
+            // 判断是否有行数限制
+            $rows = '';
+            $offset = '';
+            if (!empty($params['rows'])) {
+                $offset = 0;
+                $rows = $params['rows'];
+            }
+            $excel_data = $Email->getEmailByWhere($where, $offset, $rows);
             if ($excel_data) {
                 // 创建表
                 $newExcel = new Spreadsheet();  //创建一个新的excel文档
@@ -328,7 +335,8 @@ class Email extends Base
                         ->setCellValue('K' . $k, 'aa3');
                 }
                 // 修改邮箱下载状态
-                EmailModel::update(['is_get' => 1], $where);
+                $emailModel = new EmailModel();
+                $emailModel->isAutoWriteTimestamp(false)->update(['is_get' => 1], $where);
                 downloadExcel($newExcel, '邮箱数据表', 'Xls');
             } else {
                 $this->error('该搜索条件没有能导出的数据');
