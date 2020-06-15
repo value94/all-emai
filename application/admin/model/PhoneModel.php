@@ -35,6 +35,12 @@ class PhoneModel extends Model
         return $this->where($where)->with('email')->limit($offset, $limit)->order('id desc')->select();
     }
 
+    // 根据条件,获取数量
+    public function getSumByWhere($where, $field)
+    {
+        return $this->where($where)->sum($field);
+    }
+
     /**
      * 根据机器id获取机器信息
      * @param $id

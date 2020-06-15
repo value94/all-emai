@@ -30,8 +30,24 @@
             <h5>{$title}列表</h5>
         </div>
         <div class="ibox-content">
+            <div class="form-inline pull-left" style="border: 1px solid #d9d9d9;padding: 1%; width: 100%;">
+                <div class="form-group">
+                    任务总数:
+                    <input class="form-control layer-date" readonly="readonly" id="job_count" name="job_count" value="">
+                </div>
+                <div class="form-group">
+                    成功总数:
+                    <input class="form-control layer-date" readonly="readonly" id="success_job_count"
+                           name="success_job_count" value="">
+                </div>
+                <div class="form-group">
+                    失败总数:
+                    <input class="form-control layer-date" readonly="readonly" id="failed_job_count"
+                           name="failed_job_count" value="">
+                </div>
+            </div>
             <div class="form-group clearfix">
-                <div class="form-group clearfix col-sm-3">
+                <div class="form-group clearfix col-sm-3" style="margin-top: 1rem;">
                     {if authCheck('phone/switch_status')}
                     <div class="btn-group">
                         <button data-toggle="dropdown" class="btn btn-warning dropdown-toggle" aria-expanded="false">操作
@@ -55,7 +71,7 @@
                     </div>
                     {/if}
                 </div>
-                <div class="form-group clearfix col-sm-1" style="float: right;">
+                <div class="form-group clearfix col-sm-1" style="float: right;margin-top: 1rem;">
                     <!--{if authCheck('phone/create') }
                     <a href="{:url('phone/create')}">
                         <button class="btn btn-outline btn-primary" type="button">添加{$title}</button>
@@ -68,7 +84,6 @@
                     {/if}
                 </div>
             </div>
-
             <!--搜索框开始-->
             <form id='commentForm' role="form" method="post" class="form-inline col-sm-12 pull-right">
                 <div class="content clearfix m-b pull-right">
@@ -200,6 +215,10 @@
                 if (111 == res.code) {
                     window.location.reload();
                 }
+                // 设置统计参数
+                $('#job_count').val(res.count.job_count + '次');
+                $('#success_job_count').val(res.count.success_job_count + '次');
+                $('#failed_job_count').val(res.count.failed_job_count + '次');
                 layer.msg("加载成功", {time: 1000});
             },
             onLoadError: function () {  //加载失败时执行
