@@ -234,8 +234,8 @@ class Machine extends Base
                 // 获取数据,循环处理
                 $path = $info->getPathname();
                 // 读取数据
-                $orders_data = $this->data_import($path);
-                if (!$orders_data) {
+                $excel_data = $this->data_import($path);
+                if (!$excel_data) {
                     $this->error('excel解析失败,请检查格式');
                 }
             } else {
@@ -245,7 +245,7 @@ class Machine extends Base
             $success_count = 0;
             $error_count = 0;
             // 添加数据
-            foreach ($orders_data as $c) {
+            foreach ($excel_data as $c) {
                 // 判断邮箱是否已存在
                 $machine = new MachineModel();
                 $res = $machine->where('udid', '=', $c[4])->find();
