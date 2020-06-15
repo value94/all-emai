@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>添加邮箱</title>
+    <title>添加机器</title>
     <link rel="shortcut icon" href="favicon.ico">
     <link href="__CSS__/bootstrap.min.css?v=3.3.6" rel="stylesheet">
     <link href="__CSS__/font-awesome.min.css?v=4.4.0" rel="stylesheet">
@@ -17,62 +17,64 @@
         <div class="col-sm-8">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
-                    <h5>添加邮箱</h5>
+                    <h5>添加机器</h5>
                 </div>
                 <div class="ibox-content">
-                    <form class="form-horizontal m-t" id="commentForm" method="post" action="{:url('email/edit')}">
-                        <input type="hidden" name="id" value="{$data.id}">
+                    <form class="form-horizontal m-t" id="commentForm" method="post" action="{:url('machine/create')}">
+
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">邮箱名称：</label>
+                            <label class="col-sm-3 control-label">HWModelStr：</label>
                             <div class="input-group col-sm-4">
-                                <input id="email_name" type="text" class="form-control" name="email_name" required="" aria-required="true" value="{$data.email_name}">
+                                <input id="HWModelStr" type="text" class="form-control" name="HWModelStr" required="" aria-required="true">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">邮箱密码：</label>
+                            <label class="col-sm-3 control-label">ModelNumber：</label>
                             <div class="input-group col-sm-4">
-                                <input id="email_password" type="text" class="form-control" name="email_password" required="" aria-required="true"  value="{$data.email_password}">
+                                <input id="ModelNumber" type="text" class="form-control" name="ModelNumber" required="" aria-required="true">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">邮箱类型：</label>
+                            <label class="col-sm-3 control-label">ProductType：</label>
                             <div class="input-group col-sm-4">
-                                <select class="form-control" name="email_type" required="" aria-required="true">
-                                    <option value="">请选择</option>
-                                    {if !empty($email_type)}
-                                    {foreach name="email_type" item="vo"}
-                                    <option value="{$vo.id}" {if condition="$data['email_type_id'] eq $vo['id']"}selected{/if}>{$vo.name}</option>
-                                    {/foreach}
-                                    {/if}
-                                </select>
-                            </div>
-                        </div>
-                        <!--<div class="form-group">
-                            <label class="col-sm-3 control-label">接收服务器(imap) *：</label>
-                            <div class="input-group col-sm-4">
-                                <input id="imapsvr" type="text" class="form-control" name="imapsvr" required="" aria-required="true" placeholder="主要使用这个服务" value="{$data.imapsvr}">
+                                <input id="ProductType" type="text" class="form-control" name="ProductType" required="" aria-required="true">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">接收服务器(POP3)：</label>
+                            <label class="col-sm-3 control-label">bt：</label>
                             <div class="input-group col-sm-4">
-                                <input id="pop3svr" type="text" class="form-control" name="pop3svr" required="" aria-required="true" value="{$data.pop3svr}">
+                                <input id="bt" type="text" class="form-control" name="bt" required="" aria-required="true">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">发送服务器(SMTP)：</label>
-                            <div class="input-group col-sm-4">
-                                <input id="smtpsvr" type="text" class="form-control" name="smtpsvr" required="" aria-required="true" value="{$data.smtpsvr}">
-                            </div>
-                        </div>-->
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">使用状态：</label>
+                            <label class="col-sm-3 control-label">imei：</label>
                             <div class="input-group col-sm-6">
-                                <div class="radio i-checks col-sm-6">
-                                    <label>
-                                        <input type="radio" value="0" name="use_status" {$data.use_status == 0?'checked':''}> <i></i>未使用</label>
-                                        <input type="radio" value="1" name="use_status"{$data.use_status == 1?'checked':''}> <i></i>已使用</label>
-                                    <input type="radio" value="2" name="use_status"{$data.use_status == 2?'checked':''}> <i></i>停止使用</label>
+                                <div class="input-group col-sm-4">
+                                    <input id="imei" type="text" class="form-control" name="imei" required="" aria-required="true">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">sn：</label>
+                            <div class="input-group col-sm-6">
+                                <div class="input-group col-sm-4">
+                                    <input id="sn" type="text" class="form-control" name="sn" required="" aria-required="true">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">udid：</label>
+                            <div class="input-group col-sm-6">
+                                <div class="input-group col-sm-4">
+                                    <input id="udid" type="text" class="form-control" name="udid" required="" aria-required="true">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">wifi：</label>
+                            <div class="input-group col-sm-6">
+                                <div class="input-group col-sm-4">
+                                    <input id="wifi" type="text" class="form-control" name="wifi" required="" aria-required="true">
                                 </div>
                             </div>
                         </div>
@@ -126,7 +128,7 @@
     $(document).ready(function () {
         $(".i-checks").iCheck({checkboxClass: "icheckbox_square-green", radioClass: "iradio_square-green",});
 
-        // 添加邮箱
+        // 添加机器
         var options = {
             beforeSubmit: showStart,
             success: showSuccess

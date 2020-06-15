@@ -254,7 +254,7 @@ class Email extends Base
                 }
                 // 判断邮箱是否已存在
                 $Email = new EmailModel();
-                $res = $Email->where('email_name', '=', $c[0])->find();
+                $res = $Email->where('email_name', '=', $c[0])->count();
                 if ($res) {
                     $error_count++;
                     continue;

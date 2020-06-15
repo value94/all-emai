@@ -32,37 +32,37 @@
         <div class="ibox-content">
             <div class="form-group clearfix">
                 <div class="form-group clearfix col-sm-3">
-                    {if authCheck('machine/switch_status')}
+                    {if authCheck('phone/switch_status')}
                     <div class="btn-group">
                         <button data-toggle="dropdown" class="btn btn-warning dropdown-toggle" aria-expanded="false">操作
                             <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu" style="left: 0">
                             <li>
-                                <a href="javascript:" onclick="switch_choice_status(0)">未使用</a>
+                                <a href="javascript:" onclick="switch_choice_status(0)">未运行</a>
                             </li>
                             <li>
-                                <a href="javascript:" onclick="switch_choice_status(1)">已使用</a>
+                                <a href="javascript:" onclick="switch_choice_status(1)">正在运行</a>
                             </li>
                             <li>
                                 <a href="javascript:" onclick="switch_choice_status(2)">停止使用</a>
                             </li>
                             <li class="divider"></li>
                             <li>
-                                <a href="javascript:" onclick="machineDelMore()">删除</a>
+                                <a href="javascript:" onclick="phoneDelMore()">删除</a>
                             </li>
                         </ul>
                     </div>
                     {/if}
                 </div>
-                <div class="form-group clearfix col-sm-2" style="float: right;">
-                    {if authCheck('machine/create') }
-                    <a href="{:url('machine/create')}">
+                <div class="form-group clearfix col-sm-1" style="float: right;">
+                    <!--{if authCheck('phone/create') }
+                    <a href="{:url('phone/create')}">
                         <button class="btn btn-outline btn-primary" type="button">添加{$title}</button>
                     </a>
-                    {/if}
-                    {if authCheck('machine/import_machine') }
-                    <a href="{:url('machine/import_machine')}">
+                    {/if}-->
+                    {if authCheck('phone/import_phone') }
+                    <a href="{:url('phone/import_phone')}">
                         <button class="btn btn-outline btn-success" type="button">导入{$title}</button>
                     </a>
                     {/if}
@@ -73,17 +73,22 @@
             <form id='commentForm' role="form" method="post" class="form-inline col-sm-12 pull-right">
                 <div class="content clearfix m-b pull-right">
                     <div class="form-group">
-                        <input placeholder="开始时间" class="form-control layer-date" id="start_time" name="start_time" autocomplete="off">
-                        <input placeholder="结束时间" class="form-control layer-date" id="end_time" name="end_time" autocomplete="off">
+                        <input placeholder="开始时间" class="form-control layer-date" id="start_time" name="start_time"
+                               autocomplete="off">
+                        <input placeholder="结束时间" class="form-control layer-date" id="end_time" name="end_time"
+                               autocomplete="off">
                     </div>
                     <div class="form-group">
-                        <input type="text" placeholder="机器udid" class="form-control" id="udid" name="udid">
+                        <input type="text" placeholder="手机SN" class="form-control" id="phone_sn" name="phone_sn">
                     </div>
                     <div class="form-group">
-                        <select type="text" class="form-control" id="use_status" name="use_status">
-                            <option value="">使用状态</option>
-                            <option value="0">未使用</option>
-                            <option value="1">已使用</option>
+                        <input type="text" placeholder="设备udid" class="form-control" id="udid" name="udid">
+                    </div>
+                    <div class="form-group">
+                        <select type="text" class="form-control" id="status" name="status">
+                            <option value="">运行状态</option>
+                            <option value="0">未运行</option>
+                            <option value="1">正在运行</option>
                             <option value="2">停止使用</option>
                         </select>
                     </div>
@@ -101,10 +106,10 @@
                         </button>
                         <ul class="dropdown-menu" style="left: 0">
                             <li>
-                                <a href="javascript:" onclick="switch_by_search(0)">未使用</a>
+                                <a href="javascript:" onclick="switch_by_search(0)">未运行</a>
                             </li>
                             <li>
-                                <a href="javascript:" onclick="switch_by_search(1)">已使用</a>
+                                <a href="javascript:" onclick="switch_by_search(1)">正在运行</a>
                             </li>
                             <li>
                                 <a href="javascript:" onclick="switch_by_search(2)">停止使用</a>
@@ -129,19 +134,14 @@
                         <thead>
                         <th data-field="box_id" data-checkbox="true"></th>
                         <th data-field="id">ID</th>
+                        <th data-field="number">编号</th>
                         <th data-field="email_name">邮箱名</th>
+                        <th data-field="phone_sn">手机SN</th>
+                        <th data-field="status">运行状态</th>
+                        <th data-field="program_version">程序版本</th>
                         <th data-field="udid">udid</th>
-                        <th data-field="use_status">使用状态</th>
-                        <th data-field="HWModelStr">HWModelStr</th>
-                        <th data-field="ModelNumber">ModelNumber</th>
-                        <th data-field="ProductType">ProductType</th>
-                        <th data-field="PhoneModel">PhoneModel</th>
-                        <th data-field="idfa">idfa</th>
-                        <th data-field="bt">bt</th>
-                        <th data-field="imei">imei</th>
-                        <th data-field="sn">sn</th>
-                        <th data-field="wifi">wifi</th>
-                        <th data-field="sn">sn</th>
+                        <th data-field="run_steps">运行步骤</th>
+                        <th data-field="des">描述信息</th>
                         <th data-field="create_time">创建时间</th>
                         <th data-field="update_time">更新时间</th>
                         <th data-field="operate">操作</th>
@@ -190,9 +190,9 @@
                     udid: $('#udid').val(),
                     start_time: $('#start_time').val(),
                     end_time: $('#end_time').val(),
-                    use_status: $('#use_status').val(),
+                    status: $('#status').val(),
                     time_field: $('#time_field').val(),
-
+                    phone_sn: $('#phone_sn').val(),
                 };
                 return param;
             },
@@ -219,21 +219,21 @@
 
     let $table = $('#cusTable');
 
-    // 切换选中机器状态
-    function switch_choice_status(change_use_status = '') {
+    // 切换选中设备状态
+    function switch_choice_status(change_status = '') {
         if ($table.bootstrapTable('getAllSelections').length == 0) {
-            layer.alert('请勾选机器', {title: '友情提示', icon: 2});
+            layer.alert('请勾选设备', {title: '友情提示', icon: 2});
             return;
         }
-        layer.confirm('确认切换机器状态', {icon: 3, title: '提示'}, function (index) {
+        layer.confirm('确认切换设备状态', {icon: 3, title: '提示'}, function (index) {
             //do something
-            let machine = $table.bootstrapTable('getAllSelections');
-            let machine_id = [];
-            for (let i = 0; i < machine.length; i++) {
-                machine_id[i] = machine[i]['id'];
+            let phone = $table.bootstrapTable('getAllSelections');
+            let phone_id = [];
+            for (let i = 0; i < phone.length; i++) {
+                phone_id[i] = phone[i]['id'];
             }
-            $.getJSON("{:url('machine/switch_status')}", {
-                'machine_id': machine_id, 'change_use_status': change_use_status
+            $.getJSON("{:url('phone/switch_status')}", {
+                'phone_id': phone_id, 'change_status': change_status
             }, function (res) {
                 if (1 == res.code) {
                     layer.alert(res.msg, {title: '友情提示', icon: 1, closeBtn: 0}, function () {
@@ -250,20 +250,20 @@
         })
     }
 
-    // 删除选中机器
-    function machineDelMore() {
+    // 删除选中设备
+    function phoneDelMore() {
         if ($table.bootstrapTable('getAllSelections').length == 0) {
-            layer.alert('请勾选机器', {title: '友情提示', icon: 2});
+            layer.alert('请勾选设备', {title: '友情提示', icon: 2});
             return;
         }
-        layer.confirm('确认删除机器', {icon: 3, title: '提示'}, function (index) {
+        layer.confirm('确认删除设备', {icon: 3, title: '提示'}, function (index) {
             //do something
-            let machine = $table.bootstrapTable('getAllSelections');
-            let machine_id = [];
-            for (let i = 0; i < machine.length; i++) {
-                machine_id[i] = machine[i]['id'];
+            let phone = $table.bootstrapTable('getAllSelections');
+            let phone_id = [];
+            for (let i = 0; i < phone.length; i++) {
+                phone_id[i] = phone[i]['id'];
             }
-            $.getJSON("{:url('machine/delete')}", {'ids': machine_id}, function (res) {
+            $.getJSON("{:url('phone/delete')}", {'ids': phone_id}, function (res) {
                 if (1 == res.code) {
                     layer.alert(res.msg, {title: '友情提示', icon: 1, closeBtn: 0}, function () {
                         window.location.reload();
@@ -278,23 +278,25 @@
         })
     }
 
-    // 切换搜索机器状态
-    function switch_by_search(change_use_status = '') {
-        layer.confirm('确认切换搜索机器状态', {icon: 3, title: '提示'}, function (index) {
+    // 切换搜索设备状态
+    function switch_by_search(change_status = '') {
+        layer.confirm('确认切换搜索设备状态', {icon: 3, title: '提示'}, function (index) {
             // 获取搜索条件
             let udid = $('#udid').val();
             let start_time = $('#start_time').val();
             let end_time = $('#end_time').val();
-            let use_status = $('#use_status').val();
+            let status = $('#status').val();
+            let phone_sn = $('#phone_sn').val();
             let time_field = $('#time_field').val();
 
-            $.getJSON("{:url('machine/switch_by_search')}", {
-                'change_use_status': change_use_status
+            $.getJSON("{:url('phone/switch_by_search')}", {
+                'change_status': change_status
                 , 'udid': udid
                 , 'start_time': start_time
                 , 'end_time': end_time
-                , 'use_status': use_status
+                , 'status': status
                 , 'time_field': time_field
+                , 'phone_sn': phone_sn
 
             }, function (res) {
                 if (1 == res.code) {
@@ -312,22 +314,24 @@
         })
     }
 
-    // 删除搜索机器
+    // 删除搜索设备
     function delete_by_search() {
-        layer.confirm('确认删除搜索机器', {icon: 3, title: '提示'}, function (index) {
+        layer.confirm('确认删除搜索设备', {icon: 3, title: '提示'}, function (index) {
             // 获取搜索条件
             let udid = $('#udid').val();
             let start_time = $('#start_time').val();
             let end_time = $('#end_time').val();
-            let use_status = $('#use_status').val();
+            let status = $('#status').val();
             let time_field = $('#time_field').val();
+            let phone_sn = $('#phone_sn').val();
 
-            $.getJSON("{:url('machine/delete_by_search')}", {
+            $.getJSON("{:url('phone/delete_by_search')}", {
                 'udid': udid
                 , 'start_time': start_time
                 , 'end_time': end_time
-                , 'use_status': use_status
+                , 'status': status
                 , 'time_field': time_field
+                , 'phone_sn': phone_sn
             }, function (res) {
                 if (1 == res.code) {
                     layer.alert(res.msg, {title: '友情提示', icon: 1, closeBtn: 0}, function () {
@@ -344,10 +348,10 @@
     }
 
 
-    function switch_status(id, use_status) {
+    function switch_status(id, status) {
         layer.confirm('确认切换状态?', {icon: 3, title: '提示'}, function (index) {
             //do something
-            $.getJSON("{:url('machine/switch_status')}", {'machine_id': id, 'use_status': use_status}, function (res) {
+            $.getJSON("{:url('phone/switch_status')}", {'phone_id': id, 'status': status}, function (res) {
                 if (1 == res.code) {
                     layer.alert(res.msg, {title: '友情提示', icon: 1, closeBtn: 0}, function () {
                         initTable();
@@ -366,10 +370,10 @@
 
 
     // 根据id 删除
-    function machineDel(id) {
-        layer.confirm('确认删除此机器?', {icon: 3, title: '提示'}, function (index) {
+    function phoneDel(id) {
+        layer.confirm('确认删除此设备?', {icon: 3, title: '提示'}, function (index) {
             //do something
-            $.getJSON("{:url('machine/delete')}", {'id': id}, function (res) {
+            $.getJSON("{:url('phone/delete')}", {'id': id}, function (res) {
                 if (1 == res.code) {
                     layer.alert(res.msg, {title: '友情提示', icon: 1, closeBtn: 0}, function () {
                         initTable();

@@ -2,10 +2,9 @@
 
 namespace app\admin\controller;
 
-use app\admin\model\MachineModel;
-use think\Request;
+use app\admin\model\PhoneModel;
 
-class Machine extends Base
+class Phone extends Base
 {
     /**
      * 显示资源列表
@@ -23,8 +22,8 @@ class Machine extends Base
 
             $where = $this->getWhereByParams($param);
 
-            $Machine = new MachineModel();
-            $selectResult = $Machine->getMachineByWhere($where, $offset, $limit);
+            $Phone = new PhoneModel();
+            $selectResult = $Phone->getPhoneByWhere($where, $offset, $limit);
 
             // 拼装参数
             foreach ($selectResult as $key => $vo) {
@@ -32,13 +31,13 @@ class Machine extends Base
                 $selectResult[$key]['operate'] = showOperate($this->makeButton($vo['id']));
             }
 
-            $return['total'] = $Machine->getAllMachine($where);  //总数据
+            $return['total'] = $Phone->getAllPhone($where);  //总数据
             $return['rows'] = $selectResult;
 
             return json($return);
         }
         $this->assign([
-            'title' => '机器'
+            'title' => '手机'
         ]);
         return $this->fetch();
     }
@@ -51,10 +50,17 @@ class Machine extends Base
         if (!empty($params['udid'])) {
             $where[] = ['udid', 'like', '%' . $params['udid'] . '%'];
         }
-        // 状态搜索
-        if ($params['use_status'] != '') {
-            $where[] = ['use_status', '=', $params['use_status']];
+
+        // 机器 sn 搜索
+        if (!empty($params['phone_sn'])) {
+            $where[] = ['phone_sn', 'like', '%' . $params['phone_sn'] . '%'];
         }
+
+        // 状态搜索
+        if ($params['status'] != '') {
+            $where[] = ['status', '=', $params['status']];
+        }
+
         //时间搜索
         if (!empty($params['start_time']) && !empty($params['end_time'])) {
             if ($params['time_field'] != '') {
@@ -71,7 +77,6 @@ class Machine extends Base
         return $where;
     }
 
-
     /**
      * 显示创建资源表单页.
      *
@@ -83,8 +88,8 @@ class Machine extends Base
 
             $param = input('post.');
 
-            $Machine = new MachineModel();
-            $flag = $Machine->insertMachine($param);
+            $Phone = new PhoneModel();
+            $flag = $Phone->insertPhone($param);
 
             return json(msg($flag['code'], $flag['data'], $flag['msg']));
         }
@@ -100,19 +105,20 @@ class Machine extends Base
      */
     public function edit($id)
     {
-        $Machine = new MachineModel();
+        $Phone = new PhoneModel();
 
         if (request()->isPost()) {
 
             $param = input('post.');
 
-            $flag = $Machine->editMachine($param);
+            $flag = $Phone->editPhone($param);
 
             return json(msg($flag['code'], $flag['data'], $flag['msg']));
+//            $this->success($flag['msg'],'../');
         }
 
         $this->assign([
-            'data' => $Machine->getOneMachine($id)
+            'data' => $Phone->getOnePhone($id)
         ]);
         return $this->fetch();
     }
@@ -127,9 +133,9 @@ class Machine extends Base
     {
         $params = input('param.');
         if (isset($params['ids'])) {
-            MachineModel::where('id', 'in', $params['ids'])->delete();
+            PhoneModel::where('id', 'in', $params['ids'])->delete();
         } else {
-            MachineModel::destroy($params['id']);
+            PhoneModel::destroy($params['id']);
         }
 
         return json(msg(1, '', '删除成功'));
@@ -147,36 +153,37 @@ class Machine extends Base
                 'msg' => '切换成功'
             ];
 
-            $data = input('param.');
+            $params = input('param.');
+
             // 切换成停止状态
-            if (isset($data['use_status']) && $data['use_status'] == 2) {
-                MachineModel::update(['use_status' => 2], ['id' => $data['machine_id']]);
+            if (isset($params['status']) && $params['status'] == 2) {
+                PhoneModel::update(['status' => 2], ['id' => $params['phone_id']]);
                 return $result;
             }
             // 切换成指定状态
-            if (isset($data['change_use_status'])) {
-                MachineModel::update(['use_status' => $data['change_use_status']], ['id' => $data['machine_id']]);
+            if (isset($params['change_status'])) {
+                PhoneModel::update(['status' => $params['change_status']], ['id' => $params['phone_id']]);
                 return $result;
             }
 
             // 切换机器状态
-            $used_id = MachineModel::where([
-                ['use_status', 'in', '1,2'],
-                ['id', 'in', $data['machine_id']]
+            $used_id = PhoneModel::where([
+                ['status', 'in', '1,2'],
+                ['id', 'in', $params['phone_id']]
 
             ])->column('id');
 
-            $un_use = MachineModel::where([
-                ['use_status', 'in', '0,2'],
-                ['id', 'in', $data['machine_id']]
+            $un_use = PhoneModel::where([
+                ['status', 'in', '0,2'],
+                ['id', 'in', $params['phone_id']]
             ])->column('id');
 
             if (!empty($used_id)) {
-                MachineModel::update(['use_status' => 0], ['id' => $used_id]);
+                PhoneModel::update(['status' => 0], ['id' => $used_id]);
             }
 
             if (!empty($un_use)) {
-                MachineModel::update(['use_status' => 1], ['id' => $un_use]);
+                PhoneModel::update(['status' => 1], ['id' => $un_use]);
             }
 
 
@@ -197,7 +204,7 @@ class Machine extends Base
         $where = $this->getWhereByParams($params);
         if (!empty($where)) {
             // 执行删除
-            MachineModel::where($where)->delete();
+            PhoneModel::where($where)->delete();
         } else {
             $result = [
                 'code' => 0,
@@ -220,7 +227,7 @@ class Machine extends Base
         $where = $this->getWhereByParams($params);
         if (!empty($where)) {
             // 执行删除
-            MachineModel::where($where)->update(['use_status' => $params['change_use_status']]);
+            PhoneModel::where($where)->update(['status' => $params['change_status']]);
         } else {
             $result = [
                 'code' => 0,
@@ -231,11 +238,11 @@ class Machine extends Base
     }
 
     // 批量导入邮箱
-    public function import_machine()
+    public function import_Phone()
     {
         if (request()->isPost()) {
             // 获取表单上传文件
-            $file = request()->file('machine_file');
+            $file = request()->file('phone_file');
             // 移动到框架应用根目录/public/uploads/ 目录下
             $info = $file->move('../uploads');
             if ($info) {
@@ -259,23 +266,16 @@ class Machine extends Base
                     continue;
                 }
                 // 判断邮箱是否已存在
-                $machine = new MachineModel();
-                $res = $machine->where('udid', '=', $c[4])->count();
+                $Phone = new PhoneModel();
+                $res = $Phone->where('phone_sn', '=', $c[2])->count();
                 if ($res) {
                     $error_count++;
                     continue;
                 } else {
-                    $machine->sn = $c[0];
-                    $machine->imei = $c[1];
-                    $machine->bt = $c[2];
-                    $machine->wifi = $c[3];
-                    $machine->udid = $c[4];
-                    $machine->PhoneModel = $c[5];
-                    $machine->ModelNumber = $c[6];
-                    $machine->HWModelStr = $c[7];
-                    $machine->ProductType = $c[8];
-
-                    $machine->save();
+                    $Phone->number = $c[0];
+                    $Phone->phone_sn = $c[1];
+                    $Phone->des = $c[2];
+                    $Phone->save();
                     $success_count++;
                 }
             }
@@ -293,26 +293,26 @@ class Machine extends Base
     {
         return [
             '切换' => [
-                'auth' => 'machine/switch_status',
+                'auth' => 'phone/switch_status',
                 'href' => "javascript:switch_status(" . $id . ")",
                 'btnStyle' => 'info',
                 'icon' => 'fa fa-check-circle',
             ],
             '停止' => [
-                'auth' => 'machine/switch_status',
+                'auth' => 'phone/switch_status',
                 'href' => "javascript:switch_status(" . $id . ",2)",
                 'btnStyle' => 'warning',
                 'icon' => 'fa fa-close',
             ],
             '编辑' => [
-                'auth' => 'machine/edit',
-                'href' => url('machine/edit', ['id' => $id]),
+                'auth' => 'phone/edit',
+                'href' => url('phone/edit', ['id' => $id]),
                 'btnStyle' => 'primary',
                 'icon' => 'fa fa-paste',
             ],
             '删除' => [
-                'auth' => 'machine/delete',
-                'href' => "javascript:machineDel(" . $id . ")",
+                'auth' => 'phone/delete',
+                'href' => "javascript:phoneDel(" . $id . ")",
                 'btnStyle' => 'danger',
                 'icon' => 'fa fa-trash-o',
             ],
