@@ -94,15 +94,11 @@ class Index extends Base
         $all_reg = EmailModel::where(['reg_status' => [0, 1]])->where($where)->count('id');
         $fail_reg = EmailModel::where(['reg_status' => 0])->where($where)->count('id');
         $success_reg = EmailModel::where(['reg_status' => 1])->where($where)->count('id');
-        $machine_left = MachineModel::where(['use_status' => 0])->where($where)->count('id');
-        $email_left = EmailModel::where(['use_status' => 0])->where($where)->count('id');
         return json([
             'code' => 1,
             'all_reg' =>$all_reg,
             'fail_reg' =>$fail_reg,
             'success_reg' =>$success_reg,
-            'machine_left' => $machine_left,
-            'email_left' => $email_left,
         ]);
     }
 
