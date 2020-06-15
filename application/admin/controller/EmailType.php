@@ -3,7 +3,6 @@
 namespace app\admin\controller;
 
 use app\admin\model\EmailTypeModel;
-use think\Request;
 
 class EmailType extends Base
 {

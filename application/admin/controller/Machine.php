@@ -254,6 +254,10 @@ class Machine extends Base
             $error_count = 0;
             // 添加数据
             foreach ($excel_data as $c) {
+                // 判断行是否为空
+                if (!$c[0]) {
+                    continue;
+                }
                 // 判断邮箱是否已存在
                 $machine = new MachineModel();
                 $res = $machine->where('udid', '=', $c[4])->find();

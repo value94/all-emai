@@ -2,12 +2,10 @@
 
 namespace app\admin\controller;
 
-use app\admin\model\EmailModel;
-use app\admin\model\EmailTypeModel;
+use app\admin\model\IpAddressModel;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use think\Request;
 
-class Email extends Base
+class IpAddress extends Base
 {
     /**
      * 显示资源列表
@@ -26,21 +24,21 @@ class Email extends Base
             $where = $this->getWhereByParams($param);
 
 
-            $Email = new EmailModel();
-            $selectResult = $Email->getEmailByWhere($where, $offset, $limit);
+            $IpAddress = new IpAddressModel();
+            $selectResult = $IpAddress->getIpAddressByWhere($where, $offset, $limit);
 
             // 拼装参数
             foreach ($selectResult as $key => $vo) {
                 $selectResult[$key]['operate'] = showOperate($this->makeButton($vo['id']));
             }
 
-            $return['total'] = $Email->getAllEmail($where);  //总数据
+            $return['total'] = $IpAddress->getAllIpAddress($where);  //总数据
             $return['rows'] = $selectResult;
 
             return json($return);
         }
         $this->assign([
-            'title' => '邮箱'
+            'title' => 'IP'
         ]);
         return $this->fetch();
     }
@@ -50,24 +48,12 @@ class Email extends Base
     {
         $where = [];
         // 邮箱名搜索
-        if (!empty($params['searchText'])) {
-            $where[] = ['email_name', 'like', '%' . $params['searchText'] . '%'];
-        }
-        // 失败原因搜索
-        if (!empty($params['fail_msg'])) {
-            $where[] = ['fail_msg', 'like', '%' . $params['fail_msg'] . '%'];
+        if (!empty($params['ip'])) {
+            $where[] = ['ip', 'like', '%' . $params['ip'] . '%'];
         }
         // 状态搜索
         if ($params['use_status'] != '') {
             $where[] = ['use_status', '=', $params['use_status']];
-        }
-        // 注册状态搜索
-        if ($params['reg_status'] != '') {
-            $where[] = ['reg_status', '=', $params['reg_status']];
-        }
-        // 导出状态搜索
-        if ($params['is_get'] != '') {
-            $where[] = ['is_get', '=', $params['is_get']];
         }
         //时间搜索
         if (!empty($params['start_time']) && !empty($params['end_time'])) {
@@ -95,22 +81,22 @@ class Email extends Base
         if (request()->isPost()) {
 
             $param = input('post.');
-            $type_id = input('post.email_type');
+            $type_id = input('post.IpAddress_type');
 
-            $email_type = EmailTypeModel::getEmailTypeById($type_id);
-            $param['email_type_id'] = $type_id;
-            $param['imapsvr'] = $email_type['imapsvr'];
-            $param['pop3svr'] = $email_type['pop3svr'];
-            $param['smtpsvr'] = $email_type['smtpsvr'];
+            $IpAddress_type = IpAddressTypeModel::getIpAddressTypeById($type_id);
+            $param['IpAddress_type_id'] = $type_id;
+            $param['imapsvr'] = $IpAddress_type['imapsvr'];
+            $param['pop3svr'] = $IpAddress_type['pop3svr'];
+            $param['smtpsvr'] = $IpAddress_type['smtpsvr'];
 
-            $Email = new EmailModel();
-            $flag = $Email->insertEmail($param);
+            $IpAddress = new IpAddressModel();
+            $flag = $IpAddress->insertIpAddress($param);
 
             return json(msg($flag['code'], $flag['data'], $flag['msg']));
         }
 
         $this->assign([
-            'email_type' => EmailTypeModel::getEmailType(),
+            'IpAddress_type' => IpAddressTypeModel::getIpAddressType(),
         ]);
 
         return $this->fetch();
@@ -124,28 +110,28 @@ class Email extends Base
      */
     public function edit($id)
     {
-        $Email = new EmailModel();
+        $IpAddress = new IpAddressModel();
 
         if (request()->isPost()) {
 
             $param = input('post.');
 
-            $type_id = input('post.email_type');
+            $type_id = input('post.IpAddress_type');
 
-            $email_type = EmailTypeModel::getEmailTypeById($type_id);
-            $param['email_type_id'] = $type_id;
-            $param['imapsvr'] = $email_type['imapsvr'];
-            $param['pop3svr'] = $email_type['pop3svr'];
-            $param['smtpsvr'] = $email_type['smtpsvr'];
+            $IpAddress_type = IpAddressTypeModel::getIpAddressTypeById($type_id);
+            $param['IpAddress_type_id'] = $type_id;
+            $param['imapsvr'] = $IpAddress_type['imapsvr'];
+            $param['pop3svr'] = $IpAddress_type['pop3svr'];
+            $param['smtpsvr'] = $IpAddress_type['smtpsvr'];
 
-            $flag = $Email->editEmail($param);
+            $flag = $IpAddress->editIpAddress($param);
 
             return json(msg($flag['code'], $flag['data'], $flag['msg']));
         }
 
         $this->assign([
-            'data' => $Email->getOneEmail($id),
-            'email_type' => EmailTypeModel::getEmailType(),
+            'data' => $IpAddress->getOneIpAddress($id),
+            'IpAddress_type' => IpAddressTypeModel::getIpAddressType(),
         ]);
         return $this->fetch();
     }
@@ -160,9 +146,9 @@ class Email extends Base
     {
         $param = input('param.');
         if (isset($param['ids'])) {
-            EmailModel::destroy($param['ids']);
+            IpAddressModel::destroy($param['ids']);
         } else {
-            EmailModel::destroy($param['id']);
+            IpAddressModel::destroy($param['id']);
         }
 
         return json(msg(1, '', '删除成功'));
@@ -181,7 +167,7 @@ class Email extends Base
         $where = $this->getWhereByParams($params);
         if (!empty($where)) {
             // 执行删除
-            EmailModel::where($where)->delete();
+            IpAddressModel::where($where)->delete();
         } else {
             $result = [
                 'code' => 0,
@@ -204,7 +190,7 @@ class Email extends Base
         $where = $this->getWhereByParams($params);
         if (!empty($where)) {
             // 执行删除
-            EmailModel::where($where)->update(['use_status' => $params['change_use_status']]);
+            IpAddressModel::where($where)->update(['use_status' => $params['change_use_status']]);
         } else {
             $result = [
                 'code' => 0,
@@ -218,17 +204,11 @@ class Email extends Base
      * 批量导入邮箱
      * @return mixed
      */
-    public function import_email()
+    public function import_ip()
     {
         if (request()->isPost()) {
             // 获取表单上传文件
-            $file = request()->file('email_file');
-            $type_id = input('post.email_type');
-            if (!$type_id) {
-                $this->error('请选择邮箱类型');
-            } else {
-                $email_type = EmailTypeModel::getEmailTypeById($type_id);
-            }
+            $file = request()->file('ip_file');
 
             // 移动到框架应用根目录/public/uploads/ 目录下
             $info = $file->move('../uploads');
@@ -236,8 +216,8 @@ class Email extends Base
                 // 获取数据,循环处理
                 $path = $info->getPathname();
                 // 读取数据
-                $orders_data = $this->data_import($path);
-                if (!$orders_data) {
+                $excel_data = $this->data_import($path);
+                if (!$excel_data) {
                     $this->error('excel解析失败,请检查格式');
                 }
             } else {
@@ -247,33 +227,27 @@ class Email extends Base
             $success_count = 0;
             $error_count = 0;
             // 添加数据
-            foreach ($orders_data as $c) {
+            foreach ($excel_data as $c) {
                 // 判断行是否为空
                 if (!$c[0]) {
                     continue;
                 }
                 // 判断邮箱是否已存在
-                $Email = new EmailModel();
-                $res = $Email->where('email_name', '=', $c[0])->find();
+                $IpAddress = new IpAddressModel();
+                $res = $IpAddress->where('ip', '=', $c[0])->count();
                 if ($res) {
                     $error_count++;
                     continue;
                 } else {
-                    $Email->email_name = $c[0];
-                    $Email->email_password = $c[1];
-                    $Email->email_type_id = $email_type->id;
-                    $Email->imapsvr = $email_type->imapsvr;
-                    $Email->pop3svr = $email_type->pop3svr;
-                    $Email->smtpsvr = $email_type->smtpsvr;
-                    $Email->save();
-                    $success_count++;
+                    if ($c[0]) {
+                        $IpAddress->ip = $c[0];
+                        $IpAddress->save();
+                        $success_count++;
+                    }
                 }
             }
             $this->success('批量添加成功,共导入' . $success_count . ' 条,已存在' . $error_count . ' 条');
         }
-        $this->assign([
-            'email_type' => EmailTypeModel::getEmailType(),
-        ]);
 
         return $this->fetch();
     }
@@ -289,7 +263,7 @@ class Email extends Base
         // 导出文件
         if (!empty($where)) {
             // 搜索数据
-            $Email = new EmailModel();
+            $IpAddress = new IpAddressModel();
             // 判断是否有行数限制
             $rows = '';
             $offset = '';
@@ -297,7 +271,7 @@ class Email extends Base
                 $offset = 0;
                 $rows = $params['rows'];
             }
-            $excel_data = $Email->getEmailByWhere($where, $offset, $rows);
+            $excel_data = $IpAddress->getIpAddressByWhere($where, $offset, $rows);
             if ($excel_data) {
                 // 创建表
                 $newExcel = new Spreadsheet();  //创建一个新的excel文档
@@ -334,7 +308,7 @@ class Email extends Base
                 //->setCellValueExplicit('C' . $k, $val['admin_password']PHPExcel_Cell_DataType::TYPE_STRING),可以用来导出数字不变格式
                 foreach ($excel_data as $k => $val) {
                     $k = $k + 2;
-                    $objSheet->setCellValue('A' . $k, $val['email_name'])
+                    $objSheet->setCellValue('A' . $k, $val['IpAddress_name'])
                         ->setCellValue('B' . $k, '')
                         ->setCellValue('C' . $k, '')
                         ->setCellValue('D' . $k, 'Tt778899')
@@ -347,8 +321,8 @@ class Email extends Base
                         ->setCellValue('K' . $k, 'aa3');
                 }
                 // 修改邮箱下载状态
-                $emailModel = new EmailModel();
-                $emailModel->isAutoWriteTimestamp(false)->update(['is_get' => 1], $where);
+                $IpAddressModel = new IpAddressModel();
+                $IpAddressModel->isAutoWriteTimestamp(false)->update(['is_get' => 1], $where);
                 downloadExcel($newExcel, '邮箱数据表', 'Xls');
             } else {
                 $this->error('该搜索条件没有能导出的数据');
@@ -374,34 +348,34 @@ class Email extends Base
 
             // 切换成停止状态
             if (isset($data['use_status']) && $data['use_status'] == 2) {
-                EmailModel::update(['use_status' => 2], ['id' => $data['email_id']]);
+                IpAddressModel::update(['use_status' => 2], ['id' => $data['id']]);
                 return $result;
             }
 
             // 切换选中机器状态
             if (isset($data['change_use_status'])) {
-                EmailModel::update(['use_status' => $data['change_use_status']],
-                    ['id' => $data['email_id']]);
+                IpAddressModel::update(['use_status' => $data['change_use_status']],
+                    ['id' => $data['id']]);
                 return $result;
             }
 
             // 切换机器状态
-            $used_id = EmailModel::where([
+            $used_id = IpAddressModel::where([
                 ['use_status', 'in', '1,2'],
-                ['id', 'in', $data['email_id']]
+                ['id', 'in', $data['id']]
             ])->column('id');
 
-            $un_use = EmailModel::where([
+            $un_use = IpAddressModel::where([
                 ['use_status', 'in', '0,2'],
-                ['id', 'in', $data['email_id']]
+                ['id', 'in', $data['id']]
             ])->column('id');
 
             if (!empty($used_id)) {
-                EmailModel::update(['use_status' => 0], ['id' => $used_id]);
+                IpAddressModel::update(['use_status' => 0], ['id' => $used_id]);
             }
 
             if (!empty($un_use)) {
-                EmailModel::update(['use_status' => 1], ['id' => $un_use]);
+                IpAddressModel::update(['use_status' => 1], ['id' => $un_use]);
             }
 
             return $result;
@@ -417,7 +391,7 @@ class Email extends Base
     {
         return [
             '切换' => [
-                'auth' => 'email/switch_status',
+                'auth' => 'IpAddress/switch_status',
                 'href' => "javascript:switch_status(" . $id . ")",
                 'btnStyle' => 'info',
                 'icon' => 'fa fa-check-circle',
@@ -429,14 +403,14 @@ class Email extends Base
                 'icon' => 'fa fa-close',
             ],
             '编辑' => [
-                'auth' => 'email/edit',
-                'href' => url('email/edit', ['id' => $id]),
+                'auth' => 'IpAddress/edit',
+                'href' => url('IpAddress/edit', ['id' => $id]),
                 'btnStyle' => 'primary',
                 'icon' => 'fa fa-paste',
             ],
             '删除' => [
-                'auth' => 'email/delete',
-                'href' => "javascript:emailDel(" . $id . ")",
+                'auth' => 'IpAddress/delete',
+                'href' => "javascript:IpAddressDel(" . $id . ")",
                 'btnStyle' => 'danger',
                 'icon' => 'fa fa-trash-o',
             ],

@@ -162,6 +162,7 @@ function authCheck($rule)
     if (in_array($control, ['login', 'index'])) {
         return true;
     }
+//    dump($rule);die();
     if (in_array($rule, cache(session('role_id')))) {
         return true;
     }
