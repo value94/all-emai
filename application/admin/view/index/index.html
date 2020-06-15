@@ -11,6 +11,23 @@
     <link href="__CSS__/style.min.css" rel="stylesheet">
 </head>
 <body class="gray-bg">
+<!--搜索框开始-->
+<form id='commentForm' role="form" method="post" action="{:url('index/index')}"
+      class="form-inline" style="margin: 1rem">
+    <div class="content clearfix m-b">
+        <div class="form-group">
+            <input placeholder="开始时间" autocomplete="off" class="form-control layer-date" id="start_time"
+                   name="start_time">
+            <input placeholder="结束时间" autocomplete="off" class="form-control layer-date" id="end_time" name="end_time">
+        </div>
+        <div class="form-group">
+            <button class="btn btn-primary" onclick="searchData()" type="button" id="search">
+                <strong>搜索</strong>
+            </button>
+        </div>
+    </div>
+</form>
+<!--搜索框结束-->
 <div class="wrapper wrapper-content">
     <div class="row">
         <div class="col-sm-2">
@@ -20,7 +37,7 @@
                     <h5>总注册量</h5>
                 </div>
                 <div class="ibox-content">
-                    <h1 class="no-margins">{$show_data['all_reg']} 个</h1>
+                    <h1 class="no-margins" id="all_reg">{$show_data['all_reg']} 个</h1>
                     <div class="stat-percent font-bold text-navy"></div>
                     <small></small>
                 </div>
@@ -33,7 +50,7 @@
                     <h5>成功数量</h5>
                 </div>
                 <div class="ibox-content">
-                    <h1 class="no-margins">{$show_data['success_reg']} 个</h1>
+                    <h1 class="no-margins" id="success_reg">{$show_data['success_reg']} 个</h1>
                     <div class="stat-percent font-bold text-danger"></div>
                     <small></small>
                 </div>
@@ -46,33 +63,33 @@
                     <h5>失败数量</h5>
                 </div>
                 <div class="ibox-content">
-                    <h1 class="no-margins">{$show_data['fail_reg']} 个</h1>
+                    <h1 class="no-margins" id="fail_reg">{$show_data['fail_reg']} 个</h1>
                     <div class="stat-percent font-bold text-danger"></div>
                     <small></small>
                 </div>
             </div>
         </div>
-        <div class="col-sm-2">
+        <div class="col-sm-3">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
                     <span class="label label-primary pull-right">所有</span>
                     <h5>剩余机器量</h5>
                 </div>
                 <div class="ibox-content">
-                    <h1 class="no-margins">{$show_data['machine_left']} 台</h1>
+                    <h1 class="no-margins" id="machine_left">{$show_data['machine_left']} 台</h1>
                     <div class="stat-percent font-bold text-danger"></div>
                     <small></small>
                 </div>
             </div>
         </div>
-        <div class="col-sm-2">
+        <div class="col-sm-3">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
                     <span class="label label-primary pull-right">所有</span>
                     <h5>剩余邮箱量</h5>
                 </div>
                 <div class="ibox-content">
-                    <h1 class="no-margins">{$show_data['email_left']} 个</h1>
+                    <h1 class="no-margins" id="email_left">{$show_data['email_left']} 个</h1>
                     <div class="stat-percent font-bold text-danger"></div>
                     <small></small>
                 </div>
@@ -105,7 +122,88 @@
             </div>
         </div>-->
     </div>
-
+    <div class="row">
+        <div class="col-sm-2">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-info pull-right">今天</span>
+                    <h5>总注册量</h5>
+                </div>
+                <div class="ibox-content">
+                    <h1 class="no-margins">{$show_data['today_reg']} 个</h1>
+                    <div class="stat-percent font-bold text-navy"></div>
+                    <small></small>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-info pull-right">今天</span>
+                    <h5>成功数量</h5>
+                </div>
+                <div class="ibox-content">
+                    <h1 class="no-margins">{$show_data['today_success_reg']} 个</h1>
+                    <div class="stat-percent font-bold text-danger"></div>
+                    <small></small>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-info pull-right">今天</span>
+                    <h5>失败数量</h5>
+                </div>
+                <div class="ibox-content">
+                    <h1 class="no-margins">{$show_data['today_fail_reg']} 个</h1>
+                    <div class="stat-percent font-bold text-danger"></div>
+                    <small></small>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-2">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-warning pull-right">上小时</span>
+                    <h5>总注册量</h5>
+                </div>
+                <div class="ibox-content">
+                    <h1 class="no-margins">{$show_data['hour_reg']} 个</h1>
+                    <div class="stat-percent font-bold text-navy"></div>
+                    <small></small>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-warning pull-right">上小时</span>
+                    <h5>成功数量</h5>
+                </div>
+                <div class="ibox-content">
+                    <h1 class="no-margins">{$show_data['hour_success_reg']} 个</h1>
+                    <div class="stat-percent font-bold text-danger"></div>
+                    <small></small>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-warning pull-right">上小时</span>
+                    <h5>失败数量</h5>
+                </div>
+                <div class="ibox-content">
+                    <h1 class="no-margins">{$show_data['hour_fail_reg']} 个</h1>
+                    <div class="stat-percent font-bold text-danger"></div>
+                    <small></small>
+                </div>
+            </div>
+        </div>
+    </div>
     <!--<div class="row">
         <div class="col-sm-8">
             <div class="ibox float-e-margins">
@@ -137,7 +235,44 @@
 </div>
 
 <script src="__JS__/jquery.min.js"></script>
-<script src="__JS__/plugins/echarts/echarts-all.js"></script>
+<script src="__JS__/plugins/layer-new/layer.min.js"></script>
+<script src="__JS__/plugins/layer-new/laydate/laydate.js"></script>
+<!--<script src="__JS__/plugins/echarts/echarts-all.js"></script>-->
+<script>
+    function searchData() {
+        // 获取参数
+        let start_time = $('#start_time').val();
+        let end_time = $('#end_time').val();
+        if (!start_time || !end_time) {
+            layer.msg('请选择搜索范围');
+            return;
+        }
+        $.getJSON("{:url('index/search')}", {'start_time': start_time, 'end_time': end_time}, function (res) {
+            if (1 == res.code) {
+                layer.alert('搜索成功');
+                // 赋值
+                $('#all_reg').html(res.all_reg + " 个");
+                $('#fail_reg').html(res.fail_reg + " 个");
+                $('#success_reg').html(res.success_reg + " 个");
+                $('#machine_left').html(res.machine_left + " 台");
+                $('#email_left').html(res.email_left + " 个");
+            } else {
+                layer.alert(res.msg, {title: '请重试', icon: 2});
+            }
+        });
+        layer.close(index);
+    }
 
+    // 时间选择
+    laydate.render({
+        elem: "#start_time"
+        , type: 'datetime'
+    });
+
+    laydate.render({
+        elem: "#end_time"
+        , type: 'datetime'
+    });
+</script>
 </body>
 </html>
