@@ -22,6 +22,7 @@ DROP TABLE IF EXISTS `s_email`;
 CREATE TABLE `s_email` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `email_type_id` int(11) NOT NULL COMMENT '邮箱类型',
+  `phone_id` int(11) DEFAULT NULL COMMENT '手机id',
   `machine_id` int(11) DEFAULT NULL COMMENT '机器id',
   `email_name` varchar(128) NOT NULL COMMENT '邮箱名',
   `udid` varchar(128) DEFAULT NULL COMMENT 'udid',
@@ -38,7 +39,7 @@ CREATE TABLE `s_email` (
   `delete_time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `unq_email` (`email_type_id`,`email_name`) USING BTREE
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
+) ENGINE=MyISAM AUTO_INCREMENT=4001 DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 -- Records of s_email

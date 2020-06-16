@@ -14,7 +14,7 @@ class PhoneValidate extends BaseValidate
     protected $rule = [
         'phone_sn' => 'require',
         'program_version' => 'require',
-        'des' => 'require',
+//        'des' => 'require',
     ];
 
 }

@@ -12,8 +12,8 @@ namespace app\api\validate;
 class GetEmailValidate extends BaseValidate
 {
     protected $rule = [
+        'phone_sn' => 'require',
         /*'HWModelStr' => 'require',
-        'ModelNumber' => 'require',
         'ProductType' => 'require',
         'bt' => 'require',
         'imei' => 'require',

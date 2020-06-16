@@ -11,7 +11,9 @@ namespace app\api\controller;
 
 use app\api\model\EmailModel;
 use app\api\model\MachineModel;
+use app\api\model\PhoneModel;
 use app\api\validate\GetCodeValidate;
+use app\api\validate\GetEmailValidate;
 use app\api\validate\SendRegResultValidate;
 use app\lib\exception\EmailException;
 use app\lib\exception\SuccessMessage;
@@ -25,21 +27,29 @@ class Email extends Controller
     public function getEmail()
     {
         // 数据验证
-//        $params = (new GetEmailValidate())->goCheck();
+        $params = (new GetEmailValidate())->goCheck();
 
         // 获取一个未使用邮箱
         $email_data = EmailModel::getOneNotUseEmail();
 
-        // 存储机器数据
-        /* $params['email_id'] = $email_data['id'];
-         MachineModel::create($params);*/
+        // 存储手机数据
+        $phone_data = PhoneModel::checkPhone($params['phone_sn']);
+        if (!$phone_data) {
+            throw new EmailException(['msg' => 'phone SN 不存在']);
+        }
+
+        // 绑定手机数据
+        EmailModel::update([
+            'phone_id' => $phone_data['id'],
+            'phone_sn' => $phone_data['phone_sn'],
+        ], ['id' => $email_data['id']]);
 
         return [
             'status' => 1,
             'msg' => '成功获取邮箱',
             'email_name' => $email_data['email_name'],
-            /*'email_password' => $email_data['email_password'],
-            'email_type' => $email_data['email_type']['name']*/
+            'email_password' => $email_data['email_password'],
+            'email_type' => $email_data['email_type']['name']
         ];
     }
 
@@ -50,6 +60,9 @@ class Email extends Controller
         $params = (new GetCodeValidate())->goCheck();
         // 获取邮箱数据
         $email_data = EmailModel::getEmailByWhere(['email_name' => $params['email_name']]);
+        if (!$email_data) {
+            throw new EmailException(['errorCode' => 30001, 'msg' => '不存在该邮箱数据']);
+        }
         $email_model = new EmailModel();
         // 登录邮箱
         try {
@@ -62,7 +75,7 @@ class Email extends Controller
             );
 
             //如果catch没有捕获到，才会执行到这里
-            set_exception_handler(function () use ($email_model ,$params) {
+            set_exception_handler(function () use ($email_model, $params) {
                 $email_model->where(['email_name' => $params['email_name']])->update(['use_status' => 2]);
                 // 捕捉到错误,账号密码不正确
                 echo json_encode(['status' => 0, 'msg' => '该账号密码不正确', 'email_name' => $params['email_name']]);
