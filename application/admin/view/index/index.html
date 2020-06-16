@@ -37,7 +37,7 @@
                     <h5>总注册量</h5>
                 </div>
                 <div class="ibox-content">
-                    <h1 class="no-margins" id="all_reg">{$show_data['all_reg']} 个</h1>
+                    <h1 class="no-margins">{$show_data['all_reg']} 个</h1>
                     <div class="stat-percent font-bold text-navy"></div>
                     <small></small>
                 </div>
@@ -50,7 +50,7 @@
                     <h5>成功数量</h5>
                 </div>
                 <div class="ibox-content">
-                    <h1 class="no-margins" id="success_reg">{$show_data['success_reg']} 个</h1>
+                    <h1 class="no-margins">{$show_data['success_reg']} 个</h1>
                     <div class="stat-percent font-bold text-danger"></div>
                     <small></small>
                 </div>
@@ -63,7 +63,7 @@
                     <h5>失败数量</h5>
                 </div>
                 <div class="ibox-content">
-                    <h1 class="no-margins" id="fail_reg">{$show_data['fail_reg']} 个</h1>
+                    <h1 class="no-margins">{$show_data['fail_reg']} 个</h1>
                     <div class="stat-percent font-bold text-danger"></div>
                     <small></small>
                 </div>
@@ -76,7 +76,7 @@
                     <h5>剩余机器量</h5>
                 </div>
                 <div class="ibox-content">
-                    <h1 class="no-margins" id="machine_left">{$show_data['machine_left']} 台</h1>
+                    <h1 class="no-margins">{$show_data['machine_left']} 台</h1>
                     <div class="stat-percent font-bold text-danger"></div>
                     <small></small>
                 </div>
@@ -89,20 +89,35 @@
                     <h5>剩余邮箱量</h5>
                 </div>
                 <div class="ibox-content">
-                    <h1 class="no-margins" id="email_left">{$show_data['email_left']} 个</h1>
+                    <h1 class="no-margins">{$show_data['email_left']} 个</h1>
                     <div class="stat-percent font-bold text-danger"></div>
                     <small></small>
                 </div>
             </div>
         </div>
-        <!--<div class="col-sm-2">
+    </div>
+    <div class="row" id="search_row" style="display: none">
+        <div class="col-sm-2">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
-                    <span class="label label-primary pull-right">今天</span>
-                    <h5>接入会话量</h5>
+                    <span class="label label-danger pull-right">搜索</span>
+                    <h5>总注册量</h5>
                 </div>
                 <div class="ibox-content">
-                    <h1 class="no-margins">150</h1>
+                    <h1 class="no-margins" id="all_reg">{$show_data['all_reg']} 个</h1>
+                    <div class="stat-percent font-bold text-navy"></div>
+                    <small></small>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-danger pull-right">搜索</span>
+                    <h5>成功数量</h5>
+                </div>
+                <div class="ibox-content">
+                    <h1 class="no-margins" id="success_reg">{$show_data['success_reg']} 个</h1>
                     <div class="stat-percent font-bold text-danger"></div>
                     <small></small>
                 </div>
@@ -111,16 +126,16 @@
         <div class="col-sm-2">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
-                    <span class="label label-primary pull-right">今天</span>
-                    <h5>总会话量</h5>
+                    <span class="label label-danger pull-right">搜索</span>
+                    <h5>失败数量</h5>
                 </div>
                 <div class="ibox-content">
-                    <h1 class="no-margins">300</h1>
+                    <h1 class="no-margins" id="fail_reg">{$show_data['fail_reg']} 个</h1>
                     <div class="stat-percent font-bold text-danger"></div>
                     <small></small>
                 </div>
             </div>
-        </div>-->
+        </div>
     </div>
     <div class="row">
         <div class="col-sm-2">
@@ -162,8 +177,6 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div class="row">
         <div class="col-sm-2">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
@@ -251,6 +264,7 @@
             if (1 == res.code) {
                 layer.alert('搜索成功');
                 // 赋值
+                $('#search_row').css("display","block");
                 $('#all_reg').html(res.all_reg + " 个");
                 $('#fail_reg').html(res.fail_reg + " 个");
                 $('#success_reg').html(res.success_reg + " 个");
