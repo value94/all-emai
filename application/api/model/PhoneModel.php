@@ -10,7 +10,12 @@ class PhoneModel extends Model
 
     public static function checkPhone($phone_sn)
     {
-        return self::where('phone_sn', $phone_sn)->find();
+        $result = self::where('phone_sn', $phone_sn)->find();
+        if ($result) {
+            // 更新状态
+            self::update(['status' => 1], ['id' => $result['id']]);
+        }
+        return $result;
     }
 
 }

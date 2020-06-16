@@ -19,6 +19,7 @@ class Phone extends Controller
         if ($result) {
             throw new PhoneException(['msg' => '手机SN已存在']);
         }
+        $params['status'] = 1;
         PhoneModel::create($params);
 
         throw new SuccessMessage(['msg' => '添加成功']);
