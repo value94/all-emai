@@ -2,7 +2,12 @@
 
 namespace app\api\controller;
 
+use app\api\model\IpAddressModel;
+use app\api\validate\CheckIPValidate;
+use app\lib\exception\IPException;
+use app\lib\exception\SuccessMessage;
 use think\Controller;
+use think\exception\ErrorException;
 
 class IpAddress extends Controller
 {
@@ -12,9 +17,22 @@ class IpAddress extends Controller
         // 验证参数
 //        $params = (new GetIPValidate())->goCheck();
         // 获取一个单位时间未使用 ip
-        $ip_data = \app\api\model\IpAddress::getAvailableIP();
+        $ip_data = IpAddressModel::getAvailableIP();
         // 返回数据
         return ['status' => 1, 'msg' => '成功获取IP', 'ip' => $ip_data['ip']];
+    }
+
+    public function checkIP()
+    {
+        //验证参数
+        $params = (new CheckIPValidate())->goCheck();
+
+        $result = IpAddressModel::checkIP($params['ip']);
+        if ($result) {
+            throw new SuccessMessage(['msg' => 'ip可用']);
+        } else {
+            throw new IPException(['msg' => 'ip已过期']);
+        }
     }
 
 }

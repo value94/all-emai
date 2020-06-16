@@ -15,6 +15,7 @@ Route::any('api/getCode', 'api/Email/getCode');
 Route::any('api/SendRegResult', 'api/Email/sendRegResult');
 Route::any('api/GetUnUsedMachine', 'api/Machine/getUnUsedMachine');
 
-Route::any('api/GetAvailableIP', 'api/IpAddress/getAvailableIP');
+Route::post('api/GetAvailableIP', 'api/IpAddress/getAvailableIP');
+Route::post('api/CheckIP', 'api/IpAddress/checkIP');
 
-Route::any('api/SendPhoneInfo', 'api/Phone/sendPhoneInfo');
+Route::post('api/SendPhoneInfo', 'api/Phone/sendPhoneInfo');

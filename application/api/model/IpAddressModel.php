@@ -6,8 +6,9 @@ use app\lib\exception\IPException;
 use think\facade\Config;
 use think\Model;
 
-class IpAddress extends Model
+class IpAddressModel extends Model
 {
+    protected $table = 's_ip_address';
     protected $autoWriteTimestamp = true;
 
     public static function getAvailableIP()
@@ -28,5 +29,16 @@ class IpAddress extends Model
         } else {
             throw new IPException(['msg' => '没有可用IP']);
         }
+    }
+
+    public static function checkIP($ip)
+    {
+        // 获取配置时间
+        $email_time_interval = Config::get('setting.email_time_interval');
+        $can_time = date("Y-m-d H:i:s", strtotime("-{$email_time_interval} hour"));
+
+        return self::where('use_status', '<>', 2)
+            ->where('update_time', '<', $can_time)
+            ->find();
     }
 }

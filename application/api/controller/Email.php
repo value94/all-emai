@@ -12,7 +12,6 @@ namespace app\api\controller;
 use app\api\model\EmailModel;
 use app\api\model\MachineModel;
 use app\api\validate\GetCodeValidate;
-use app\api\validate\GetEmailValidate;
 use app\api\validate\SendRegResultValidate;
 use app\lib\exception\EmailException;
 use app\lib\exception\SuccessMessage;
