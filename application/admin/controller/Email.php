@@ -248,6 +248,8 @@ class Email extends Base
 
             $success_count = 0;
             $error_count = 0;
+            $update_time = date('Y-m-d H:i:s');
+            $create_time = date('Y-m-d H:i:s');
             // 添加数据
             foreach ($orders_data as $c) {
                 // 判断行是否为空
@@ -261,6 +263,8 @@ class Email extends Base
                     'imapsvr' => $email_type->imapsvr,
                     'pop3svr' => $email_type->pop3svr,
                     'smtpsvr' => $email_type->smtpsvr,
+                    'create_time' => $create_time,
+                    'update_time' => $update_time,
                 ];
                 $result = Db::table('s_email')->insert($email_data, "IGNORE");
                 if ($result == 1) {
