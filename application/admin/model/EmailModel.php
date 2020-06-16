@@ -9,7 +9,6 @@ class EmailModel extends Model
 {
     protected $table = 's_email';
     protected $updateTime = false;
-    protected $autoWriteTimestamp = false;
 
     public function getUseStatusAttr($value)
     {
