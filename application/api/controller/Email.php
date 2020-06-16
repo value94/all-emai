@@ -39,8 +39,8 @@ class Email extends Controller
             'status' => 1,
             'msg' => '成功获取邮箱',
             'email_name' => $email_data['email_name'],
-            'email_password' => $email_data['email_password'],
-            'email_type' => $email_data['email_type']['name']
+            /*'email_password' => $email_data['email_password'],
+            'email_type' => $email_data['email_type']['name']*/
         ];
     }
 
