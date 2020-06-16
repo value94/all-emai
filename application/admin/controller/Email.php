@@ -5,6 +5,7 @@ namespace app\admin\controller;
 use app\admin\model\EmailModel;
 use app\admin\model\EmailTypeModel;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use think\Db;
 use think\Request;
 
 class Email extends Base
@@ -50,8 +51,8 @@ class Email extends Base
     {
         $where = [];
         // 邮箱名搜索
-        if (!empty($params['searchText'])) {
-            $where[] = ['email_name', 'like', '%' . $params['searchText'] . '%'];
+        if (!empty($params['email_name'])) {
+            $where[] = ['email_name', 'like', '%' . $params['email_name'] . '%'];
         }
         // 失败原因搜索
         if (!empty($params['fail_msg'])) {
@@ -244,6 +245,7 @@ class Email extends Base
                 // 上传失败获取错误信息
                 $this->error('上传文件失败,请重试!');
             }
+
             $success_count = 0;
             $error_count = 0;
             // 添加数据
@@ -252,24 +254,23 @@ class Email extends Base
                 if (!$c[0]) {
                     continue;
                 }
-                // 判断邮箱是否已存在
-                $Email = new EmailModel();
-                $res = $Email->where('email_name', '=', $c[0])->count();
-                if ($res) {
-                    $error_count++;
-                    continue;
-                } else {
-                    $Email->email_name = $c[0];
-                    $Email->email_password = $c[1];
-                    $Email->email_type_id = $email_type->id;
-                    $Email->imapsvr = $email_type->imapsvr;
-                    $Email->pop3svr = $email_type->pop3svr;
-                    $Email->smtpsvr = $email_type->smtpsvr;
-                    $Email->save();
+                $email_data = [
+                    'email_name' => $c[0],
+                    'email_password' => $c[1],
+                    'email_type_id' => $email_type->id,
+                    'imapsvr' => $email_type->imapsvr,
+                    'pop3svr' => $email_type->pop3svr,
+                    'smtpsvr' => $email_type->smtpsvr,
+                ];
+                $result = Db::table('s_email')->insert($email_data, "IGNORE");
+                if ($result == 1) {
                     $success_count++;
+                } else {
+                    $error_count++;
                 }
             }
-            $this->success('批量添加成功,共导入' . $success_count . ' 条,已存在' . $error_count . ' 条');
+
+            $this->success('批量添加成功,共导入' . $success_count . ' 条,已存在' . $error_count . ' 条。');
         }
         $this->assign([
             'email_type' => EmailTypeModel::getEmailType(),
