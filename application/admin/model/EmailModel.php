@@ -8,7 +8,6 @@ use think\Model;
 class EmailModel extends Model
 {
     protected $table = 's_email';
-    protected $updateTime = false;
 
     public function getUseStatusAttr($value)
     {

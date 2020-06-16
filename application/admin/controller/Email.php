@@ -349,7 +349,7 @@ class Email extends Base
                 }
                 // 修改邮箱下载状态
                 $emailModel = new EmailModel();
-                $emailModel->isAutoWriteTimestamp(false)->update(['is_get' => 1], $where);
+                $emailModel->isAutoWriteTimestamp(false)->save(['is_get' => 1], $where);
                 downloadExcel($newExcel, '邮箱数据表', 'Xls');
             } else {
                 $this->error('该搜索条件没有能导出的数据');
@@ -379,14 +379,14 @@ class Email extends Base
                 return $result;
             }
 
-            // 切换选中机器状态
+            // 切换选中邮箱状态
             if (isset($data['change_use_status'])) {
                 EmailModel::update(['use_status' => $data['change_use_status']],
                     ['id' => $data['email_id']]);
                 return $result;
             }
 
-            // 切换机器状态
+            // 切换邮箱状态
             $used_id = EmailModel::where([
                 ['use_status', 'in', '1,2'],
                 ['id', 'in', $data['email_id']]
