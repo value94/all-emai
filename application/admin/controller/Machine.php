@@ -3,6 +3,7 @@
 namespace app\admin\controller;
 
 use app\admin\model\MachineModel;
+use think\Db;
 use think\Request;
 
 class Machine extends Base
@@ -231,7 +232,7 @@ class Machine extends Base
         return $result;
     }
 
-    // 批量导入邮箱
+    // 批量导入机器码
     public function import_machine()
     {
         if (request()->isPost()) {
@@ -251,36 +252,40 @@ class Machine extends Base
                 // 上传失败获取错误信息
                 $this->error('上传文件失败,请重试!');
             }
+
+            // 添加数据
             $success_count = 0;
             $error_count = 0;
+            $update_time = date('Y-m-d H:i:s');
+            $create_time = date('Y-m-d H:i:s');
             // 添加数据
             foreach ($excel_data as $c) {
                 // 判断行是否为空
                 if (!$c[0]) {
                     continue;
                 }
-                // 判断邮箱是否已存在
-                $machine = new MachineModel();
-                $res = $machine->where('udid', '=', $c[4])->count();
-                if ($res) {
-                    $error_count++;
-                    continue;
-                } else {
-                    $machine->sn = $c[0];
-                    $machine->imei = $c[1];
-                    $machine->bt = $c[2];
-                    $machine->wifi = $c[3];
-                    $machine->udid = $c[4];
-                    $machine->PhoneModel = $c[5];
-                    $machine->ModelNumber = $c[6];
-                    $machine->HWModelStr = $c[7];
-                    $machine->ProductType = $c[8];
-
-                    $machine->save();
+                $machine_data = [
+                    'sn' => $c[0],
+                    'imei' => $c[1],
+                    'bt' => $c[2],
+                    'wifi' => $c[3],
+                    'udid' => $c[4],
+                    'PhoneModel' => $c[5],
+                    'ModelNumber' => $c[6],
+                    'HWModelStr' => $c[7],
+                    'ProductType' => $c[8],
+                    'create_time' => $create_time,
+                    'update_time' => $update_time,
+                ];
+                $result = Db::table('s_machine')->insert($machine_data, "IGNORE");
+                if ($result == 1) {
                     $success_count++;
+                } else {
+                    $error_count++;
                 }
             }
-            $this->success('批量添加成功,共导入' . $success_count . ' 条,已存在' . $error_count . ' 条');
+
+            $this->success('批量添加成功,共导入' . $success_count . ' 条,已存在' . $error_count . ' 条。');
         }
         return $this->fetch();
     }

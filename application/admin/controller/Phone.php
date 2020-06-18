@@ -3,6 +3,7 @@
 namespace app\admin\controller;
 
 use app\admin\model\PhoneModel;
+use think\Db;
 
 class Phone extends Base
 {
@@ -247,7 +248,7 @@ class Phone extends Base
         return $result;
     }
 
-    // 批量导入邮箱
+    // 批量导入手机
     public function import_Phone()
     {
         if (request()->isPost()) {
@@ -269,24 +270,26 @@ class Phone extends Base
             }
             $success_count = 0;
             $error_count = 0;
+            $update_time = date('Y-m-d H:i:s');
+            $create_time = date('Y-m-d H:i:s');
             // 添加数据
             foreach ($excel_data as $c) {
                 // 判断行是否为空
                 if (!$c[0]) {
                     continue;
                 }
-                // 判断邮箱是否已存在
-                $Phone = new PhoneModel();
-                $res = $Phone->where('phone_sn', '=', $c[2])->count();
-                if ($res) {
-                    $error_count++;
-                    continue;
-                } else {
-                    $Phone->number = $c[0];
-                    $Phone->phone_sn = $c[1];
-                    $Phone->des = $c[2];
-                    $Phone->save();
+                $email_data = [
+                    'number' => $c[0],
+                    'phone_sn' => $c[1],
+                    'des' => $c[2],
+                    'create_time' => $create_time,
+                    'update_time' => $update_time,
+                ];
+                $result = Db::table('s_phone')->insert($email_data, "IGNORE");
+                if ($result == 1) {
                     $success_count++;
+                } else {
+                    $error_count++;
                 }
             }
             $this->success('批量添加成功,共导入' . $success_count . ' 条,已存在' . $error_count . ' 条');
