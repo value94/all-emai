@@ -4,9 +4,11 @@ namespace app\admin\model;
 
 use app\admin\validate\MachineValidate;
 use think\Model;
+use think\model\concern\SoftDelete;
 
 class MachineModel extends Model
 {
+    use SoftDelete;
     protected $table = 's_machine';
 
     public function email()

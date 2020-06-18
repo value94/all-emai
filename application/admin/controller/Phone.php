@@ -141,7 +141,7 @@ class Phone extends Base
     {
         $params = input('param.');
         if (isset($params['ids'])) {
-            PhoneModel::where('id', 'in', $params['ids'])->delete();
+            PhoneModel::destroy($params['ids']);
         } else {
             PhoneModel::destroy($params['id']);
         }
@@ -212,7 +212,9 @@ class Phone extends Base
         $where = $this->getWhereByParams($params);
         if (!empty($where)) {
             // 执行删除
-            PhoneModel::where($where)->delete();
+            PhoneModel::destroy(function ($query) use ($where) {
+                $query->where($where);
+            });
         } else {
             $result = [
                 'code' => 0,

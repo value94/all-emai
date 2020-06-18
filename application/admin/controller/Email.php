@@ -167,7 +167,9 @@ class Email extends Base
         $where = $this->getWhereByParams($params);
         if (!empty($where)) {
             // 执行删除
-            EmailModel::where($where)->delete();
+            EmailModel::destroy(function ($query) use ($where) {
+                $query->where($where);
+            });
         } else {
             $result = [
                 'code' => 0,

@@ -71,7 +71,6 @@ class Machine extends Base
         return $where;
     }
 
-
     /**
      * 显示创建资源表单页.
      *
@@ -127,7 +126,7 @@ class Machine extends Base
     {
         $params = input('param.');
         if (isset($params['ids'])) {
-            MachineModel::where('id', 'in', $params['ids'])->delete();
+            MachineModel::destroy($params['ids']);
         } else {
             MachineModel::destroy($params['id']);
         }
@@ -197,7 +196,9 @@ class Machine extends Base
         $where = $this->getWhereByParams($params);
         if (!empty($where)) {
             // 执行删除
-            MachineModel::where($where)->delete();
+            MachineModel::destroy(function ($query) use ($where) {
+                $query->where($where);
+            });
         } else {
             $result = [
                 'code' => 0,

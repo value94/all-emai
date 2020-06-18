@@ -4,9 +4,11 @@ namespace app\admin\model;
 
 use app\admin\validate\PhoneValidate;
 use think\Model;
+use think\model\concern\SoftDelete;
 
 class PhoneModel extends Model
 {
+    use SoftDelete;
     protected $table = 's_phone';
 
     public function email()
