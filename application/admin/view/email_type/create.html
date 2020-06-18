@@ -29,15 +29,37 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            <label class="col-sm-3 control-label">接收协议：</label>
+                            <div class="input-group col-sm-6">
+                                <div class="radio i-checks col-sm-6">
+                                    <label>
+                                        <input type="radio" value="1" name="connection_method" checked> <i></i>IMAP</label>
+                                        <input type="radio" value="2" name="connection_method"> <i></i>POP3</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label class="col-sm-3 control-label">接收服务器(imap) *：</label>
                             <div class="input-group col-sm-4">
                                 <input id="imapsvr" type="text" class="form-control" name="imapsvr" required="" aria-required="true" placeholder="主要使用这个服务">
                             </div>
                         </div>
                         <div class="form-group">
+                            <label class="col-sm-3 control-label">IMAP端口 *：</label>
+                            <div class="input-group col-sm-4">
+                                <input id="imap_port" type="text" class="form-control" name="imap_port" required="" aria-required="true" placeholder="默认为993" value="993">
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label class="col-sm-3 control-label">接收服务器(POP3)：</label>
                             <div class="input-group col-sm-4">
                                 <input id="pop3svr" type="text" class="form-control" name="pop3svr" required="" aria-required="true">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">POP3端口：</label>
+                            <div class="input-group col-sm-4">
+                                <input id="pop3_port" type="text" class="form-control" name="pop3_port" required="" aria-required="true" placeholder="默认为465" value="465">
                             </div>
                         </div>
                         <div class="form-group">

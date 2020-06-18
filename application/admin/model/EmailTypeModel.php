@@ -11,9 +11,9 @@ class EmailTypeModel extends Model
     protected $table = 's_email_type';
     use SoftDelete;
 
-    public function getUseStatusAttr($value)
+    public function getConnectionMethodAttr($value)
     {
-        $status = [0 => '未使用', 1 => '已使用'];
+        $status = [1 => '<p style="color: green">imap</p>', 2 => '<p style="color: blue">pop3</p>'];
         return $status[$value];
     }
 
@@ -38,7 +38,7 @@ class EmailTypeModel extends Model
      */
     public function getOneEmailType($id)
     {
-        return $this->where('id', $id)->find();
+        return $this->where('id', $id)->find()->getData();
     }
 
     /**

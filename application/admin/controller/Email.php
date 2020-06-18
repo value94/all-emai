@@ -33,6 +33,7 @@ class Email extends Base
             // 拼装参数
             foreach ($selectResult as $key => $vo) {
                 $selectResult[$key]['operate'] = showOperate($this->makeButton($vo['id']));
+                $selectResult[$key]['imapsvr'] = $vo['email_type']['imapsvr'];
             }
 
             $return['total'] = $Email->getAllEmail($where);  //总数据
