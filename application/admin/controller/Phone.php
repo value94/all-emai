@@ -28,7 +28,8 @@ class Phone extends Base
 
             // 拼装参数
             foreach ($selectResult as $key => $vo) {
-                $selectResult[$key]['email_name'] = $vo['email']['email_name'];
+//                $selectResult[$key]['email_name'] = $vo['email']['email_name'];
+                $selectResult[$key]['failed_job_count'] = $vo['job_count'] - $vo['success_job_count'];
                 $selectResult[$key]['operate'] = showOperate($this->makeButton($vo['id']));
             }
             // 查询统计

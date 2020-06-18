@@ -16,12 +16,12 @@ class Phone extends Controller
 
         // 验证是否已经存在
         $result = PhoneModel::checkPhone($params['phone_sn']);
-        if ($result) {
-            throw new PhoneException(['msg' => '手机SN已存在']);
+        if (!$result) {
+            throw new PhoneException(['msg' => '手机SN不存在']);
         }
         $params['status'] = 1;
-        PhoneModel::create($params);
+        PhoneModel::update($params,['phone_sn' => $params['phone_sn']]);
 
-        throw new SuccessMessage(['msg' => '添加成功']);
+        throw new SuccessMessage(['msg' => '更新手机信息成功']);
     }
 }
