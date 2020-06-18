@@ -18,8 +18,10 @@ class Phone extends Controller
         $result = PhoneModel::checkPhone($params['phone_sn']);
         if (!$result) {
             throw new PhoneException(['msg' => '手机SN不存在']);
+        }elseif($result['status'] == 2){
+            throw new PhoneException(['msg' => '手机已停用']);
         }
-        $params['status'] = 1;
+//        $params['status'] = 1;
         PhoneModel::update($params,['phone_sn' => $params['phone_sn']]);
 
         throw new SuccessMessage(['msg' => '更新手机信息成功']);
