@@ -3,9 +3,11 @@
 namespace app\api\model;
 
 use think\Model;
+use think\model\concern\SoftDelete;
 
 class PhoneModel extends Model
 {
+    use SoftDelete;
     protected $table = 's_phone';
 
     public static function checkPhone($phone_sn)
