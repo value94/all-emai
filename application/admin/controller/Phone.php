@@ -29,17 +29,17 @@ class Phone extends Base
             // 拼装参数
             foreach ($selectResult as $key => $vo) {
 //                $selectResult[$key]['email_name'] = $vo['email']['email_name'];
-                $selectResult[$key]['failed_job_count'] = $vo['job_count'] - $vo['success_job_count'];
+                $selectResult[$key]['job_count'] = $vo['failed_job_count'] + $vo['success_job_count'];
                 $selectResult[$key]['operate'] = showOperate($this->makeButton($vo['id']));
             }
             // 查询统计
-            $job_count = $Phone->getSumByWhere($where, 'job_count');
+            $failed_job_count = $Phone->getSumByWhere($where, 'failed_job_count');
             $success_job_count = $Phone->getSumByWhere($where, 'success_job_count');
 
             $return['count'] = [
-                'job_count' => $job_count,
+                'job_count' => $failed_job_count + $success_job_count,
                 'success_job_count' => $success_job_count,
-                'failed_job_count' => $job_count - $success_job_count,
+                'failed_job_count' => $failed_job_count,
             ];
             $return['total'] = $Phone->getAllPhone($where);  //总数据
             $return['rows'] = $selectResult;
