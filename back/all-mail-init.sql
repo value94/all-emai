@@ -26,6 +26,7 @@ CREATE TABLE `s_email` (
   `machine_id` int(11) DEFAULT NULL COMMENT '机器id',
   `email_name` varchar(128) NOT NULL COMMENT '邮箱名',
   `udid` varchar(128) DEFAULT NULL COMMENT 'udid',
+  `phone_sn` varchar(128) DEFAULT NULL,
   `email_password` varchar(255) DEFAULT NULL,
   `reg_status` tinyint(4) DEFAULT '2' COMMENT '注册状态: 2/未注册 0/失败 1/成功',
   `use_status` tinyint(2) DEFAULT '0' COMMENT '使用状态:0/未使用 1/已使用 2/停止使用',
@@ -44,7 +45,7 @@ CREATE TABLE `s_email` (
 -- ----------------------------
 -- Records of s_email
 -- ----------------------------
-INSERT INTO `s_email` VALUES ('3', '1', null, 'noashashehkau@outlook.com', '', '7dh18XTu', '2', '0', '0', '', 'imap.rambler.ru', 'pop.rambler.ru', 'smtp.rambler.ru', '2020-06-16 17:55:12', null, null);
+INSERT INTO `s_email` VALUES ('3', '1',null, null, 'noashashehkau@outlook.com', '','', '7dh18XTu', '2', '0', '0', '', 'imap.rambler.ru', 'pop.rambler.ru', 'smtp.rambler.ru', '2020-06-16 17:55:12', null, null);
 
 -- ----------------------------
 -- Table structure for s_email_type

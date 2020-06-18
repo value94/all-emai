@@ -22,9 +22,11 @@ DROP TABLE IF EXISTS `s_email`;
 CREATE TABLE `s_email` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `email_type_id` int(11) NOT NULL COMMENT '邮箱类型',
+  `phone_id` int(11) DEFAULT NULL COMMENT '手机id',
   `machine_id` int(11) DEFAULT NULL COMMENT '机器id',
   `email_name` varchar(128) NOT NULL COMMENT '邮箱名',
   `udid` varchar(128) DEFAULT NULL COMMENT 'udid',
+  `phone_sn` varchar(128) DEFAULT NULL,
   `email_password` varchar(255) DEFAULT NULL,
   `reg_status` tinyint(4) DEFAULT '2' COMMENT '注册状态: 2/未注册 0/失败 1/成功',
   `use_status` tinyint(2) DEFAULT '0' COMMENT '使用状态:0/未使用 1/已使用 2/停止使用',
@@ -38,7 +40,7 @@ CREATE TABLE `s_email` (
   `delete_time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `unq_email` (`email_type_id`,`email_name`) USING BTREE
-) ENGINE=MyISAM AUTO_INCREMENT=4003 DEFAULT CHARSET=utf8mb4;
+) ENGINE=MyISAM AUTO_INCREMENT=4001 DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 -- Records of s_email

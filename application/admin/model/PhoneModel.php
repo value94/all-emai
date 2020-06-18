@@ -32,7 +32,7 @@ class PhoneModel extends Model
      */
     public function getPhoneByWhere($where, $offset, $limit)
     {
-        return $this->where($where)->with('email')->limit($offset, $limit)->order('id desc')->select();
+        return $this->where($where)->with('email')->limit($offset, $limit)->order('update_time desc')->select();
     }
 
     // 根据条件,获取数量

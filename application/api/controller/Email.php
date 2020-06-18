@@ -49,7 +49,10 @@ class Email extends Controller
             'msg' => '成功获取邮箱',
             'email_name' => $email_data['email_name'],
             'email_password' => $email_data['email_password'],
-            'email_type' => $email_data['email_type']['name']
+            'connection_method' => $email_data['email_type']['connection_method'] == 1 ? 'imap' : 'pop3',
+            'email_port' => $email_data['email_type']['connection_method'] == 1 ? $email_data['email_type']['imap_port'] : $email_data['email_type']['pop3_port'],
+            'imapsvr' => $email_data['email_type']['imapsvr'],
+            'pop3svr' => $email_data['email_type']['pop3svr'],
         ];
     }
 

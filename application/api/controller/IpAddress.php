@@ -29,6 +29,8 @@ class IpAddress extends Controller
 
         $result = IpAddressModel::checkIP($params['ip']);
         if ($result) {
+            // 更新 ip 的更新时间
+            IpAddressModel::update(['update_time' => date('Y-m-d H:i:s')], ['id' => $result['id']]);
             throw new SuccessMessage(['msg' => 'ip可用']);
         } else {
             throw new IPException(['msg' => 'ip已过期']);
