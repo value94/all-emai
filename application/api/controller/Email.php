@@ -69,8 +69,14 @@ class Email extends Controller
         $email_model = new EmailModel();
         // 登录邮箱
         try {
+            if ($email_data['email_type']['connection_method'] == 1) {
+                $imap_path = '{' . $email_data['email_type']['imapsvr'] . ':' . $email_data['email_type']['imap_port'] . '/imap/ssl' . '}INBOX';
+            } else {
+                $imap_path = '{' . $email_data['email_type']['pop3svr'] . ':' . $email_data['email_type']['pop3_port'] . '/imap/ssl' . '}INBOX';
+            }
+
             $mailbox = new Mailbox(
-                '{' . $email_data['imapsvr'] . ':993/imap/ssl' . '}INBOX', // IMAP server and mailbox folder
+                $imap_path, // IMAP server and mailbox folder
                 $email_data['email_name'], // Username for the before configured mailbox
                 $email_data['email_password'], // Password for the before configured username
                 '', // Directory, where attachments will be saved (optional)

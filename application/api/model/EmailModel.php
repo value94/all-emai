@@ -46,7 +46,7 @@ class EmailModel extends Model
      */
     public static function getEmailByWhere($where)
     {
-        return self::where($where)->find();
+        return self::with('EmailType')->where($where)->find();
     }
 
     /**
