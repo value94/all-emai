@@ -39,11 +39,11 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label">邮箱类型：</label>
                             <div class="input-group col-sm-4">
-                                <select class="form-control" name="email_type" required="" aria-required="true">
+                                <select class="form-control" name="email_type_id" required="" aria-required="true">
                                     <option value="">请选择</option>
                                     {if !empty($email_type)}
                                     {foreach name="email_type" item="vo"}
-                                    <option value="{$vo.id}" >{$vo.name}</option>
+                                    <option value="{$vo.id}">{$vo.name}</option>
                                     {/foreach}
                                     {/if}
                                 </select>

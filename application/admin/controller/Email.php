@@ -97,13 +97,6 @@ class Email extends Base
         if (request()->isPost()) {
 
             $param = input('post.');
-            $type_id = input('post.email_type');
-
-            $email_type = EmailTypeModel::getEmailTypeById($type_id);
-            $param['email_type_id'] = $type_id;
-            $param['imapsvr'] = $email_type['imapsvr'];
-            $param['pop3svr'] = $email_type['pop3svr'];
-            $param['smtpsvr'] = $email_type['smtpsvr'];
 
             $Email = new EmailModel();
             $flag = $Email->insertEmail($param);
@@ -131,15 +124,6 @@ class Email extends Base
         if (request()->isPost()) {
 
             $param = input('post.');
-
-            $type_id = input('post.email_type');
-
-            $email_type = EmailTypeModel::getEmailTypeById($type_id);
-            $param['email_type_id'] = $type_id;
-            $param['imapsvr'] = $email_type['imapsvr'];
-            $param['pop3svr'] = $email_type['pop3svr'];
-            $param['smtpsvr'] = $email_type['smtpsvr'];
-
             $flag = $Email->editEmail($param);
 
             return json(msg($flag['code'], $flag['data'], $flag['msg']));
@@ -261,9 +245,6 @@ class Email extends Base
                     'email_name' => $c[0],
                     'email_password' => $c[1],
                     'email_type_id' => $email_type->id,
-                    'imapsvr' => $email_type->imapsvr,
-                    'pop3svr' => $email_type->pop3svr,
-                    'smtpsvr' => $email_type->smtpsvr,
                     'create_time' => $create_time,
                     'update_time' => $update_time,
                 ];
