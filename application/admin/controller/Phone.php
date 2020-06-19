@@ -56,12 +56,12 @@ class Phone extends Base
     protected function getWhereByParams($params)
     {
         $where = [];
-        // 机器 udid 搜索
+        // 任务设备 udid 搜索
         if (!empty($params['udid'])) {
             $where[] = ['udid', 'like', '%' . $params['udid'] . '%'];
         }
 
-        // 机器 sn 搜索
+        // 任务设备 sn 搜索
         if (!empty($params['phone_sn'])) {
             $where[] = ['phone_sn', 'like', '%' . $params['phone_sn'] . '%'];
         }
@@ -152,7 +152,7 @@ class Phone extends Base
     }
 
     /**
-     * 切换选中机器状态
+     * 切换选中任务设备状态
      * @return mixed
      */
     public function switch_status()
@@ -176,7 +176,7 @@ class Phone extends Base
                 return $result;
             }
 
-            // 切换机器状态
+            // 切换任务设备状态
             $used_id = PhoneModel::where([
                 ['status', 'in', '1,2'],
                 ['id', 'in', $params['phone_id']]

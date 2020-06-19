@@ -71,12 +71,12 @@
                     </div>
                     {/if}
                 </div>
-                <div class="form-group clearfix col-sm-1" style="float: right;margin-top: 1rem;">
-                    <!--{if authCheck('phone/create') }
+                <div class="form-group clearfix col-sm-2" style="float: right;margin-top: 1rem;">
+                    {if authCheck('phone/create') }
                     <a href="{:url('phone/create')}">
                         <button class="btn btn-outline btn-primary" type="button">添加{$title}</button>
                     </a>
-                    {/if}-->
+                    {/if}
                     {if authCheck('phone/import_phone') }
                     <a href="{:url('phone/import_phone')}">
                         <button class="btn btn-outline btn-success" type="button">导入{$title}</button>

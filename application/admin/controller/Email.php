@@ -4,6 +4,7 @@ namespace app\admin\controller;
 
 use app\admin\model\EmailModel;
 use app\admin\model\EmailTypeModel;
+use app\admin\model\PhoneModel;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use think\Db;
 use think\Request;
@@ -54,6 +55,14 @@ class Email extends Base
         // 邮箱名搜索
         if (!empty($params['email_name'])) {
             $where[] = ['email_name', 'like', '%' . $params['email_name'] . '%'];
+        }
+        // phone sn搜索
+        if (!empty($params['phone_sn'])) {
+            // 搜索 phone id
+            $phone_id = PhoneModel::where(['phone_sn' => $params['phone_sn']])->column('id');
+            if ($phone_id){
+                $where[] = ['phone_id', '=', $phone_id[0]];
+            }
         }
         // 失败原因搜索
         if (!empty($params['fail_msg'])) {

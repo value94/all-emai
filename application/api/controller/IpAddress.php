@@ -31,7 +31,7 @@ class IpAddress extends Controller
         if ($ip_data) {
             throw new IPException(['msg' => 'ip暂时不可用']);
         } else {
-            // 验证ip是否存在
+            // 插入ip
             Db::table('s_ip_address')->insert($params, "IGNORE");
             // 更新 ip 的更新时间
             IpAddressModel::update(['update_time' => date('Y-m-d H:i:s')],['ip' => $params['ip']]);

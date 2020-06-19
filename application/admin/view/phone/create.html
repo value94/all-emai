@@ -17,70 +17,36 @@
         <div class="col-sm-8">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
-                    <h5>添加机器</h5>
+                    <h5>添加任务设备</h5>
                 </div>
                 <div class="ibox-content">
-                    <form class="form-horizontal m-t" id="commentForm" method="post" action="{:url('machine/create')}">
-
+                    <form class="form-horizontal m-t" id="commentForm" method="post" action="{:url('phone/create')}">
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">HWModelStr：</label>
+                            <label class="col-sm-3 control-label">编号：</label>
                             <div class="input-group col-sm-4">
-                                <input id="HWModelStr" type="text" class="form-control" name="HWModelStr" required="" aria-required="true">
+                                <input id="HWModelStr" type="text" class="form-control" name="number" required="" aria-required="true" value="">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">ModelNumber：</label>
+                            <label class="col-sm-3 control-label">手机SN：</label>
                             <div class="input-group col-sm-4">
-                                <input id="ModelNumber" type="text" class="form-control" name="ModelNumber" required="" aria-required="true">
+                                <input id="ModelNumber" type="text" class="form-control" name="phone_sn" required="" aria-required="true" >
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">ProductType：</label>
-                            <div class="input-group col-sm-4">
-                                <input id="ProductType" type="text" class="form-control" name="ProductType" required="" aria-required="true">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">bt：</label>
-                            <div class="input-group col-sm-4">
-                                <input id="bt" type="text" class="form-control" name="bt" required="" aria-required="true">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">imei：</label>
-                            <div class="input-group col-sm-6">
-                                <div class="input-group col-sm-4">
-                                    <input id="imei" type="text" class="form-control" name="imei" required="" aria-required="true">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">sn：</label>
-                            <div class="input-group col-sm-6">
-                                <div class="input-group col-sm-4">
-                                    <input id="sn" type="text" class="form-control" name="sn" required="" aria-required="true">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">udid：</label>
-                            <div class="input-group col-sm-6">
-                                <div class="input-group col-sm-4">
-                                    <input id="udid" type="text" class="form-control" name="udid" required="" aria-required="true">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">wifi：</label>
-                            <div class="input-group col-sm-6">
-                                <div class="input-group col-sm-4">
-                                    <input id="wifi" type="text" class="form-control" name="wifi" required="" aria-required="true">
+                            <label class="col-sm-3 control-label">运行状态：</label>
+                            <div class="input-group col-sm-9">
+                                <div class="radio i-checks col-sm-6">
+                                    <label>
+                                        <input type="radio" value="0" name="status">
+                                        <i></i>未运行</label>
+                                    <input type="radio" value="1" name="status"> <i></i>正在运行</label>
+                                    <input type="radio" value="2" name="status"> <i></i>停止使用</label>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-sm-4 col-sm-offset-6">
-                                <!--<input type="button" value="提交" class="btn btn-primary" id="postform"/>-->
                                 <button class="btn btn-primary" type="submit">提交</button>
                             </div>
                         </div>

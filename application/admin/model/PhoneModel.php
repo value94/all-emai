@@ -23,7 +23,7 @@ class PhoneModel extends Model
     }
 
     /**
-     * 查询机器
+     * 查询任务设备
      * @param $where
      * @param $offset
      * @param $limit
@@ -44,7 +44,7 @@ class PhoneModel extends Model
     }
 
     /**
-     * 根据机器id获取机器信息
+     * 根据任务设备id获取任务设备信息
      * @param $id
      */
     public function getOnePhone($id)
@@ -53,7 +53,7 @@ class PhoneModel extends Model
     }
 
     /**
-     * 查询所有机器数量
+     * 查询所有任务设备数量
      * @param $where
      * @return int|string
      */
@@ -63,7 +63,7 @@ class PhoneModel extends Model
     }
 
     /**
-     * 添加一个机器
+     * 添加一个任务设备
      * @param $data
      * @return mixed
      */
@@ -77,7 +77,7 @@ class PhoneModel extends Model
             }
 
             $this->save($param);
-            return msg(1, url('Phone/index'), '添加机器成功');
+            return msg(1, url('Phone/index'), '添加任务设备成功');
 
         } catch (\Exception $e) {
             return msg(-2, '', $e->getMessage());
@@ -100,7 +100,7 @@ class PhoneModel extends Model
 
             $this->update($param, ['id' => $param['id']]);
 
-            return msg(1, url('Phone/index'), '修改机器成功');
+            return msg(1, url('Phone/index'), '修改任务设备成功');
         } catch (\Exception $e) {
             return msg(-2, '', $e->getMessage());
         }
