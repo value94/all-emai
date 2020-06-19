@@ -50,9 +50,8 @@ class Email extends Controller
             'email_name' => $email_data['email_name'],
             'email_password' => $email_data['email_password'],
             'connection_method' => $email_data['email_type']['connection_method'] == 1 ? 'imap' : 'pop3',
+            'agreement' => $email_data['email_type']['connection_method'] == 1 ? $email_data['email_type']['imapsvr'] : $email_data['email_type']['pop3svr'],
             'email_port' => $email_data['email_type']['connection_method'] == 1 ? $email_data['email_type']['imap_port'] : $email_data['email_type']['pop3_port'],
-            'imapsvr' => $email_data['email_type']['imapsvr'],
-            'pop3svr' => $email_data['email_type']['pop3svr'],
         ];
     }
 
@@ -176,7 +175,7 @@ class Email extends Controller
             // 自增状态次数
             if ($params['reg_status'] == 1) {
                 PhoneModel::where(['phone_sn' => $params['phone_sn']])->setInc('success_job_count', 1);
-            }else{
+            } else {
                 PhoneModel::where(['phone_sn' => $params['phone_sn']])->setInc('failed_job_count', 1);
 
             }

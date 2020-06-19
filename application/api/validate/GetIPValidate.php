@@ -12,6 +12,7 @@ namespace app\api\validate;
 class GetIPValidate extends BaseValidate
 {
     protected $rule = [
+        'ip' => 'require'
     ];
 
 }
