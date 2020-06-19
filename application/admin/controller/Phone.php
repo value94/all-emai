@@ -99,7 +99,20 @@ class Phone extends Base
             $param = input('post.');
 
             $Phone = new PhoneModel();
-            $flag = $Phone->insertPhone($param);
+            // 查询是否被软删除
+            $check = PhoneModel::onlyTrashed()->find(function ($query) use ($param) {
+                $query->where('phone_sn', '=', $param['phone_sn']);
+            });
+            if ($check){
+                $check->restore();
+                $flag =[
+                    'code' => 1,
+                    'data' => '',
+                    'msg' => '添加任务设备成功'
+                ];
+            }else{
+                $flag = $Phone->insertPhone($param);
+            }
 
             return json(msg($flag['code'], $flag['data'], $flag['msg']));
         }

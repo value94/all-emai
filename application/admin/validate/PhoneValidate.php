@@ -14,5 +14,8 @@ use think\Validate;
 
 class PhoneValidate extends Validate
 {
+    protected $rule = [
+        'phone_sn' => 'require|unique:phone'
+    ];
 
 }

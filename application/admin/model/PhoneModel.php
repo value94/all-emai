@@ -77,6 +77,7 @@ class PhoneModel extends Model
             }
 
             $this->save($param);
+
             return msg(1, url('Phone/index'), '添加任务设备成功');
 
         } catch (\Exception $e) {
