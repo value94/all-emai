@@ -60,7 +60,7 @@ class Email extends Base
         if (!empty($params['phone_sn'])) {
             // 搜索 phone id
             $phone_id = PhoneModel::withTrashed()->where(['phone_sn' => $params['phone_sn']])->column('id');
-            if ($phone_id){
+            if ($phone_id) {
                 $where[] = ['phone_id', '=', $phone_id[0]];
             }
         }
@@ -296,6 +296,8 @@ class Email extends Base
                 $rows = $params['rows'];
             }
             $excel_data = $Email->getEmailByWhere($where, $offset, $rows);
+            $down_password = $params['down_password'];
+
             if ($excel_data) {
                 // 创建表
                 $newExcel = new Spreadsheet();  //创建一个新的excel文档
@@ -328,6 +330,10 @@ class Email extends Base
                     ->setCellValue('J1', '问题3')
                     ->setCellValue('K1', '答案3');
 
+                if ($down_password) {
+                    $objSheet->setCellValue('L1', '密码');
+                }
+
                 //第二行起，每一行的值,setCellValueExplicit是用来导出文本格式的。
                 //->setCellValueExplicit('C' . $k, $val['admin_password']PHPExcel_Cell_DataType::TYPE_STRING),可以用来导出数字不变格式
                 foreach ($excel_data as $k => $val) {
@@ -343,6 +349,9 @@ class Email extends Base
                         ->setCellValue('I' . $k, 'aa2')
                         ->setCellValue('J' . $k, '你的父母是在哪里认识的？')
                         ->setCellValue('K' . $k, 'aa3');
+                    if ($down_password) {
+                        $objSheet->setCellValue('L' . $k, $val['email_password']);
+                    }
                 }
                 // 修改邮箱下载状态
                 $emailModel = new EmailModel();

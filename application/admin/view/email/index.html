@@ -70,6 +70,7 @@
             <form id='commentForm' role="form" method="post" action="{:url('email/download_excel')}"
                   class="form-inline pull-right">
                 <input type="hidden" name="rows" id="rows">
+                <input type="hidden" name="down_password" id="down_password_new">
                 <div class="content clearfix m-b">
                     <div class="form-group">
                         <input placeholder="开始时间" class="form-control layer-date" id="start_time" name="start_time"
@@ -249,8 +250,7 @@
     let $table = $('#cusTable');
 
     function downLodeExcel() {
-        layer.prompt({title: '请输入导出数量,为空导出全部', formType: 0, allowBlank: true,}, function (pass, index) {
-                console.log(pass);
+        layer.prompt({title: '请输入导出数量,为空导出全部', formType: 0, allowBlank: true,}, function (pass, index, elem) {
                 // 判断是否为正整数
                 if (pass && !(/(^[1-9]\d*$)/.test(pass))) {
                     layer.msg("请输入正整数");
@@ -258,13 +258,21 @@
                 }
                 // 设置行数
                 $('#rows').val(pass);
+                // 获取是否下载密码
+                let down_password =$('input:radio:checked').val();
+                $('#down_password_new').val(down_password);
+
                 let form = document.getElementById('commentForm');
                 form.submit();
                 layer.close(index);
 
             }
-        )
-        ;
+        );
+        $(".layui-layer-content").append("<br/><div style='font-size: 1.3rem;font-weight: 500;margin-left: 1rem;'>" +
+            "<input id='down_password' type='radio' value='0' name='down_password' checked>不导出密码</label>" +
+            "<input id='down_password' type='radio' value='1' name='down_password' style='margin-left: 1.5rem'>导出密码</label>" +
+            "</div>");
+
     }
 
 
@@ -341,27 +349,27 @@
             let phone_sn = $('#phone_sn').val();
 
 
-                $.getJSON("{:url('email/switch_by_search')}", {
-                    'change_use_status': change_use_status
-                    , 'start_time': start_time
-                    , 'end_time': end_time
-                    , 'email_name': email_name
-                    , 'use_status': use_status
-                    , 'reg_status': reg_status
-                    , 'is_get': is_get
-                    , 'time_field': time_field
-                    , 'phone_sn': phone_sn
-                }, function (res) {
-                    if (1 == res.code) {
-                        layer.alert(res.msg, {title: '友情提示', icon: 1, closeBtn: 0}, function () {
-                            window.location.reload();
-                        });
-                    } else if (111 == res.code) {
+            $.getJSON("{:url('email/switch_by_search')}", {
+                'change_use_status': change_use_status
+                , 'start_time': start_time
+                , 'end_time': end_time
+                , 'email_name': email_name
+                , 'use_status': use_status
+                , 'reg_status': reg_status
+                , 'is_get': is_get
+                , 'time_field': time_field
+                , 'phone_sn': phone_sn
+            }, function (res) {
+                if (1 == res.code) {
+                    layer.alert(res.msg, {title: '友情提示', icon: 1, closeBtn: 0}, function () {
                         window.location.reload();
-                    } else {
-                        layer.alert(res.msg, {title: '友情提示', icon: 2});
-                    }
-                });
+                    });
+                } else if (111 == res.code) {
+                    window.location.reload();
+                } else {
+                    layer.alert(res.msg, {title: '友情提示', icon: 2});
+                }
+            });
 
             layer.close(index);
         })
