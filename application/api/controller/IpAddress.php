@@ -7,6 +7,7 @@ use app\api\validate\CheckIPValidate;
 use app\lib\exception\IPException;
 use app\lib\exception\SuccessMessage;
 use think\Controller;
+use think\Db;
 
 class IpAddress extends Controller
 {
@@ -28,11 +29,13 @@ class IpAddress extends Controller
 
         $ip_data = IpAddressModel::checkIP($params['ip']);
         if ($ip_data) {
-            // 更新 ip 的更新时间
-            IpAddressModel::update(['update_time' => date('Y-m-d H:i:s')],['id' => $ip_data['id']]);
-            throw new SuccessMessage(['msg' => 'ip可用']);
+            throw new IPException(['msg' => 'ip暂时不可用']);
         } else {
-            throw new IPException(['msg' => 'ip已过期']);
+            // 验证ip是否存在
+            Db::table('s_ip_address')->insert($params, "IGNORE");
+            // 更新 ip 的更新时间
+            IpAddressModel::update(['update_time' => date('Y-m-d H:i:s')],['ip' => $params['ip']]);
+            throw new SuccessMessage(['msg' => 'ip可用']);
         }
     }
 

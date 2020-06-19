@@ -9,7 +9,6 @@ use think\Model;
 class IpAddressModel extends Model
 {
     protected $table = 's_ip_address';
-    protected $autoWriteTimestamp = true;
 
     public static function getAvailableIP()
     {
@@ -38,7 +37,8 @@ class IpAddressModel extends Model
         $can_time = date("Y-m-d H:i:s", strtotime("-{$email_time_interval} hour"));
 
         return self::where('use_status', '<>', 2)
-            ->where('update_time', '<', $can_time)
+            ->where('update_time', '>', $can_time)
+            ->where('ip', '=', $ip)
             ->find();
     }
 }
