@@ -59,7 +59,7 @@ class Email extends Base
         // phone sn搜索
         if (!empty($params['phone_sn'])) {
             // 搜索 phone id
-            $phone_id = PhoneModel::where(['phone_sn' => $params['phone_sn']])->column('id');
+            $phone_id = PhoneModel::withTrashed()->where(['phone_sn' => $params['phone_sn']])->column('id');
             if ($phone_id){
                 $where[] = ['phone_id', '=', $phone_id[0]];
             }

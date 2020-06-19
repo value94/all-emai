@@ -32,9 +32,14 @@ class IpAddress extends Controller
             throw new IPException(['msg' => 'ip暂时不可用']);
         } else {
             // 插入ip
-            Db::table('s_ip_address')->insert($params, "IGNORE");
-            // 更新 ip 的更新时间
-            IpAddressModel::update(['update_time' => date('Y-m-d H:i:s')],['ip' => $params['ip']]);
+            $now = date('Y-m-d H:i:s');
+            $params['create_time'] = $now;
+            $params['update_time'] = $now;
+            $result = Db::table('s_ip_address')->insert($params, "IGNORE");
+            // 更新 ip 的更新时间 (已存在ip)
+            if ($result == 2){
+                IpAddressModel::update(['update_time' => $now], ['ip' => $params['ip']]);
+            }
             throw new SuccessMessage(['msg' => 'ip可用']);
         }
     }
