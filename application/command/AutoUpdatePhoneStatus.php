@@ -23,7 +23,7 @@ class AutoUpdatePhoneStatus extends Command
     {
         // 获取配置时间
         $phone_time_interval = Config::get('setting.phone_time_interval');
-        $can_time = date("Y-m-d H:i:s", strtotime("-{$phone_time_interval} hour"));
+        $can_time = date("Y-m-d H:i:s", strtotime("-{$phone_time_interval} minute"));
 
         // 设置未运行
         $result = PhoneModel::where([
