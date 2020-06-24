@@ -19,3 +19,4 @@ Route::post('api/GetAvailableIP', 'api/IpAddress/getAvailableIP');
 Route::post('api/CheckIP', 'api/IpAddress/checkIP');
 
 Route::post('api/SendPhoneInfo', 'api/Phone/sendPhoneInfo');
+Route::post('api/GetAccountBySN', 'api/Phone/getAccountBySN');

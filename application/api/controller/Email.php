@@ -158,8 +158,10 @@ class Email extends Controller
         if (!$check) {
             throw new EmailException(['msg' => '邮箱不存在']);
         }
+
         // 存储数据
         EmailModel::update($params, ['email_name' => $params['email_name']]);
+
         // 修改机器状态
         if ($params['reg_status'] == 1 && !empty($params['udid'])) {
             MachineModel::update([
@@ -171,7 +173,13 @@ class Email extends Controller
 
         // 修改手机信息
         if (!empty($params['phone_sn'])) {
-            PhoneModel::update(['status' => 1], ['phone_sn' => $params['phone_sn']]);
+            PhoneModel::update([
+                'status' => 1,
+                'email_id' => $check['id'],
+                'account_name' => $params['email_name'],
+                'account_pass' => 'Tt778899'
+            ], ['phone_sn' => $params['phone_sn']]);
+
             // 自增状态次数
             if ($params['reg_status'] == 1) {
                 PhoneModel::where(['phone_sn' => $params['phone_sn']])->setInc('success_job_count', 1);
