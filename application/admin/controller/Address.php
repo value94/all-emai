@@ -2,10 +2,10 @@
 
 namespace app\admin\controller;
 
-use app\admin\model\IpAddressModel;
+use app\admin\model\AddressModel;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
-class IpAddress extends Base
+class Address extends Base
 {
     /**
      * 显示资源列表
@@ -24,21 +24,21 @@ class IpAddress extends Base
             $where = $this->getWhereByParams($param);
 
 
-            $IpAddress = new IpAddressModel();
-            $selectResult = $IpAddress->getIpAddressByWhere($where, $offset, $limit);
+            $Address = new AddressModel();
+            $selectResult = $Address->getAddressByWhere($where, $offset, $limit);
 
             // 拼装参数
             foreach ($selectResult as $key => $vo) {
                 $selectResult[$key]['operate'] = showOperate($this->makeButton($vo['id']));
             }
 
-            $return['total'] = $IpAddress->getAllIpAddress($where);  //总数据
+            $return['total'] = $Address->getAllAddress($where);  //总数据
             $return['rows'] = $selectResult;
 
             return json($return);
         }
         $this->assign([
-            'title' => 'IP'
+            'title' => '地址'
         ]);
         return $this->fetch();
     }
@@ -47,9 +47,15 @@ class IpAddress extends Base
     protected function getWhereByParams($params)
     {
         $where = [];
-        // 邮箱名搜索
-        if (!empty($params['ip'])) {
-            $where[] = ['ip', 'like', '%' . $params['ip'] . '%'];
+        // 地址名搜索
+        if (!empty($params['country'])) {
+            $where[] = ['country', 'like', '%' . $params['country'] . '%'];
+        }
+        if (!empty($params['province'])) {
+            $where[] = ['province', 'like', '%' . $params['province'] . '%'];
+        }
+        if (!empty($params['city'])) {
+            $where[] = ['city', 'like', '%' . $params['city'] . '%'];
         }
         // 状态搜索
         if ($params['use_status'] != '') {
@@ -81,22 +87,22 @@ class IpAddress extends Base
         if (request()->isPost()) {
 
             $param = input('post.');
-            $type_id = input('post.IpAddress_type');
+            $type_id = input('post.Address_type');
 
-            $IpAddress_type = IpAddressTypeModel::getIpAddressTypeById($type_id);
-            $param['IpAddress_type_id'] = $type_id;
-            $param['imapsvr'] = $IpAddress_type['imapsvr'];
-            $param['pop3svr'] = $IpAddress_type['pop3svr'];
-            $param['smtpsvr'] = $IpAddress_type['smtpsvr'];
+            $Address_type = AddressTypeModel::getAddressTypeById($type_id);
+            $param['Address_type_id'] = $type_id;
+            $param['imapsvr'] = $Address_type['imapsvr'];
+            $param['pop3svr'] = $Address_type['pop3svr'];
+            $param['smtpsvr'] = $Address_type['smtpsvr'];
 
-            $IpAddress = new IpAddressModel();
-            $flag = $IpAddress->insertIpAddress($param);
+            $Address = new AddressModel();
+            $flag = $Address->insertAddress($param);
 
             return json(msg($flag['code'], $flag['data'], $flag['msg']));
         }
 
         $this->assign([
-            'IpAddress_type' => IpAddressTypeModel::getIpAddressType(),
+            'Address_type' => AddressTypeModel::getAddressType(),
         ]);
 
         return $this->fetch();
@@ -110,28 +116,19 @@ class IpAddress extends Base
      */
     public function edit($id)
     {
-        $IpAddress = new IpAddressModel();
+        $Address = new AddressModel();
 
         if (request()->isPost()) {
 
             $param = input('post.');
 
-            $type_id = input('post.IpAddress_type');
-
-            $IpAddress_type = IpAddressTypeModel::getIpAddressTypeById($type_id);
-            $param['IpAddress_type_id'] = $type_id;
-            $param['imapsvr'] = $IpAddress_type['imapsvr'];
-            $param['pop3svr'] = $IpAddress_type['pop3svr'];
-            $param['smtpsvr'] = $IpAddress_type['smtpsvr'];
-
-            $flag = $IpAddress->editIpAddress($param);
+            $flag = $Address->editAddress($param);
 
             return json(msg($flag['code'], $flag['data'], $flag['msg']));
         }
 
         $this->assign([
-            'data' => $IpAddress->getOneIpAddress($id),
-            'IpAddress_type' => IpAddressTypeModel::getIpAddressType(),
+            'data' => $Address->getOneAddress($id),
         ]);
         return $this->fetch();
     }
@@ -146,9 +143,9 @@ class IpAddress extends Base
     {
         $param = input('param.');
         if (isset($param['ids'])) {
-            IpAddressModel::destroy($param['ids']);
+            AddressModel::destroy($param['ids']);
         } else {
-            IpAddressModel::destroy($param['id']);
+            AddressModel::destroy($param['id']);
         }
 
         return json(msg(1, '', '删除成功'));
@@ -167,7 +164,7 @@ class IpAddress extends Base
         $where = $this->getWhereByParams($params);
         if (!empty($where)) {
             // 执行删除
-            IpAddressModel::where($where)->delete();
+            AddressModel::where($where)->delete();
         } else {
             $result = [
                 'code' => 0,
@@ -190,7 +187,7 @@ class IpAddress extends Base
         $where = $this->getWhereByParams($params);
         if (!empty($where)) {
             // 执行删除
-            IpAddressModel::where($where)->update(['use_status' => $params['change_use_status']]);
+            AddressModel::where($where)->update(['use_status' => $params['change_use_status']]);
         } else {
             $result = [
                 'code' => 0,
@@ -201,10 +198,10 @@ class IpAddress extends Base
     }
 
     /**
-     * 批量导入邮箱
+     * 批量导入地址
      * @return mixed
      */
-    public function import_ip()
+    public function import()
     {
         if (request()->isPost()) {
             // 获取表单上传文件
@@ -224,36 +221,36 @@ class IpAddress extends Base
                 // 上传失败获取错误信息
                 $this->error('上传文件失败,请重试!');
             }
-            $success_count = 0;
-            $error_count = 0;
-            $IpAddress = new IpAddressModel();
-
+            $all_count = 0;
+            $data = [];
             // 添加数据
             foreach ($excel_data as $c) {
                 // 判断行是否为空
                 if (!$c[0]) {
                     continue;
                 }
-                // 判断邮箱是否已存在
-                $res = $IpAddress->where('ip', '=', $c[0])->count();
-                if ($res) {
-                    $error_count++;
-                    continue;
-                } else {
-                    if ($c[0]) {
-                        $IpAddress->ip = $c[0];
-                        $IpAddress->save();
-                        $success_count++;
-                    }
-                }
+                $data[$all_count] = [
+                    'country' => $c[0],
+                    'province' => $c[1],
+                    'city' => $c[2],
+                    'street_one' => $c[3],
+                    'street_two' => $c[4],
+                    'street_three' => $c[5],
+                    'postal_code' => $c[6],
+                ];
+                $all_count++;
             }
-            $this->success('批量添加成功,共导入' . $success_count . ' 条,已存在' . $error_count . ' 条');
+
+            $Address = new AddressModel();
+            $Address->saveAll($data);
+
+            $this->success('批量添加成功,共' . $all_count . ' 条,成功导入' . $all_count . ' 条');
         }
 
         return $this->fetch();
     }
 
-    // 导出搜索的邮箱
+    // 导出搜索的地址
     public function download_excel()
     {
         // 获取搜索参数
@@ -264,7 +261,7 @@ class IpAddress extends Base
         // 导出文件
         if (!empty($where)) {
             // 搜索数据
-            $IpAddress = new IpAddressModel();
+            $Address = new AddressModel();
             // 判断是否有行数限制
             $rows = '';
             $offset = '';
@@ -272,12 +269,12 @@ class IpAddress extends Base
                 $offset = 0;
                 $rows = $params['rows'];
             }
-            $excel_data = $IpAddress->getIpAddressByWhere($where, $offset, $rows);
+            $excel_data = $Address->getAddressByWhere($where, $offset, $rows);
             if ($excel_data) {
                 // 创建表
                 $newExcel = new Spreadsheet();  //创建一个新的excel文档
                 $objSheet = $newExcel->getActiveSheet();  //获取当前操作sheet的对象
-                $objSheet->setTitle('邮箱信息表');  //设置当前sheet的标题
+                $objSheet->setTitle('地址信息表');  //设置当前sheet的标题
 
                 //设置宽度为true,不然太窄了
                 $newExcel->getActiveSheet()->getColumnDimension('A')->setAutoSize(true);
@@ -293,7 +290,7 @@ class IpAddress extends Base
                 $newExcel->getActiveSheet()->getColumnDimension('K')->setWidth(10);
 
                 //设置第一栏的标题
-                $objSheet->setCellValue('A1', '邮箱')
+                $objSheet->setCellValue('A1', '地址')
                     ->setCellValue('B1', '')
                     ->setCellValue('C1', '')
                     ->setCellValue('D1', '密码')
@@ -309,7 +306,7 @@ class IpAddress extends Base
                 //->setCellValueExplicit('C' . $k, $val['admin_password']PHPExcel_Cell_DataType::TYPE_STRING),可以用来导出数字不变格式
                 foreach ($excel_data as $k => $val) {
                     $k = $k + 2;
-                    $objSheet->setCellValue('A' . $k, $val['IpAddress_name'])
+                    $objSheet->setCellValue('A' . $k, $val['Address_name'])
                         ->setCellValue('B' . $k, '')
                         ->setCellValue('C' . $k, '')
                         ->setCellValue('D' . $k, 'Tt778899')
@@ -321,10 +318,10 @@ class IpAddress extends Base
                         ->setCellValue('J' . $k, '你的父母是在哪里认识的？')
                         ->setCellValue('K' . $k, 'aa3');
                 }
-                // 修改邮箱下载状态
-                $IpAddressModel = new IpAddressModel();
-                $IpAddressModel->isAutoWriteTimestamp(false)->update(['is_get' => 1], $where);
-                downloadExcel($newExcel, '邮箱数据表', 'Xls');
+                // 修改地址下载状态
+                $AddressModel = new AddressModel();
+                $AddressModel->isAutoWriteTimestamp(false)->update(['is_get' => 1], $where);
+                downloadExcel($newExcel, '地址数据表', 'Xls');
             } else {
                 $this->error('该搜索条件没有能导出的数据');
             }
@@ -334,7 +331,7 @@ class IpAddress extends Base
     }
 
     /**
-     * 切换选中邮箱状态
+     * 切换选中地址状态
      * @return mixed
      */
     public function switch_status()
@@ -349,34 +346,34 @@ class IpAddress extends Base
 
             // 切换成停止状态
             if (isset($data['use_status']) && $data['use_status'] == 2) {
-                IpAddressModel::update(['use_status' => 2], ['id' => $data['id']]);
+                AddressModel::update(['use_status' => 2], ['id' => $data['id']]);
                 return $result;
             }
 
             // 切换选中机器状态
             if (isset($data['change_use_status'])) {
-                IpAddressModel::update(['use_status' => $data['change_use_status']],
+                AddressModel::update(['use_status' => $data['change_use_status']],
                     ['id' => $data['id']]);
                 return $result;
             }
 
             // 切换机器状态
-            $used_id = IpAddressModel::where([
+            $used_id = AddressModel::where([
                 ['use_status', 'in', '1,2'],
                 ['id', 'in', $data['id']]
             ])->column('id');
 
-            $un_use = IpAddressModel::where([
+            $un_use = AddressModel::where([
                 ['use_status', 'in', '0,2'],
                 ['id', 'in', $data['id']]
             ])->column('id');
 
             if (!empty($used_id)) {
-                IpAddressModel::update(['use_status' => 0], ['id' => $used_id]);
+                AddressModel::update(['use_status' => 0], ['id' => $used_id]);
             }
 
             if (!empty($un_use)) {
-                IpAddressModel::update(['use_status' => 1], ['id' => $un_use]);
+                AddressModel::update(['use_status' => 1], ['id' => $un_use]);
             }
 
             return $result;
@@ -391,27 +388,27 @@ class IpAddress extends Base
     private function makeButton($id)
     {
         return [
-            '切换' => [
-                'auth' => 'IpAddress/switch_status',
+            /*'切换' => [
+                'auth' => 'address/switch_status',
                 'href' => "javascript:switch_status(" . $id . ")",
                 'btnStyle' => 'info',
                 'icon' => 'fa fa-check-circle',
-            ],
+            ],*/
             '停止' => [
-                'auth' => 'machine/switch_status',
+                'auth' => 'address/switch_status',
                 'href' => "javascript:switch_status(" . $id . ",2)",
                 'btnStyle' => 'warning',
                 'icon' => 'fa fa-close',
             ],
             '编辑' => [
-                'auth' => 'IpAddress/edit',
-                'href' => url('IpAddress/edit', ['id' => $id]),
+                'auth' => 'address/edit',
+                'href' => url('address/edit', ['id' => $id]),
                 'btnStyle' => 'primary',
                 'icon' => 'fa fa-paste',
             ],
             '删除' => [
-                'auth' => 'IpAddress/delete',
-                'href' => "javascript:IpAddressDel(" . $id . ")",
+                'auth' => 'address/delete',
+                'href' => "javascript:AddressDel(" . $id . ")",
                 'btnStyle' => 'danger',
                 'icon' => 'fa fa-trash-o',
             ],
