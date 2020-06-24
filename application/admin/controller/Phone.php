@@ -103,14 +103,14 @@ class Phone extends Base
             $check = PhoneModel::onlyTrashed()->find(function ($query) use ($param) {
                 $query->where('phone_sn', '=', $param['phone_sn']);
             });
-            if ($check){
+            if ($check) {
                 $check->restore();
-                $flag =[
+                $flag = [
                     'code' => 1,
                     'data' => '',
                     'msg' => '添加任务设备成功'
                 ];
-            }else{
+            } else {
                 $flag = $Phone->insertPhone($param);
             }
 
@@ -289,13 +289,15 @@ class Phone extends Base
             // 添加数据
             foreach ($excel_data as $c) {
                 // 判断行是否为空
-                if (!$c[0]) {
+                if (!$c[1]) {
                     continue;
                 }
                 $email_data = [
                     'number' => $c[0],
                     'phone_sn' => $c[1],
                     'des' => $c[2],
+                    'account_name' => empty($c[3]) ? null : $c[3],
+                    'account_pass' => empty($c[4]) ? null : $c[4],
                     'create_time' => $create_time,
                     'update_time' => $update_time,
                 ];
