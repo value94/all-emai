@@ -66,6 +66,11 @@ class Phone extends Base
             $where[] = ['phone_sn', 'like', '%' . $params['phone_sn'] . '%'];
         }
 
+        // 机器编号搜索
+        if (!empty($params['number'])) {
+            $where[] = ['number', 'like', '%' . $params['number'] . '%'];
+        }
+
         // 状态搜索
         if ($params['status'] != '') {
             $where[] = ['status', '=', $params['status']];

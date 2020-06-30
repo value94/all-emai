@@ -64,6 +64,14 @@ class Email extends Base
                 $where[] = ['phone_id', '=', $phone_id[0]];
             }
         }
+        // phone 编号搜索
+        if (!empty($params['number'])) {
+            // 搜索 phone id
+            $phone_sn = PhoneModel::withTrashed()->where('number', 'like', '%' . $params['number'] . '%')->column('phone_sn');
+            if ($phone_sn) {
+                $where[] = ['phone_sn', 'in', $phone_sn];
+            }
+        }
         // 失败原因搜索
         if (!empty($params['fail_msg'])) {
             $where[] = ['fail_msg', 'like', '%' . $params['fail_msg'] . '%'];

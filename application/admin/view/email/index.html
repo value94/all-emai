@@ -85,6 +85,9 @@
                         <input type="text" placeholder="手机SN" class="form-control" id="phone_sn" name="phone_sn">
                     </div>
                     <div class="form-group">
+                        <input type="text" placeholder="手机编号" class="form-control" id="number" name="number">
+                    </div>
+                    <div class="form-group">
                         <input type="text" placeholder="失败原因" class="form-control" id="fail_msg" name="fail_msg">
                     </div>
                     <div class="form-group">
@@ -223,6 +226,7 @@
                     fail_msg: $('#fail_msg').val(),
                     time_field: $('#time_field').val(),
                     phone_sn: $('#phone_sn').val(),
+                    number: $('#number').val(),
                 };
                 return param;
             },
@@ -347,6 +351,7 @@
             let is_get = $('#is_get').val();
             let time_field = $('#time_field').val();
             let phone_sn = $('#phone_sn').val();
+            let number = $('#number').val();
 
 
             $.getJSON("{:url('email/switch_by_search')}", {
@@ -359,6 +364,7 @@
                 , 'is_get': is_get
                 , 'time_field': time_field
                 , 'phone_sn': phone_sn
+                , 'number': number
             }, function (res) {
                 if (1 == res.code) {
                     layer.alert(res.msg, {title: '友情提示', icon: 1, closeBtn: 0}, function () {
@@ -387,6 +393,7 @@
             let is_get = $('#is_get').val();
             let time_field = $('#time_field').val();
             let phone_sn = $('#phone_sn').val();
+            let number = $('#number').val();
 
             $.getJSON("{:url('email/delete_by_search')}", {
                 'start_time': start_time
@@ -397,6 +404,7 @@
                 , 'is_get': is_get
                 , 'time_field': time_field
                 , 'phone_sn': phone_sn
+                , 'number': number
             }, function (res) {
                 if (1 == res.code) {
                     layer.alert(res.msg, {title: '友情提示', icon: 1, closeBtn: 0}, function () {
