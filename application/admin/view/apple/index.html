@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{$title}列表</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="__CSS__/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="__CSS__/font-awesome.min.css?v=4.4.0" rel="stylesheet">
+    <link href="__CSS__/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <link href="__CSS__/animate.min.css" rel="stylesheet">
+    <link href="__CSS__/style.min.css?v=4.1.0" rel="stylesheet">
+    <link href="__CSS__/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+</head>
+<style>
+    .jumpto input {
+        height: 31px;
+        width: 50px;
+        margin-left: 5px;
+        margin-right: 5px;
+        text-align: center;
+        display: inline-block;
+    }
+</style>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <!-- Panel Other -->
+    <div class="ibox float-e-margins">
+        <div class="ibox-title">
+            <h5>{$title}列表</h5>
+        </div>
+        <div class="ibox-content">
+            <div class="form-group clearfix col-sm-3">
+                {if authCheck('apple/switch_status')}
+                <div class="btn-group">
+                    <button data-toggle="dropdown" class="btn btn-warning dropdown-toggle" aria-expanded="false">操作
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" style="left: 0">
+                        <li>
+                            <a href="javascript:" onclick="switch_choice_status(0)">可以使用</a>
+                        </li>
+                        <!--<li>
+                            <a href="javascript:" onclick="switch_choice_status(1)">已使用</a>
+                        </li>-->
+                        <li>
+                            <a href="javascript:" onclick="switch_choice_status(2)">停止使用</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="javascript:" onclick="appleDelMore()">删除</a>
+                        </li>
+                    </ul>
+                </div>
+                {/if}
+            </div>
+            <div class="form-group clearfix col-sm-3" style="float: right;text-align: right">
+                {if authCheck('apple/create') }
+                <a href="{:url('apple/create')}">
+                    <button class="btn btn-outline btn-primary" type="button">添加{$title}</button>
+                </a>
+                {/if}
+                {if authCheck('apple/import') }
+                <a href="{:url('apple/import')}">
+                    <button class="btn btn-outline btn-success" type="button">导入{$title}</button>
+                </a>
+                {/if}
+            </div>
+            <!--搜索框开始-->
+            <form id='commentForm' role="form" method="post" action="{:url('apple/download_excel')}"
+                  class="form-inline pull-right">
+                <input type="hidden" name="rows" id="rows">
+                <div class="content clearfix m-b">
+                    <div class="form-group">
+                        <input placeholder="开始时间" class="form-control layer-date" id="start_time" name="start_time"
+                               autocomplete="off">
+                        <input placeholder="结束时间" class="form-control layer-date" id="end_time" name="end_time"
+                               autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" placeholder="账号" class="form-control" id="apple_account" name="apple_account">
+                    </div>
+                    <div class="form-group">
+                        <select type="text" class="form-control" id="use_status" name="use_status">
+                            <option value="">使用状态</option>
+                            <option value="0">可以使用</option>
+                            <option value="2">停止使用</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <select type="text" class="form-control" id="time_field" name="time_field">
+                            <option value="">时间字段</option>
+                            <option value="1">创建时间</option>
+                            <option value="2">更新时间</option>
+                        </select>
+                    </div>
+                    <div class="btn-group">
+                        <button data-toggle="dropdown" class="btn btn-warning dropdown-toggle" aria-expanded="false"
+                                style="margin: 0;">操作
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" style="left: 0">
+                            <li>
+                                <a href="javascript:" onclick="switch_by_search(0)">未使用</a>
+                            </li>
+                            <li>
+                                <a href="javascript:" onclick="switch_by_search(1)">已使用</a>
+                            </li>
+                            <li>
+                                <a href="javascript:" onclick="switch_by_search(2)">停止使用</a>
+                            </li>
+                            <li class="divider"></li>
+                            <li>
+                                <a href="javascript:" onclick="delete_by_search()">删除</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <!--<div class="form-group">
+                        <input class="btn btn-info" type="button" onclick="downLodeExcel()" style="margin-top:5px"
+                               id="downLodeInfo" value="导出">
+                    </div>-->
+                    <div class="form-group">
+                        <button class="btn btn-primary" type="button" style="margin-top:5px" id="search">
+                            <strong>搜索</strong>
+                        </button>
+                    </div>
+                </div>
+            </form>
+            <!--搜索框结束-->
+            <div class="example-wrap">
+                <div class="example">
+                    <table id="cusTable" data-show-jumpto="true" class="table table-hover">
+                        <thead>
+                        <th data-field="box_id" data-checkbox="true"></th>
+                        <th data-field="id">ID</th>
+                        <th data-field="apple_account">账号</th>
+                        <th data-field="apple_pass">密码</th>
+                        <th data-field="use_status">使用状态</th>
+                        <th data-field="used_count">使用次数</th>
+                        <th data-field="create_time">创建时间</th>
+                        <th data-field="update_time">更新时间</th>
+                        <th data-field="operate">操作</th>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+            <!-- End Example Pagination -->
+        </div>
+    </div>
+</div>
+<!-- End Panel Other -->
+<script src="__JS__/jquery.min.js?v=2.1.4"></script>
+<script src="__JS__/bootstrap.min.js?v=3.3.6"></script>
+<script src="__JS__/content.min.js?v=1.0.0"></script>
+<script src="__JS__/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="__JS__/plugins/bootstrap-table/bootstrap-table-jumpto.js"></script>
+<script src="__JS__/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+<script src="__JS__/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<!--<script src="__JS__/plugins/suggest/bootstrap-suggest.min.js"></script>-->
+<script src="__JS__/plugins/layer-new/layer.min.js"></script>
+<script src="__JS__/plugins/layer-new/laydate/laydate.js"></script>
+<!--<script src="__JS__/plugins/sweetalert/sweetalert.min.js"></script>-->
+<script type="text/javascript">
+    function initTable() {
+        //先销毁表格
+        $('#cusTable').bootstrapTable('destroy');
+        //初始化表格,动态从服务器加载数据
+        $("#cusTable").bootstrapTable({
+            method: "get",  //使用get请求到服务器获取数据
+            url: "./index", //获取数据的apple备用账号
+            striped: true,  //表格显示条纹
+            pagination: true, //启动分页
+            pageSize: 10,  //每页显示的记录数
+            pageNumber: 1, //当前第几页
+            pageList: [5, 10, 15, 20, 25],  //记录数可选列表
+            sidePagination: "server", //表示服务端请求
+            search: false,
+            singleSelect: false,
+            paginationFirstText: "首页",
+            paginationPreText: "上一页",
+            paginationNextText: "下一页",
+            paginationLastText: "尾页",
+            queryParamsType: "undefined",
+            queryParams: function queryParams(params) {   //设置查询参数
+                let param = {
+                    pageNumber: params.pageNumber,
+                    pageSize: params.pageSize,
+                    apple_account: $('#apple_account').val(),
+                    start_time: $('#start_time').val(),
+                    end_time: $('#end_time').val(),
+                    use_status: $('#use_status').val(),
+                    time_field: $('#time_field').val(),
+                };
+                return param;
+            },
+            onLoadSuccess: function (res) {  //加载成功时执行
+                if (111 == res.code) {
+                    window.location.reload();
+                }
+                layer.msg("加载成功", {time: 1000});
+            },
+            onLoadError: function () {  //加载失败时执行
+                layer.msg("加载数据失败");
+            }
+        });
+    }
+
+    // 页面初始化
+    $(document).ready(function () {
+        //调用函数，初始化表格
+        initTable();
+        //当点击查询按钮的时候执行
+        $("#search").bind("click", initTable);
+    });
+
+    // 导出搜索订单
+    let $table = $('#cusTable');
+
+    function downLodeExcel() {
+        layer.prompt({title: '请输入导出数量,为空导出全部', formType: 0, allowBlank: true,}, function (pass, index) {
+                console.log(pass);
+                // 判断是否为正整数
+                if (pass && !(/(^[1-9]\d*$)/.test(pass))) {
+                    layer.msg("请输入正整数");
+                    return;
+                }
+                // 设置行数
+                $('#rows').val(pass);
+                let form = document.getElementById('commentForm');
+                form.submit();
+                layer.close(index);
+
+            }
+        )
+        ;
+    }
+
+
+    // 切换选中apple备用账号状态
+    function switch_choice_status(change_use_status = '') {
+        if ($table.bootstrapTable('getAllSelections').length == 0) {
+            layer.alert('请勾选apple备用账号', {title: '友情提示', icon: 2});
+            return;
+        }
+        layer.confirm('确认切换apple备用账号状态', {icon: 3, title: '提示'}, function (index) {
+            //do something
+            let apple = $table.bootstrapTable('getAllSelections');
+            let apple_id = [];
+            for (let i = 0; i < apple.length; i++) {
+                apple_id[i] = apple[i]['id'];
+            }
+            $.getJSON("{:url('apple/switch_status')}", {
+                'id': apple_id, 'change_use_status': change_use_status
+            }, function (res) {
+                if (1 == res.code) {
+                    layer.alert(res.msg, {title: '友情提示', icon: 1, closeBtn: 0}, function () {
+                        initTable();
+                    });
+                } else if (111 == res.code) {
+                    window.location.reload();
+                } else {
+                    layer.alert(res.msg, {title: '友情提示', icon: 2});
+                }
+            });
+
+            layer.close(index);
+        })
+    }
+
+    // 删除选中apple备用账号
+    function appleDelMore() {
+        if ($table.bootstrapTable('getAllSelections').length == 0) {
+            layer.alert('请勾选apple备用账号', {title: '友情提示', icon: 2});
+            return;
+        }
+        layer.confirm('确认删除apple备用账号', {icon: 3, title: '提示'}, function (index) {
+            //do something
+            let apple = $table.bootstrapTable('getAllSelections');
+            let apple_id = [];
+            for (let i = 0; i < apple.length; i++) {
+                apple_id[i] = apple[i]['id'];
+            }
+            $.getJSON("{:url('apple/delete')}", {'ids': apple_id}, function (res) {
+                if (1 == res.code) {
+                    layer.alert(res.msg, {title: '友情提示', icon: 1, closeBtn: 0}, function () {
+                        window.location.reload();
+                    });
+                } else if (111 == res.code) {
+                    window.location.reload();
+                } else {
+                    layer.alert(res.msg, {title: '友情提示', icon: 2});
+                }
+            });
+            layer.close(index);
+        })
+    }
+
+    // 切换搜索apple备用账号状态
+    function switch_by_search(change_use_status = '') {
+        layer.confirm('确认切换搜素apple备用账号状态', {icon: 3, title: '提示'}, function (index) {
+            // 获取搜索条件
+            let start_time = $('#start_time').val();
+            let end_time = $('#end_time').val();
+            let apple_account = $('#apple_account').val();
+            let use_status = $('#use_status').val();
+            let time_field = $('#time_field').val();
+
+            $.getJSON("{:url('apple/switch_by_search')}", {
+                'change_use_status': change_use_status
+                , 'start_time': start_time
+                , 'end_time': end_time
+                , 'apple_account': apple_account
+                , 'use_status': use_status
+                , 'time_field': time_field
+            }, function (res) {
+                if (1 == res.code) {
+                    layer.alert(res.msg, {title: '友情提示', icon: 1, closeBtn: 0}, function () {
+                        window.location.reload();
+                    });
+                } else if (111 == res.code) {
+                    window.location.reload();
+                } else {
+                    layer.alert(res.msg, {title: '友情提示', icon: 2});
+                }
+            });
+
+            layer.close(index);
+        })
+    }
+
+    // 删除搜索apple备用账号
+    function delete_by_search() {
+        layer.confirm('确认删除搜索apple备用账号', {icon: 3, title: '提示'}, function (index) {
+            // 获取搜索条件
+            let start_time = $('#start_time').val();
+            let end_time = $('#end_time').val();
+            let apple_account = $('#apple_account').val();
+            let use_status = $('#use_status').val();
+            let time_field = $('#time_field').val();
+
+            $.getJSON("{:url('apple/delete_by_search')}", {
+                'start_time': start_time
+                , 'end_time': end_time
+                , 'apple_account': apple_account
+                , 'use_status': use_status
+                , 'time_field': time_field
+            }, function (res) {
+                if (1 == res.code) {
+                    layer.alert(res.msg, {title: '友情提示', icon: 1, closeBtn: 0}, function () {
+                        initTable();
+                    });
+                } else if (111 == res.code) {
+                    window.location.reload();
+                } else {
+                    layer.alert(res.msg, {title: '友情提示', icon: 2});
+                }
+            });
+            layer.close(index);
+        })
+    }
+
+    // 切换状态
+    function switch_status(id, use_status = '') {
+        layer.confirm('确认切换状态?', {icon: 3, title: '提示'}, function (index) {
+            //do something
+            $.getJSON("{:url('apple/switch_status')}", {
+                'id': id,
+                'use_status': use_status
+            }, function (res) {
+                if (1 == res.code) {
+                    layer.alert(res.msg, {title: '友情提示', icon: 1, closeBtn: 0}, function () {
+                        initTable();
+                    });
+                } else if (111 == res.code) {
+                    window.location.reload();
+                } else {
+                    layer.alert(res.msg, {title: '友情提示', icon: 2});
+                }
+            });
+
+            layer.close(index);
+        })
+
+    }
+
+    // 删除apple备用账号
+    function appleDel(id) {
+        layer.confirm('确认删除此apple备用账号?', {icon: 3, title: '提示'}, function (index) {
+            //do something
+            $.getJSON("{:url('apple/delete')}", {'id': id}, function (res) {
+                if (1 == res.code) {
+                    layer.alert(res.msg, {title: '友情提示', icon: 1, closeBtn: 0}, function () {
+                        initTable();
+                    });
+                } else if (111 == res.code) {
+                    window.location.reload();
+                } else {
+                    layer.alert(res.msg, {title: '友情提示', icon: 2});
+                }
+            });
+
+            layer.close(index);
+        })
+
+    }
+
+    // 时间选择
+    laydate.render({
+        elem: "#start_time"
+        , type: 'datetime'
+    });
+
+    laydate.render({
+        elem: "#end_time"
+        , type: 'datetime'
+    });
+</script>
+</body>
+</html>

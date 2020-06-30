@@ -2,12 +2,12 @@
 
 namespace app\admin\model;
 
-use app\admin\validate\AddressValidate;
+use app\admin\validate\AppleValidate;
 use think\Model;
 
-class AddressModel extends Model
+class AppleModel extends Model
 {
-    protected $table = 's_address';
+    protected $table = 's_apple';
 
     public function getUseStatusAttr($value)
     {
@@ -16,7 +16,7 @@ class AddressModel extends Model
     }
 
     /**
-     * 查询地址
+     * 查询apple备用账号
      * @param $where
      * @param $offset
      * @param $limit
@@ -25,46 +25,46 @@ class AddressModel extends Model
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
      */
-    public function getAddressByWhere($where, $offset = '', $limit = '')
+    public function getAppleByWhere($where, $offset = '', $limit = '')
     {
         return $this->where($where)->limit($offset, $limit)->order('id desc')->select();
     }
 
     /**
-     * 根据地址id获取地址信息
+     * 根据apple备用账号id获取apple备用账号信息
      * @param $id
      */
-    public function getOneAddress($id)
+    public function getOneApple($id)
     {
         return $this->where('id', $id)->find()->getData();
     }
 
     /**
-     * 查询所有地址数量
+     * 查询所有apple备用账号数量
      * @param $where
      * @return int|string
      */
-    public function getAllAddress($where)
+    public function getAllApple($where)
     {
         return $this->where($where)->count();
     }
 
     /**
-     * 添加一个地址
-     * @param $data
+     * 添加一个apple备用账号
+     * @param $param
      * @return mixed
      */
-    public function insertAddress($param)
+    public function insertApple($param)
     {
         try {
-            $AddressValidate = new AddressValidate();
-            if (false === $AddressValidate->check($param)) {
+            $AppleValidate = new AppleValidate();
+            if (false === $AppleValidate->check($param)) {
                 // 验证失败 输出错误信息
-                return msg(-1, '', $AddressValidate->getError());
+                return msg(-1, '', $AppleValidate->getError());
             }
 
             $this->save($param);
-            return msg(1, url('Address/index'), '添加地址成功');
+            return msg(1, url('Apple/index'), '添加apple备用账号成功');
 
         } catch (\Exception $e) {
             return msg(-2, '', $e->getMessage());
@@ -72,22 +72,22 @@ class AddressModel extends Model
     }
 
     /**
-     * 编辑商户
+     * 编辑
      * @param $param
      * @return array
      */
-    public function editAddress($param)
+    public function editApple($param)
     {
         try {
-            $AddressValidate = new AddressValidate();
-            if (false === $AddressValidate->check($param)) {
+            $AppleValidate = new AppleValidate();
+            if (false === $AppleValidate->check($param)) {
                 // 验证失败 输出错误信息
-                return msg(-1, '', $AddressValidate->getError());
+                return msg(-1, '', $AppleValidate->getError());
             }
 
             $this->update($param, ['id' => $param['id']]);
 
-            return msg(1, url('Address/index'), '修改地址成功');
+            return msg(1, url('Apple/index'), '修改apple备用账号成功');
         } catch (\Exception $e) {
             return msg(-2, '', $e->getMessage());
         }

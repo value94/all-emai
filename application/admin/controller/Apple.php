@@ -2,10 +2,11 @@
 
 namespace app\admin\controller;
 
-use app\admin\model\AddressModel;
+use app\admin\model\AppleModel;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use think\Db;
 
-class Address extends Base
+class Apple extends Base
 {
     /**
      * 显示资源列表
@@ -24,21 +25,21 @@ class Address extends Base
             $where = $this->getWhereByParams($param);
 
 
-            $Address = new AddressModel();
-            $selectResult = $Address->getAddressByWhere($where, $offset, $limit);
+            $Apple = new AppleModel();
+            $selectResult = $Apple->getAppleByWhere($where, $offset, $limit);
 
             // 拼装参数
             foreach ($selectResult as $key => $vo) {
                 $selectResult[$key]['operate'] = showOperate($this->makeButton($vo['id']));
             }
 
-            $return['total'] = $Address->getAllAddress($where);  //总数据
+            $return['total'] = $Apple->getAllApple($where);  //总数据
             $return['rows'] = $selectResult;
 
             return json($return);
         }
         $this->assign([
-            'title' => '地址'
+            'title' => '备用账号'
         ]);
         return $this->fetch();
     }
@@ -47,15 +48,9 @@ class Address extends Base
     protected function getWhereByParams($params)
     {
         $where = [];
-        // 地址名搜索
-        if (!empty($params['country'])) {
-            $where[] = ['country', 'like', '%' . $params['country'] . '%'];
-        }
-        if (!empty($params['province'])) {
-            $where[] = ['province', 'like', '%' . $params['province'] . '%'];
-        }
-        if (!empty($params['city'])) {
-            $where[] = ['city', 'like', '%' . $params['city'] . '%'];
+        // apple备用账号名搜索
+        if (!empty($params['apple_account'])) {
+            $where[] = ['apple_account', 'like', '%' . $params['apple_account'] . '%'];
         }
         // 状态搜索
         if ($params['use_status'] != '') {
@@ -88,8 +83,8 @@ class Address extends Base
 
             $param = input('post.');
 
-            $Address = new AddressModel();
-            $flag = $Address->insertAddress($param);
+            $Apple = new AppleModel();
+            $flag = $Apple->insertApple($param);
 
             return json(msg($flag['code'], $flag['data'], $flag['msg']));
         }
@@ -105,19 +100,19 @@ class Address extends Base
      */
     public function edit($id)
     {
-        $Address = new AddressModel();
+        $Apple = new AppleModel();
 
         if (request()->isPost()) {
 
             $param = input('post.');
 
-            $flag = $Address->editAddress($param);
+            $flag = $Apple->editApple($param);
 
             return json(msg($flag['code'], $flag['data'], $flag['msg']));
         }
 
         $this->assign([
-            'data' => $Address->getOneAddress($id),
+            'data' => $Apple->getOneApple($id),
         ]);
         return $this->fetch();
     }
@@ -132,9 +127,9 @@ class Address extends Base
     {
         $param = input('param.');
         if (isset($param['ids'])) {
-            AddressModel::destroy($param['ids']);
+            AppleModel::destroy($param['ids']);
         } else {
-            AddressModel::destroy($param['id']);
+            AppleModel::destroy($param['id']);
         }
 
         return json(msg(1, '', '删除成功'));
@@ -153,7 +148,7 @@ class Address extends Base
         $where = $this->getWhereByParams($params);
         if (!empty($where)) {
             // 执行删除
-            AddressModel::where($where)->delete();
+            AppleModel::where($where)->delete();
         } else {
             $result = [
                 'code' => 0,
@@ -176,7 +171,7 @@ class Address extends Base
         $where = $this->getWhereByParams($params);
         if (!empty($where)) {
             // 执行删除
-            AddressModel::where($where)->update(['use_status' => $params['change_use_status']]);
+            AppleModel::where($where)->update(['use_status' => $params['change_use_status']]);
         } else {
             $result = [
                 'code' => 0,
@@ -187,7 +182,7 @@ class Address extends Base
     }
 
     /**
-     * 批量导入地址
+     * 批量导入apple备用账号
      * @return mixed
      */
     public function import()
@@ -210,36 +205,38 @@ class Address extends Base
                 // 上传失败获取错误信息
                 $this->error('上传文件失败,请重试!');
             }
-            $all_count = 0;
-            $data = [];
+            $success_count = 0;
+            $error_count = 0;
+            $update_time = date('Y-m-d H:i:s');
+            $create_time = date('Y-m-d H:i:s');
+
             // 添加数据
             foreach ($excel_data as $c) {
                 // 判断行是否为空
                 if (!$c[0]) {
                     continue;
                 }
-                $data[$all_count] = [
-                    'country' => $c[0],
-                    'province' => $c[1],
-                    'city' => $c[2],
-                    'street_one' => $c[3],
-                    'street_two' => $c[4],
-                    'street_three' => $c[5],
-                    'postal_code' => $c[6],
+                $save_data = [
+                    'apple_account' => $c[0],
+                    'apple_pass' => $c[1],
+                    'create_time' => $create_time,
+                    'update_time' => $update_time,
                 ];
-                $all_count++;
+                $result = Db::table('s_apple')->insert($save_data, "IGNORE");
+                if ($result == 1) {
+                    $success_count++;
+                } else {
+                    $error_count++;
+                }
             }
+            $this->success('批量添加成功,共导入' . $success_count . ' 条,已存在' . $error_count . ' 条。');
 
-            $Address = new AddressModel();
-            $Address->saveAll($data);
-
-            $this->success('批量添加成功,共' . $all_count . ' 条,成功导入' . $all_count . ' 条');
         }
 
         return $this->fetch();
     }
 
-    // 导出搜索的地址
+    // 导出搜索的apple备用账号
     public function download_excel()
     {
         // 获取搜索参数
@@ -250,7 +247,7 @@ class Address extends Base
         // 导出文件
         if (!empty($where)) {
             // 搜索数据
-            $Address = new AddressModel();
+            $Apple = new AppleModel();
             // 判断是否有行数限制
             $rows = '';
             $offset = '';
@@ -258,12 +255,12 @@ class Address extends Base
                 $offset = 0;
                 $rows = $params['rows'];
             }
-            $excel_data = $Address->getAddressByWhere($where, $offset, $rows);
+            $excel_data = $Apple->getAppleByWhere($where, $offset, $rows);
             if ($excel_data) {
                 // 创建表
                 $newExcel = new Spreadsheet();  //创建一个新的excel文档
                 $objSheet = $newExcel->getActiveSheet();  //获取当前操作sheet的对象
-                $objSheet->setTitle('地址信息表');  //设置当前sheet的标题
+                $objSheet->setTitle('apple备用账号信息表');  //设置当前sheet的标题
 
                 //设置宽度为true,不然太窄了
                 $newExcel->getActiveSheet()->getColumnDimension('A')->setAutoSize(true);
@@ -279,7 +276,7 @@ class Address extends Base
                 $newExcel->getActiveSheet()->getColumnDimension('K')->setWidth(10);
 
                 //设置第一栏的标题
-                $objSheet->setCellValue('A1', '地址')
+                $objSheet->setCellValue('A1', 'apple备用账号')
                     ->setCellValue('B1', '')
                     ->setCellValue('C1', '')
                     ->setCellValue('D1', '密码')
@@ -295,7 +292,7 @@ class Address extends Base
                 //->setCellValueExplicit('C' . $k, $val['admin_password']PHPExcel_Cell_DataType::TYPE_STRING),可以用来导出数字不变格式
                 foreach ($excel_data as $k => $val) {
                     $k = $k + 2;
-                    $objSheet->setCellValue('A' . $k, $val['Address_name'])
+                    $objSheet->setCellValue('A' . $k, $val['Apple_name'])
                         ->setCellValue('B' . $k, '')
                         ->setCellValue('C' . $k, '')
                         ->setCellValue('D' . $k, 'Tt778899')
@@ -307,10 +304,10 @@ class Address extends Base
                         ->setCellValue('J' . $k, '你的父母是在哪里认识的？')
                         ->setCellValue('K' . $k, 'aa3');
                 }
-                // 修改地址下载状态
-                $AddressModel = new AddressModel();
-                $AddressModel->isAutoWriteTimestamp(false)->update(['is_get' => 1], $where);
-                downloadExcel($newExcel, '地址数据表', 'Xls');
+                // 修改apple备用账号下载状态
+                $AppleModel = new AppleModel();
+                $AppleModel->isAutoWriteTimestamp(false)->update(['is_get' => 1], $where);
+                downloadExcel($newExcel, 'apple备用账号数据表', 'Xls');
             } else {
                 $this->error('该搜索条件没有能导出的数据');
             }
@@ -320,7 +317,7 @@ class Address extends Base
     }
 
     /**
-     * 切换选中地址状态
+     * 切换选中apple备用账号状态
      * @return mixed
      */
     public function switch_status()
@@ -335,34 +332,34 @@ class Address extends Base
 
             // 切换成停止状态
             if (isset($data['use_status']) && $data['use_status'] == 2) {
-                AddressModel::update(['use_status' => 2], ['id' => $data['id']]);
+                AppleModel::update(['use_status' => 2], ['id' => $data['id']]);
                 return $result;
             }
 
             // 切换选中机器状态
             if (isset($data['change_use_status'])) {
-                AddressModel::update(['use_status' => $data['change_use_status']],
+                AppleModel::update(['use_status' => $data['change_use_status']],
                     ['id' => $data['id']]);
                 return $result;
             }
 
             // 切换机器状态
-            $used_id = AddressModel::where([
+            $used_id = AppleModel::where([
                 ['use_status', 'in', '1,2'],
                 ['id', 'in', $data['id']]
             ])->column('id');
 
-            $un_use = AddressModel::where([
+            $un_use = AppleModel::where([
                 ['use_status', 'in', '0,2'],
                 ['id', 'in', $data['id']]
             ])->column('id');
 
             if (!empty($used_id)) {
-                AddressModel::update(['use_status' => 0], ['id' => $used_id]);
+                AppleModel::update(['use_status' => 0], ['id' => $used_id]);
             }
 
             if (!empty($un_use)) {
-                AddressModel::update(['use_status' => 1], ['id' => $un_use]);
+                AppleModel::update(['use_status' => 1], ['id' => $un_use]);
             }
 
             return $result;
@@ -378,26 +375,26 @@ class Address extends Base
     {
         return [
             /*'切换' => [
-                'auth' => 'address/switch_status',
+                'auth' => 'apple/switch_status',
                 'href' => "javascript:switch_status(" . $id . ")",
                 'btnStyle' => 'info',
                 'icon' => 'fa fa-check-circle',
             ],*/
             '停止' => [
-                'auth' => 'address/switch_status',
+                'auth' => 'apple/switch_status',
                 'href' => "javascript:switch_status(" . $id . ",2)",
                 'btnStyle' => 'warning',
                 'icon' => 'fa fa-close',
             ],
             '编辑' => [
-                'auth' => 'address/edit',
-                'href' => url('address/edit', ['id' => $id]),
+                'auth' => 'apple/edit',
+                'href' => url('apple/edit', ['id' => $id]),
                 'btnStyle' => 'primary',
                 'icon' => 'fa fa-paste',
             ],
             '删除' => [
-                'auth' => 'address/delete',
-                'href' => "javascript:AddressDel(" . $id . ")",
+                'auth' => 'apple/delete',
+                'href' => "javascript:AppleDel(" . $id . ")",
                 'btnStyle' => 'danger',
                 'icon' => 'fa fa-trash-o',
             ],
