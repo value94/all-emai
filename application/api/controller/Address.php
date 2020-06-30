@@ -27,7 +27,5 @@ class Address extends Controller
         $address['msg'] = '成功获取地址';
 
         return $address;
-
-
     }
 }

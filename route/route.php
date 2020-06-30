@@ -20,5 +20,11 @@ Route::post('api/CheckIP', 'api/IpAddress/checkIP');
 
 Route::post('api/GetAddress', 'api/Address/getAddress');
 
+// 备用账号
+Route::post('api/GetAppleAccount', 'api/Apple/getAppleAccount');
+Route::post('api/SetAccountCanUse', 'api/Apple/setAccountCanUse');
+
+
+
 Route::post('api/SendPhoneInfo', 'api/Phone/sendPhoneInfo');
 Route::post('api/GetAccountBySN', 'api/Phone/getAccountBySN');
