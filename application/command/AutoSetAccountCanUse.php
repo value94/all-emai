@@ -27,9 +27,9 @@ class AutoSetAccountCanUse extends Command
 
         // 设置未运行
         $result = AppleModel::where([
-            ['status', '=', 1],
+            ['use_status', '=', 1],
             ['update_time', '<', $can_time]]
-        )->update(['status' => 0]);
+        )->update(['use_status' => 0]);
 
         // 指令输出
         if ($result) {
