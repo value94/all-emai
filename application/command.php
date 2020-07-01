@@ -10,5 +10,6 @@
 // +----------------------------------------------------------------------
 
 return [
-    'update:phone-status' => 'app\command\AutoUpdatePhoneStatus'
+    'update:phone-status' => 'app\command\AutoUpdatePhoneStatus',
+    'update:apple-status' => 'app\command\AutoSetAccountCanUse',
 ];
