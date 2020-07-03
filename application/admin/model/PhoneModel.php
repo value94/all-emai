@@ -22,6 +22,12 @@ class PhoneModel extends Model
         return $status[$value];
     }
 
+    public function getTestStatusAttr($value)
+    {
+        $status = [0 => '正常设备', 1 => '<p style="color: blue">测试设备</p>'];
+        return $status[$value];
+    }
+
     /**
      * 查询任务设备
      * @param $where

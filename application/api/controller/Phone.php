@@ -25,7 +25,13 @@ class Phone extends Controller
 
         PhoneModel::update($params, ['phone_sn' => $params['phone_sn']]);
 
-        throw new SuccessMessage(['msg' => '更新手机信息成功']);
+        return [
+            'msg' => '更新手机信息成功',
+            'status' => 1,
+            'error_code' => 0,
+            'request_url' => '/api/SendPhoneInfo',
+            'test_status' => $result['test_status'],
+        ];
     }
 
     public function getAccountBySN()
