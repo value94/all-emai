@@ -32,7 +32,7 @@ class Apple extends Controller
 
         // 返回
         $account['status'] = 1;
-        $account['msg'] = '成功获取地址';
+        $account['msg'] = '成功获取备用账号';
 
         return $account;
     }

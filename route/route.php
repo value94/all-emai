@@ -24,6 +24,10 @@ Route::post('api/GetAddress', 'api/Address/getAddress');
 Route::post('api/GetAppleAccount', 'api/Apple/getAppleAccount');
 Route::post('api/SetAccountCanUse', 'api/Apple/setAccountCanUse');
 
+// 待激活账号
+Route::post('api/GetRegAppleAccount', 'api/RegApple/getRegAppleAccount');
+Route::post('api/SetRegAccountStatus', 'api/RegApple/setRegAccountStatus');
+
 
 
 Route::post('api/SendPhoneInfo', 'api/Phone/sendPhoneInfo');
