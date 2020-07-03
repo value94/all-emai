@@ -78,7 +78,11 @@
                                autocomplete="off">
                     </div>
                     <div class="form-group">
-                        <input type="text" placeholder="账号" class="form-control" id="apple_account" name="apple_account">
+                        <input type="text" placeholder="账号" class="form-control" id="apple_account"
+                               name="apple_account">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" placeholder="失败原因" class="form-control" id="fail_reason" name="fail_reason">
                     </div>
                     <div class="form-group">
                         <select type="text" class="form-control" id="use_status" name="use_status">
@@ -200,6 +204,7 @@
                     use_status: $('#use_status').val(),
                     reg_status: $('#reg_status').val(),
                     time_field: $('#time_field').val(),
+                    fail_reason: $('#fail_reason').val(),
                 };
                 return param;
             },
@@ -315,6 +320,7 @@
             let use_status = $('#use_status').val();
             let reg_status = $('#reg_status').val();
             let time_field = $('#time_field').val();
+            let fail_reason = $('#fail_reason').val();
 
             $.getJSON("{:url('reg_apple/switch_by_search')}", {
                 'change_use_status': change_use_status
@@ -324,6 +330,7 @@
                 , 'use_status': use_status
                 , 'reg_status': reg_status
                 , 'time_field': time_field
+                , 'fail_reason': fail_reason
             }, function (res) {
                 if (1 == res.code) {
                     layer.alert(res.msg, {title: '友情提示', icon: 1, closeBtn: 0}, function () {
@@ -350,6 +357,7 @@
             let use_status = $('#use_status').val();
             let reg_status = $('#reg_status').val();
             let time_field = $('#time_field').val();
+            let fail_reason = $('#fail_reason').val();
 
             $.getJSON("{:url('reg_apple/delete_by_search')}", {
                 'start_time': start_time
@@ -358,6 +366,7 @@
                 , 'use_status': use_status
                 , 'reg_status': reg_status
                 , 'time_field': time_field
+                , 'fail_reason': fail_reason
             }, function (res) {
                 if (1 == res.code) {
                     layer.alert(res.msg, {title: '友情提示', icon: 1, closeBtn: 0}, function () {

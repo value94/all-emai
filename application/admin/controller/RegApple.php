@@ -52,6 +52,10 @@ class RegApple extends Base
         if (!empty($params['apple_account'])) {
             $where[] = ['apple_account', 'like', '%' . $params['apple_account'] . '%'];
         }
+        // 失败原因
+        if (!empty($params['fail_reason'])) {
+            $where[] = ['fail_reason', 'like', '%' . $params['fail_reason'] . '%'];
+        }
         // 状态搜索
         if ($params['use_status'] != '') {
             $where[] = ['use_status', '=', $params['use_status']];
