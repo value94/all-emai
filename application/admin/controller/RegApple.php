@@ -268,7 +268,7 @@ class RegApple extends Base
                 // 创建表
                 $newExcel = new Spreadsheet();  //创建一个新的excel文档
                 $objSheet = $newExcel->getActiveSheet();  //获取当前操作sheet的对象
-                $objSheet->setTitle('reg_apple备用账号信息表');  //设置当前sheet的标题
+                $objSheet->setTitle('apple激活账号信息表');  //设置当前sheet的标题
 
                 //设置宽度为true,不然太窄了
                 $newExcel->getActiveSheet()->getColumnDimension('A')->setAutoSize(true);
@@ -276,46 +276,34 @@ class RegApple extends Base
                 $newExcel->getActiveSheet()->getColumnDimension('C')->setWidth(20);
                 $newExcel->getActiveSheet()->getColumnDimension('D')->setAutoSize(true);
                 $newExcel->getActiveSheet()->getColumnDimension('E')->setAutoSize(true);
-                $newExcel->getActiveSheet()->getColumnDimension('F')->setWidth(30);
+                /*$newExcel->getActiveSheet()->getColumnDimension('F')->setWidth(30);
                 $newExcel->getActiveSheet()->getColumnDimension('G')->setWidth(10);
                 $newExcel->getActiveSheet()->getColumnDimension('H')->setWidth(30);
                 $newExcel->getActiveSheet()->getColumnDimension('I')->setWidth(10);
                 $newExcel->getActiveSheet()->getColumnDimension('J')->setWidth(30);
-                $newExcel->getActiveSheet()->getColumnDimension('K')->setWidth(10);
+                $newExcel->getActiveSheet()->getColumnDimension('K')->setWidth(10);*/
 
                 //设置第一栏的标题
-                $objSheet->setCellValue('A1', 'reg_apple备用账号')
-                    ->setCellValue('B1', '')
-                    ->setCellValue('C1', '')
-                    ->setCellValue('D1', '密码')
-                    ->setCellValue('E1', '出生年月')
-                    ->setCellValue('F1', '问题1')
-                    ->setCellValue('G1', '答案1')
-                    ->setCellValue('H1', '问题2')
-                    ->setCellValue('I1', '答案2')
-                    ->setCellValue('J1', '问题3')
-                    ->setCellValue('K1', '答案3');
+                $objSheet->setCellValue('A1', '账号')
+                    ->setCellValue('B1', '密码')
+                    ->setCellValue('C1', '激活状态')
+                    ->setCellValue('D1', '使用状态')
+                    ->setCellValue('E1', '激活时间');
 
                 //第二行起，每一行的值,setCellValueExplicit是用来导出文本格式的。
                 //->setCellValueExplicit('C' . $k, $val['admin_password']PHPExcel_Cell_DataType::TYPE_STRING),可以用来导出数字不变格式
                 foreach ($excel_data as $k => $val) {
                     $k = $k + 2;
-                    $objSheet->setCellValue('A' . $k, $val['RegApple_name'])
-                        ->setCellValue('B' . $k, '')
-                        ->setCellValue('C' . $k, '')
-                        ->setCellValue('D' . $k, 'Tt778899')
-                        ->setCellValue('E' . $k, '1981/1/1')
-                        ->setCellValue('F' . $k, '你少年时代最好的朋友叫什么名字？')
-                        ->setCellValue('G' . $k, 'aa1')
-                        ->setCellValue('H' . $k, '你的理想工作是什么？')
-                        ->setCellValue('I' . $k, 'aa2')
-                        ->setCellValue('J' . $k, '你的父母是在哪里认识的？')
-                        ->setCellValue('K' . $k, 'aa3');
+                    $objSheet->setCellValue('A' . $k, $val['apple_account'])
+                        ->setCellValue('B' . $k, $val['apple_pass'])
+                        ->setCellValue('C' . $k, $val['reg_status'])
+                        ->setCellValue('D' . $k, $val['use_status'])
+                        ->setCellValue('E' . $k, $val['update_time']);
                 }
                 // 修改reg_apple备用账号下载状态
                 $RegAppleModel = new RegAppleModel();
                 $RegAppleModel->isAutoWriteTimestamp(false)->update(['is_get' => 1], $where);
-                downloadExcel($newExcel, 'reg_apple备用账号数据表', 'Xls');
+                downloadExcel($newExcel, 'apple激活账号数据表', 'Xls');
             } else {
                 $this->error('该搜索条件没有能导出的数据');
             }
