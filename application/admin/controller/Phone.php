@@ -76,6 +76,11 @@ class Phone extends Base
             $where[] = ['status', '=', $params['status']];
         }
 
+        // 状态搜索
+        if ($params['test_status'] != '') {
+            $where[] = ['test_status', '=', $params['test_status']];
+        }
+
         //时间搜索
         if (!empty($params['start_time']) && !empty($params['end_time'])) {
             if ($params['time_field'] != '') {
