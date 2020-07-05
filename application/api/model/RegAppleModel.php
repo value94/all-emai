@@ -10,7 +10,7 @@ class RegAppleModel extends Model
 
     public static function getOneRegApple()
     {
-        return self::where(['use_status' => 0,'reg_status' => 2])
+        return self::where(['use_status' => 0])//,'reg_status' => 2
             ->field('id,apple_account,apple_pass')
             ->order('id')
             ->find();
