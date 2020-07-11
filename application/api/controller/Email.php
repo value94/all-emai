@@ -12,6 +12,7 @@ namespace app\api\controller;
 use app\api\model\EmailModel;
 use app\api\model\MachineModel;
 use app\api\model\PhoneModel;
+use app\api\model\RegChannelModel;
 use app\api\validate\GetCodeValidate;
 use app\api\validate\GetEmailValidate;
 use app\api\validate\SendRegResultValidate;
@@ -44,11 +45,26 @@ class Email extends Controller
             'phone_sn' => $phone_data['phone_sn'],
         ], ['id' => $email_data['id']]);
 
+        // 获取注册通道
+        $reg_channel = RegChannelModel::getNextChannel();
+
+        // 更新邮箱账号通道数据
+        EmailModel::where('id', '=', $email_data['id'])
+            ->update([
+                'use_status' => 1,
+                'channel_id' => $reg_channel['id'],
+                'channel_name' => $reg_channel['channel_name'],
+            ]);
+
         return [
             'status' => 1,
             'msg' => '成功获取邮箱',
             'email_name' => $email_data['email_name'],
             'email_password' => $email_data['email_password'],
+            'channel_name' => $reg_channel['channel_name'],
+            'process_name' => $reg_channel['process_name'],
+            'bid' => $reg_channel['bid'],
+            'remark' => $reg_channel['remark'],
             'connection_method' => $email_data['email_type']['connection_method'] == 1 ? 'imap' : 'pop3',
             'agreement' => $email_data['email_type']['connection_method'] == 1 ? $email_data['email_type']['imapsvr'] : $email_data['email_type']['pop3svr'],
             'email_port' => $email_data['email_type']['connection_method'] == 1 ? $email_data['email_type']['imap_port'] : $email_data['email_type']['pop3_port'],

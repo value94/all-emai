@@ -22,7 +22,6 @@ class EmailModel extends Model
     {
         $email_data = self::with('EmailType')->where('use_status', '=', 0)->order('id asc')->find();
         if ($email_data) {
-            self::where('id', '=', $email_data['id'])->update(['use_status' => 1]);
             return $email_data;
         } else {
             throw new EmailException(['msg' => '没有可用邮箱']);
