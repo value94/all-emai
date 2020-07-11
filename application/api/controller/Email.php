@@ -46,7 +46,7 @@ class Email extends Controller
         ], ['id' => $email_data['id']]);
 
         // 获取注册通道
-        $reg_channel = RegChannelModel::getNextChannel();
+        $reg_channel = RegChannelModel::getNextChannel($params['phone_sn']);
 
         // 更新邮箱账号通道数据
         EmailModel::where('id', '=', $email_data['id'])
