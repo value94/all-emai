@@ -107,6 +107,9 @@
                         </select>
                     </div>
                     <div class="form-group">
+                        <input type="text" placeholder="注册通道名" class="form-control" id="channel_name" name="channel_name">
+                    </div>
+                    <div class="form-group">
                         <select type="text" class="form-control" id="is_get" name="is_get">
                             <option value="">导出状态</option>
                             <option value="0">未导出</option>
@@ -165,6 +168,7 @@
                         <th data-field="is_get">导出状态</th>
                         <th data-field="use_status">使用状态</th>
                         <th data-field="reg_status">注册状态</th>
+                        <th data-field="channel_name">注册通道</th>
                         <th data-field="fail_msg">失败原因</th>
                         <th data-field="email_type.name">邮箱类型</th>
                         <th data-field="udid">udid</th>
@@ -227,6 +231,7 @@
                     time_field: $('#time_field').val(),
                     phone_sn: $('#phone_sn').val(),
                     number: $('#number').val(),
+                    channel_name: $('#channel_name').val(),
                 };
                 return param;
             },
@@ -352,7 +357,7 @@
             let time_field = $('#time_field').val();
             let phone_sn = $('#phone_sn').val();
             let number = $('#number').val();
-
+            let channel_name = $('#channel_name').val();
 
             $.getJSON("{:url('email/switch_by_search')}", {
                 'change_use_status': change_use_status
@@ -365,6 +370,7 @@
                 , 'time_field': time_field
                 , 'phone_sn': phone_sn
                 , 'number': number
+                , 'channel_name': channel_name
             }, function (res) {
                 if (1 == res.code) {
                     layer.alert(res.msg, {title: '友情提示', icon: 1, closeBtn: 0}, function () {
@@ -394,6 +400,7 @@
             let time_field = $('#time_field').val();
             let phone_sn = $('#phone_sn').val();
             let number = $('#number').val();
+            let channel_name = $('#channel_name').val();
 
             $.getJSON("{:url('email/delete_by_search')}", {
                 'start_time': start_time
@@ -405,6 +412,7 @@
                 , 'time_field': time_field
                 , 'phone_sn': phone_sn
                 , 'number': number
+                , 'channel_name': channel_name
             }, function (res) {
                 if (1 == res.code) {
                     layer.alert(res.msg, {title: '友情提示', icon: 1, closeBtn: 0}, function () {

@@ -76,6 +76,10 @@ class Email extends Base
         if (!empty($params['fail_msg'])) {
             $where[] = ['fail_msg', 'like', '%' . $params['fail_msg'] . '%'];
         }
+        // 通道名搜索
+        if (!empty($params['channel_name'])) {
+            $where[] = ['channel_name', 'like', '%' . $params['channel_name'] . '%'];
+        }
         // 状态搜索
         if ($params['use_status'] != '') {
             $where[] = ['use_status', '=', $params['use_status']];
