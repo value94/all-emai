@@ -93,8 +93,23 @@ class Versions extends Base
         $versions = new VersionsModel();
 
         if (request()->isPost()) {
-
             $param = input('post.');
+
+            // 更新上传文件
+            $file = request()->file('file_url');
+            if ($file) {
+                // 移动到框架应用根目录/uploads/ 目录下
+                $info = $file->move('../uploads', '');
+                if ($info) {
+                    // 上传后
+                    $param['file_url'] = '/uploads/' . $info->getSaveName();
+                } else {
+                    // 上传失败获取错误信息
+                    return json(msg(0, 0, $file->getError()));
+                }
+            }else{
+                unset($param['file_url']);
+            }
 
             $flag = $versions->editVersions($param);
 
@@ -115,7 +130,9 @@ class Versions extends Base
         $id = input('param.id');
 
         $versions = new VersionsModel();
+
         $flag = $versions->delversions($id);
+
         return json(msg($flag['code'], $flag['data'], $flag['msg']));
     }
 

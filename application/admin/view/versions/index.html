@@ -119,7 +119,7 @@
     function versionsDel(id){
         layer.confirm('确认删除此版本?', {icon: 3, title:'提示'}, function(index){
             //do something
-            $.getJSON("{:url('versions/versionsDel')}", {'Vid' : id}, function(res){
+            $.getJSON("{:url('versions/versionsDel')}", {'id' : id}, function(res){
                 if(1 == res.code){
                     layer.alert(res.msg, {title: '友情提示', icon: 1, closeBtn: 0}, function(){
                         initTable();

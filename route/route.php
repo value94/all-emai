@@ -28,6 +28,8 @@ Route::post('api/SetAccountCanUse', 'api/Apple/setAccountCanUse');
 Route::post('api/GetRegAppleAccount', 'api/RegApple/getRegAppleAccount');
 Route::post('api/SetRegAccountStatus', 'api/RegApple/setRegAccountStatus');
 
+// 程序版本
+Route::post('api/CheckVersions', 'api/Versions/CheckVersions');
 
 
 Route::post('api/SendPhoneInfo', 'api/Phone/sendPhoneInfo');

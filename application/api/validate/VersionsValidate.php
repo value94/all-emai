@@ -11,8 +11,7 @@ namespace app\api\validate;
 class VersionsValidate extends BaseValidate
 {
     protected $rule = [
-        'BankName' => 'require',
-        'sign' => 'require',
-        /*'Versions' => 'require'*/
+        'app_name' => 'require',
+        'version_num' => 'require',
     ];
 }

@@ -83,8 +83,16 @@ class Versions extends Model
                 $versions = [
                     'file_versions' => $param['file_versions'],
                     'file_name' => $param['file_name'],
-                    'file_url' => $param['file_url'],
                 ];
+                // 没有更新文件,获取原来的路径
+                $old_cash = Cache::get($param['file_name']);
+
+                if ($old_cash && !isset($param['file_url'])) {
+                    $versions['file_url'] = $old_cash['file_name'];
+                }else{
+                    $versions['file_url'] = $param['file_name'];
+                }
+
                 //添加缓存数据
                 Cache::set($param['file_name'], json_encode($versions), 0);
 
@@ -119,8 +127,6 @@ class Versions extends Model
                 Cache::rm($version['file_name']);
                 return msg(1, '', '删除版本成功');
             }
-
-
         } catch (PDOException $e) {
             return msg(-1, '', $e->getMessage());
         }
