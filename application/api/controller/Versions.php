@@ -28,14 +28,27 @@ class Versions extends Controller
         // 从redis缓存中判断版本号是否正确
         $nowVersion = Cache::get($params['app_name']);
         if ($nowVersion) {
-            // 返回结果
-            return json_decode($nowVersion,true);
-        }else{
+            $nowVersion = json_decode($nowVersion, true);
+            if ($nowVersion['file_versions'] != $params['version_num']) {
+                // 返回结果
+                $nowVersion['msg'] = '需要更新';
+                $nowVersion['status'] = 1;
+                $nowVersion['error_code'] = 0;
+
+                return $nowVersion;
+            }
             // 返回结果
             return [
-                'Msg' => '没有该版本号信息,请先添加',
-                'Status' => 0,
-                'ErrorCode' => 3702
+                'msg' => '该程序不需要更新',
+                'status' => 0,
+                'error_code' => 3703
+            ];
+        } else {
+            // 返回结果
+            return [
+                'msg' => '没有该版本号信息,请先添加',
+                'status' => 0,
+                'error_code' => 3702
             ];
         }
     }
