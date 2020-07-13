@@ -10,6 +10,7 @@ class EmailModel extends Model
 {
     use SoftDelete;
     protected $table = 's_email';
+    protected $autoWriteTimestamp = false;
 
     public function getUseStatusAttr($value)
     {

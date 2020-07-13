@@ -81,9 +81,9 @@
                     <div class="form-group">
                         <input type="text" placeholder="邮箱名称" class="form-control" id="email_name" name="email_name">
                     </div>
-                    <div class="form-group">
+                    <!--<div class="form-group">
                         <input type="text" placeholder="手机SN" class="form-control" id="phone_sn" name="phone_sn">
-                    </div>
+                    </div>-->
                     <div class="form-group">
                         <input type="text" placeholder="手机编号" class="form-control" id="number" name="number">
                     </div>
@@ -172,7 +172,7 @@
                         <th data-field="fail_msg">失败原因</th>
                         <th data-field="email_type.name">邮箱类型</th>
                         <th data-field="udid">udid</th>
-                        <th data-field="phone_sn">手机SN</th>
+                        <th data-field="phone_sn">手机编号</th>
                         <th data-field="create_time">创建时间</th>
                         <th data-field="update_time">更新时间</th>
                         <th data-field="operate">操作</th>
@@ -229,7 +229,7 @@
                     is_get: $('#is_get').val(),
                     fail_msg: $('#fail_msg').val(),
                     time_field: $('#time_field').val(),
-                    phone_sn: $('#phone_sn').val(),
+                    // phone_sn: $('#phone_sn').val(),
                     number: $('#number').val(),
                     channel_name: $('#channel_name').val(),
                 };
@@ -355,7 +355,7 @@
             let reg_status = $('#reg_status').val();
             let is_get = $('#is_get').val();
             let time_field = $('#time_field').val();
-            let phone_sn = $('#phone_sn').val();
+            // let phone_sn = $('#phone_sn').val();
             let number = $('#number').val();
             let channel_name = $('#channel_name').val();
 
@@ -368,7 +368,7 @@
                 , 'reg_status': reg_status
                 , 'is_get': is_get
                 , 'time_field': time_field
-                , 'phone_sn': phone_sn
+                // , 'phone_sn': phone_sn
                 , 'number': number
                 , 'channel_name': channel_name
             }, function (res) {
@@ -398,7 +398,7 @@
             let reg_status = $('#reg_status').val();
             let is_get = $('#is_get').val();
             let time_field = $('#time_field').val();
-            let phone_sn = $('#phone_sn').val();
+            // let phone_sn = $('#phone_sn').val();
             let number = $('#number').val();
             let channel_name = $('#channel_name').val();
 
@@ -410,7 +410,7 @@
                 , 'reg_status': reg_status
                 , 'is_get': is_get
                 , 'time_field': time_field
-                , 'phone_sn': phone_sn
+                // , 'phone_sn': phone_sn
                 , 'number': number
                 , 'channel_name': channel_name
             }, function (res) {
