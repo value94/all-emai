@@ -8,6 +8,7 @@ use app\api\validate\PhoneValidate;
 use app\lib\exception\PhoneException;
 use app\lib\exception\SuccessMessage;
 use think\Controller;
+use think\facade\Config;
 
 class Phone extends Controller
 {
@@ -25,12 +26,21 @@ class Phone extends Controller
 
         PhoneModel::update($params, ['phone_sn' => $params['phone_sn']]);
 
+        // 获取程序配置
+        $config_data = Config::pull('setting');
+
         return [
             'msg' => '更新手机信息成功',
             'status' => 1,
             'error_code' => 0,
             'request_url' => '/api/SendPhoneInfo',
             'test_status' => $result['test_status'],
+            'payment_method' => (int) $config_data['payment_method'],
+            'change_machine' => (int) $config_data['change_machine'],
+            'openVPN' => (int) $config_data['openVPN'],
+            'clean_files' => (int) $config_data['clean_files'],
+            'restart_process' => (int) $config_data['restart_process'],
+            'account_operation' => (int) $config_data['account_operation'],
         ];
     }
 
