@@ -24,21 +24,64 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label">ip获取间隔：</label>
                             <div class="input-group col-sm-4">
-                                <input type="text" class="form-control" name="email_time_interval" required="" aria-required="true" value="{$config_data.email_time_interval?$config_data.email_time_interval:''}"> 小时
+                                <input type="text" class="form-control" name="email_time_interval" required=""
+                                       aria-required="true"
+                                       value="{$config_data.email_time_interval?$config_data.email_time_interval:''}">
+                                小时
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label">手机无活动时间：</label>
                             <div class="input-group col-sm-4">
-                                <input id="transfer_count" type="text" class="form-control" name="phone_time_interval" required="" aria-required="true" value="{$config_data.phone_time_interval?$config_data.phone_time_interval:''}"> 分钟
+                                <input id="transfer_count" type="text" class="form-control" name="phone_time_interval"
+                                       required="" aria-required="true"
+                                       value="{$config_data.phone_time_interval?$config_data.phone_time_interval:''}">
+                                分钟
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">备用账号自动可用时间：</label>
-                            <div class="input-group col-sm-4">
-                                <input id="apple_can_use" type="text" class="form-control" name="apple_can_use" required="" aria-required="true" value="{$config_data.apple_can_use?$config_data.apple_can_use:''}"> 分钟
+                            <label class="col-sm-3 control-label">支付方式：</label>
+                            <div class="radio i-checks col-sm-6">
+                                <label><input type="radio" value="0" name="payment_method" {$config_data.payment_method==0?'checked':''}> <i></i>无</label>
+                                <label><input type="radio" value="1" name="payment_method" {$config_data.payment_method==1?'checked':''}> <i></i>易支付</label>
                             </div>
                         </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">是否改机：</label>
+                            <div class="radio i-checks col-sm-6">
+                                <label><input type="radio" value="0" name="change_machine" {$config_data.change_machine==0?'checked':''}> <i></i>NO</label>
+                                <label><input type="radio" value="1" name="change_machine" {$config_data.change_machine==1?'checked':''}> <i></i>YES</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">开启VPN：</label>
+                            <div class="radio i-checks col-sm-6">
+                                <label><input type="radio" value="0" name="openVPN" {$config_data.openVPN==0?'checked':''}> <i></i>NO</label>
+                                <label><input type="radio" value="1" name="openVPN" {$config_data.openVPN==1?'checked':''}> <i></i>YES</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">清理文件：</label>
+                            <div class="radio i-checks col-sm-6">
+                                <label><input type="radio" value="0" name="clean_files" {$config_data.clean_files==0?'checked':''}> <i></i>NO</label>
+                                <label><input type="radio" value="1" name="clean_files" {$config_data.clean_files==1?'checked':''}> <i></i>YES</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">重启进程：</label>
+                            <div class="radio i-checks col-sm-6">
+                                <label><input type="radio" value="0" name="restart_process" {$config_data.restart_process==0?'checked':''}> <i></i>NO</label>
+                                <label><input type="radio" value="1" name="restart_process" {$config_data.restart_process==1?'checked':''}> <i></i>YES</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">登录/登出账号：</label>
+                            <div class="radio i-checks col-sm-6">
+                                <label><input type="radio" value="0" name="account_operation" {$config_data.account_operation==0?'checked':''}> <i></i>NO</label>
+                                <label><input type="radio" value="1" name="account_operation" {$config_data.account_operation==1?'checked':''}> <i></i>YES</label>
+                            </div>
+                        </div>
+
                         <div class="form-group">
                             <div class="col-sm-4 col-sm-offset-4">
                                 <button class="btn btn-primary" type="submit">提交修改</button>
@@ -61,15 +104,15 @@
 <script src="__JS__/jquery.form.js"></script>
 <script type="text/javascript">
     // 下发查账任务
-    function delConfig(){
-        layer.confirm('确认清除配置缓存?', {icon: 3, title:'提示'}, function(index){
+    function delConfig() {
+        layer.confirm('确认清除配置缓存?', {icon: 3, title: '提示'}, function (index) {
             //do something
-            $.getJSON("{:url('general/delConfig')}", {}, function(res){
-                if(1 == res.code){
+            $.getJSON("{:url('general/delConfig')}", {}, function (res) {
+                if (1 == res.code) {
                     layer.alert(res.msg, {title: '友情提示', icon: 1});
-                }else if(111 == res.code){
+                } else if (111 == res.code) {
                     window.location.reload();
-                }else{
+                } else {
                     layer.alert(res.msg, {title: '友情提示', icon: 2});
                 }
             });
@@ -77,6 +120,7 @@
         })
 
     }
+
     var index = '';
 
     function showStart() {
