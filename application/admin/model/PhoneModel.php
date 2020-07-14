@@ -34,8 +34,9 @@ class PhoneModel extends Model
     public function getJobTypeAttr($value)
     {
         $status = [
+            0 => '未定',
             1 => '<p style="color: blue">接码</p>',
-            2 => '<p style="color: grey">注册</p>',
+            2 => '<p style="color: yellow">注册</p>',
             3 => '<p style="color: green">激活</p>',
             4 => '<p style="color: red">双重</p>',
         ];
