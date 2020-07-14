@@ -118,6 +118,15 @@
                         </select>
                     </div>
                     <div class="form-group">
+                        <select type="text" class="form-control" id="job_type" name="job_type">
+                            <option value="">工作类型</option>
+                            <option value="1">接码</option>
+                            <option value="2">注册</option>
+                            <option value="3">激活</option>
+                            <option value="4">双重</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
                         <select type="text" class="form-control" id="time_field" name="time_field">
                             <option value="">时间字段</option>
                             <option value="1">创建时间</option>
@@ -161,14 +170,16 @@
                         <th data-field="id">ID</th>
                         <th data-field="number">编号</th>
                         <!--<th data-field="email_name">邮箱名</th>-->
-                        <th data-field="job_count">任务总数</th>
-                        <th data-field="success_job_count">成功总数</th>
-                        <th data-field="failed_job_count">失败总数</th>
+                        <th data-field="phone_num">手机号</th>
                         <th data-field="phone_sn">手机SN</th>
                         <th data-field="account_name">Apple账号</th>
                         <th data-field="account_pass">Apple密码</th>
+                        <th data-field="job_type">工作类型</th>
                         <th data-field="status">运行状态</th>
                         <th data-field="test_status">测试状态</th>
+                        <th data-field="job_count">任务总数</th>
+                        <th data-field="success_job_count">成功总数</th>
+                        <th data-field="failed_job_count">失败总数</th>
                         <th data-field="program_version">程序版本</th>
                         <th data-field="udid">udid</th>
                         <th data-field="run_steps">运行步骤</th>
@@ -226,6 +237,7 @@
                     time_field: $('#time_field').val(),
                     phone_sn: $('#phone_sn').val(),
                     number: $('#number').val(),
+                    job_type: $('#job_type').val(),
                 };
                 return param;
             },
@@ -327,6 +339,7 @@
             let phone_sn = $('#phone_sn').val();
             let time_field = $('#time_field').val();
             let number = $('#number').val();
+            let job_type = $('#job_type').val();
 
             $.getJSON("{:url('phone/switch_by_search')}", {
                 'change_status': change_status
@@ -338,7 +351,7 @@
                 , 'time_field': time_field
                 , 'phone_sn': phone_sn
                 , 'number': number
-
+                , 'job_type': job_type
             }, function (res) {
                 if (1 == res.code) {
                     layer.alert(res.msg, {title: '友情提示', icon: 1, closeBtn: 0}, function () {
@@ -367,6 +380,7 @@
             let time_field = $('#time_field').val();
             let phone_sn = $('#phone_sn').val();
             let number = $('#number').val();
+            let job_type = $('#job_type').val();
 
 
             $.getJSON("{:url('phone/delete_by_search')}", {
@@ -378,6 +392,7 @@
                 , 'time_field': time_field
                 , 'phone_sn': phone_sn
                 , 'number': number
+                , 'job_type': job_type
             }, function (res) {
                 if (1 == res.code) {
                     layer.alert(res.msg, {title: '友情提示', icon: 1, closeBtn: 0}, function () {

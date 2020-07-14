@@ -16,15 +16,29 @@ class PhoneModel extends Model
         return $this->hasOne('EmailModel', 'id', 'email_id');
     }
 
+    // 运行状态
     public function getStatusAttr($value)
     {
         $status = [0 => '未运行', 1 => '<p style="color: blue">正在运行</p>', 2 => '<p style="color: red">停止使用</p>'];
         return $status[$value];
     }
 
+    // 设备类型
     public function getTestStatusAttr($value)
     {
         $status = [0 => '正常设备', 1 => '<p style="color: blue">测试设备</p>'];
+        return $status[$value];
+    }
+
+    // 工作类型
+    public function getJobTypeAttr($value)
+    {
+        $status = [
+            1 => '<p style="color: blue">接码</p>',
+            2 => '<p style="color: grey">注册</p>',
+            3 => '<p style="color: green">激活</p>',
+            4 => '<p style="color: red">双重</p>',
+        ];
         return $status[$value];
     }
 

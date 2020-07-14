@@ -76,6 +76,11 @@ class Phone extends Base
             $where[] = ['status', '=', $params['status']];
         }
 
+        // 工作类型搜索
+        if ($params['job_type'] != '') {
+            $where[] = ['job_type', '=', $params['job_type']];
+        }
+
         // 状态搜索
         if ($params['test_status'] != '') {
             $where[] = ['test_status', '=', $params['test_status']];
@@ -308,6 +313,8 @@ class Phone extends Base
                     'des' => $c[2],
                     'account_name' => empty($c[3]) ? null : $c[3],
                     'account_pass' => empty($c[4]) ? null : $c[4],
+                    'phone_num' => $c[5],
+                    'job_type' => in_array($c[6], [1, 2, 3, 4]) ? $c[6] : 1,
                     'create_time' => $create_time,
                     'update_time' => $update_time,
                 ];
