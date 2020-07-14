@@ -40,6 +40,13 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            <label class="col-sm-3 control-label">SMS手机释放时间：</label>
+                            <div class="input-group col-sm-4">
+                                <input id="release_phone_time" type="text" class="form-control" name="release_phone_time" required="" aria-required="true" alue="{$config_data.release_phone_time?$config_data.release_phone_time:''}">
+                                分钟
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label class="col-sm-3 control-label">支付方式：</label>
                             <div class="radio i-checks col-sm-6">
                                 <label><input type="radio" value="0" name="payment_method" {$config_data.payment_method==0?'checked':''}> <i></i>无</label>

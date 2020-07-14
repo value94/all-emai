@@ -13,4 +13,5 @@ return [
     'update:phone-status' => 'app\command\AutoUpdatePhoneStatus',
     'update:apple-status' => 'app\command\AutoSetAccountCanUse',
     'update:address' => 'app\command\ChangeAddress',
+    'release:sms-phone' => 'app\command\AutoReleaseSMSPhoneStatus',
 ];
