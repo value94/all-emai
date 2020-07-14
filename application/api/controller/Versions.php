@@ -26,7 +26,7 @@ class Versions extends Controller
         // 解密及验证参数
         $params = (new VersionsValidate())->goCheck();
         // 从redis缓存中判断版本号是否正确
-        $nowVersion = Cache::get($params['app_name']);
+        $nowVersion = Cache::tag('versions')->get($params['app_name']);
         if ($nowVersion) {
             $nowVersion = json_decode($nowVersion, true);
             if ($nowVersion['file_versions'] != $params['version_num']) {

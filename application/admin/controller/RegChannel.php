@@ -3,6 +3,7 @@
 namespace app\admin\controller;
 
 use app\admin\model\RegChannelModel;
+use think\facade\Cache;
 
 class RegChannel extends Base
 {
@@ -96,8 +97,18 @@ class RegChannel extends Base
      */
     public function delete($id)
     {
-        RegChannelModel::destroy($id);
-        return json(msg(1, '', '删除成功'));
+        $regModel = new RegChannelModel();
+        $channel_data = $regModel->getOneRegChannel($id);
+        if ($channel_data) {
+            // 清除该通道缓存
+            Cache::tag('channel')->clear();
+            // 真实删除通道
+            RegChannelModel::destroy($id, true);
+
+            return json(msg(1, '', '删除成功'));
+        }
+        return json(msg(0, '', '没有该通道数据'));
+
     }
 
     /**
