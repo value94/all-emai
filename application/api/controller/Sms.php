@@ -60,7 +60,6 @@ class Sms extends Controller
         } else {
             // 更新获取短信状态
             SmsModel::where('token', $params['token'])->update([
-                'receiving_status' => 2,
                 'sending_sms_time' => date('Y-m-d H:i:s')
             ]);
             // 释放手机

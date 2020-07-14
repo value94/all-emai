@@ -28,7 +28,6 @@ class Sms extends Base
 
             // 拼装参数
             foreach ($selectResult as $key => $vo) {
-                $selectResult[$key]['fail_sms_count'] = $vo['received_sms_count'] - $vo['success_sms_count'];
                 $selectResult[$key]['operate'] = showOperate($this->makeButton($vo['id']));
             }
 
@@ -49,30 +48,42 @@ class Sms extends Base
         $where = [];
 
         // 手机号搜索
-        if (!empty($params['phone_num'])) {
-            $where[] = ['phone_num', 'like', '%' . $params['phone_num'] . '%'];
+        if (!empty($params['receiving_phone_num'])) {
+            $where[] = ['receiving_phone_num', 'like', '%' . $params['receiving_phone_num'] . '%'];
         }
 
         // 机器编号搜索
-        if (!empty($params['device_num'])) {
-            $where[] = ['device_num', 'like', '%' . $params['device_num'] . '%'];
+        if (!empty($params['get_phone_num'])) {
+            $where[] = ['get_phone_num', 'like', '%' . $params['get_phone_num'] . '%'];
+        }
+
+        if (!empty($params['fail_reason'])) {
+            $where[] = ['fail_reason', 'like', '%' . $params['fail_reason'] . '%'];
+        }
+
+        if (!empty($params['token'])) {
+            $where[] = ['token', '=', $params['token']];
+        }
+
+        if (!empty($params['code'])) {
+            $where[] = ['code', '=', $params['code']];
         }
 
         // 状态搜索
-        if ($params['status'] != '') {
-            $where[] = ['status', '=', $params['status']];
+        if ($params['receiving_status'] != '') {
+            $where[] = ['receiving_status', '=', $params['receiving_status']];
         }
 
         //时间搜索
         if (!empty($params['start_time']) && !empty($params['end_time'])) {
             if ($params['time_field'] != '') {
                 $time_field = [
-                    1 => 'create_time',
-                    2 => 'update_time',
+                    1 => 'upload_sms_time',
+                    2 => 'sending_sms_time',
                 ];
                 $where[] = [$time_field[$params['time_field']], 'between', [$params['start_time'], $params['end_time']]];
             } else {
-                $where[] = ['update_time', 'between', [$params['start_time'], $params['end_time']]];
+                $where[] = ['upload_sms_time', 'between', [$params['start_time'], $params['end_time']]];
             }
         }
 
@@ -148,9 +159,9 @@ class Sms extends Base
     {
         $params = input('param.');
         if (isset($params['ids'])) {
-            SmsModel::destroy($params['ids']);
+            SmsModel::destroy($params['ids'], true);
         } else {
-            SmsModel::destroy($params['id']);
+            SmsModel::destroy($params['id'], true);
         }
 
         return json(msg(1, '', '删除成功'));
@@ -310,27 +321,9 @@ class Sms extends Base
     private function makeButton($id)
     {
         return [
-            '切换' => [
-                'auth' => 'smsPhone/switch_status',
-                'href' => "javascript:switch_status(" . $id . ")",
-                'btnStyle' => 'info',
-                'icon' => 'fa fa-check-circle',
-            ],
-            '停止' => [
-                'auth' => 'smsPhone/switch_status',
-                'href' => "javascript:switch_status(" . $id . ",2)",
-                'btnStyle' => 'warning',
-                'icon' => 'fa fa-close',
-            ],
-            '编辑' => [
-                'auth' => 'smsPhone/edit',
-                'href' => url('smsPhone/edit', ['id' => $id]),
-                'btnStyle' => 'primary',
-                'icon' => 'fa fa-paste',
-            ],
             '删除' => [
-                'auth' => 'smsPhone/delete',
-                'href' => "javascript:sms_phoneDel(" . $id . ")",
+                'auth' => 'sms/delete',
+                'href' => "javascript:smsDel(" . $id . ")",
                 'btnStyle' => 'danger',
                 'icon' => 'fa fa-trash-o',
             ],

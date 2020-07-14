@@ -11,6 +11,17 @@ class SmsModel extends Model
     use SoftDelete;
     protected $table = 's_sms';
 
+    // 运行状态
+    public function getReceivingStatusAttr($value)
+    {
+        $status = [
+            0 => '<p style="color: red">失败</p>',
+            1 => '<p style="color: yellowgreen">成功</p>',
+            2 => '<p style="color: blue">下发</p>'
+        ];
+        return $status[$value];
+    }
+
     /**
      * 查询任务设备
      * @param $where
@@ -67,7 +78,7 @@ class SmsModel extends Model
 
             $this->save($param);
 
-            return msg(1, url('Sms/index'), '添加SMS设备成功');
+            return msg(1, url('Sms/index'), '添加SMS成功');
 
         } catch (\Exception $e) {
             return msg(-2, '', $e->getMessage());
