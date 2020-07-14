@@ -48,17 +48,17 @@
             </div>-->
             <div class="form-group clearfix">
                 <div class="form-group clearfix col-sm-3" style="margin-top: 1rem;">
-                    {if authCheck('sms_phone/switch_status')}
+                    {if authCheck('smsPhone/switch_status')}
                     <div class="btn-group">
                         <button data-toggle="dropdown" class="btn btn-warning dropdown-toggle" aria-expanded="false">操作
                             <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu" style="left: 0">
                             <li>
-                                <a href="javascript:" onclick="switch_choice_status(0)">未运行</a>
+                                <a href="javascript:" onclick="switch_choice_status(0)">空闲</a>
                             </li>
                             <li>
-                                <a href="javascript:" onclick="switch_choice_status(1)">正在运行</a>
+                                <a href="javascript:" onclick="switch_choice_status(1)">接码中</a>
                             </li>
                             <li>
                                 <a href="javascript:" onclick="switch_choice_status(2)">停止使用</a>
@@ -94,36 +94,17 @@
                                autocomplete="off">
                     </div>
                     <div class="form-group">
-                        <input type="text" placeholder="手机SN" class="form-control" id="sms_phone_sn" name="sms_phone_sn">
+                        <input type="text" placeholder="手机编号" class="form-control" id="device_num" name="device_num">
                     </div>
                     <div class="form-group">
-                        <input type="text" placeholder="机器编号" class="form-control" id="number" name="number">
-                    </div>
-                    <div class="form-group">
-                        <input type="text" placeholder="设备udid" class="form-control" id="udid" name="udid">
+                        <input type="text" placeholder="手机号" class="form-control" id="phone_num" name="phone_num">
                     </div>
                     <div class="form-group">
                         <select type="text" class="form-control" id="status" name="status">
-                            <option value="">运行状态</option>
-                            <option value="0">未运行</option>
-                            <option value="1">正在运行</option>
+                            <option value="">状态</option>
+                            <option value="0">空闲</option>
+                            <option value="1">接码中</option>
                             <option value="2">停止使用</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <select type="text" class="form-control" id="test_status" name="test_status">
-                            <option value="">测试状态</option>
-                            <option value="0">正常设备</option>
-                            <option value="1">测试设备</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <select type="text" class="form-control" id="job_type" name="job_type">
-                            <option value="">工作类型</option>
-                            <option value="1">接码</option>
-                            <option value="2">注册</option>
-                            <option value="3">激活</option>
-                            <option value="4">双重</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -168,22 +149,14 @@
                         <thead>
                         <th data-field="box_id" data-checkbox="true"></th>
                         <th data-field="id">ID</th>
-                        <th data-field="number">编号</th>
-                        <!--<th data-field="email_name">邮箱名</th>-->
-                        <th data-field="sms_phone_num">手机号</th>
-                        <th data-field="sms_phone_sn">手机SN</th>
-                        <th data-field="account_name">Apple账号</th>
-                        <th data-field="account_pass">Apple密码</th>
-                        <th data-field="job_type">工作类型</th>
-                        <th data-field="status">运行状态</th>
-                        <th data-field="test_status">测试状态</th>
-                        <th data-field="job_count">任务总数</th>
-                        <th data-field="success_job_count">成功总数</th>
-                        <th data-field="failed_job_count">失败总数</th>
-                        <th data-field="program_version">程序版本</th>
-                        <th data-field="udid">udid</th>
-                        <th data-field="run_steps">运行步骤</th>
-                        <th data-field="des">描述信息</th>
+                        <th data-field="phone_num">手机号</th>
+                        <th data-field="device_num">设备编号</th>
+                        <th data-field="status">状态</th>
+                        <th data-field="get_phone_count">请求号码数</th>
+                        <th data-field="get_sms_count">获取短信数</th>
+                        <th data-field="received_sms_count">总接收短信数</th>
+                        <th data-field="success_sms_count">成功接收短信数</th>
+                        <th data-field="fail_sms_count">失败接收短信数</th>
                         <th data-field="create_time">创建时间</th>
                         <th data-field="update_time">更新时间</th>
                         <th data-field="operate">操作</th>
@@ -229,15 +202,12 @@
                 var param = {
                     pageNumber: params.pageNumber,
                     pageSize: params.pageSize,
-                    udid: $('#udid').val(),
                     start_time: $('#start_time').val(),
                     end_time: $('#end_time').val(),
                     status: $('#status').val(),
-                    test_status: $('#test_status').val(),
+                    phone_num: $('#phone_num').val(),
+                    device_num: $('#device_num').val(),
                     time_field: $('#time_field').val(),
-                    sms_phone_sn: $('#sms_phone_sn').val(),
-                    number: $('#number').val(),
-                    job_type: $('#job_type').val(),
                 };
                 return param;
             },
@@ -282,7 +252,7 @@
                 sms_phone_id[i] = sms_phone[i]['id'];
             }
             $.getJSON("{:url('sms_phone/switch_status')}", {
-                'sms_phone_id': sms_phone_id, 'change_status': change_status
+                'id': sms_phone_id, 'change_status': change_status
             }, function (res) {
                 if (1 == res.code) {
                     layer.alert(res.msg, {title: '友情提示', icon: 1, closeBtn: 0}, function () {
@@ -300,7 +270,7 @@
     }
 
     // 删除选中设备
-    function sms_phoneDelMore() {
+    function SmsPhoneDelMore() {
         if ($table.bootstrapTable('getAllSelections').length == 0) {
             layer.alert('请勾选设备', {title: '友情提示', icon: 2});
             return;
@@ -331,27 +301,20 @@
     function switch_by_search(change_status = '') {
         layer.confirm('确认切换搜索设备状态', {icon: 3, title: '提示'}, function (index) {
             // 获取搜索条件
-            let udid = $('#udid').val();
             let start_time = $('#start_time').val();
             let end_time = $('#end_time').val();
             let status = $('#status').val();
-            let test_status = $('#test_status').val();
-            let sms_phone_sn = $('#sms_phone_sn').val();
-            let time_field = $('#time_field').val();
-            let number = $('#number').val();
-            let job_type = $('#job_type').val();
+            let phone_num = $('#phone_num').val();
+            let device_num = $('#device_num').val();
+
 
             $.getJSON("{:url('sms_phone/switch_by_search')}", {
                 'change_status': change_status
-                , 'udid': udid
                 , 'start_time': start_time
                 , 'end_time': end_time
                 , 'status': status
-                , 'test_status': test_status
-                , 'time_field': time_field
-                , 'sms_phone_sn': sms_phone_sn
-                , 'number': number
-                , 'job_type': job_type
+                , 'phone_num': phone_num
+                , 'device_num': device_num
             }, function (res) {
                 if (1 == res.code) {
                     layer.alert(res.msg, {title: '友情提示', icon: 1, closeBtn: 0}, function () {
@@ -372,27 +335,19 @@
     function delete_by_search() {
         layer.confirm('确认删除搜索设备', {icon: 3, title: '提示'}, function (index) {
             // 获取搜索条件
-            let udid = $('#udid').val();
             let start_time = $('#start_time').val();
             let end_time = $('#end_time').val();
             let status = $('#status').val();
-            let test_status = $('#test_status').val();
-            let time_field = $('#time_field').val();
-            let sms_phone_sn = $('#sms_phone_sn').val();
-            let number = $('#number').val();
-            let job_type = $('#job_type').val();
+            let phone_num = $('#phone_num').val();
+            let device_num = $('#device_num').val();
 
 
             $.getJSON("{:url('sms_phone/delete_by_search')}", {
-                'udid': udid
-                , 'start_time': start_time
+                'start_time': start_time
                 , 'end_time': end_time
                 , 'status': status
-                , 'test_status': test_status
-                , 'time_field': time_field
-                , 'sms_phone_sn': sms_phone_sn
-                , 'number': number
-                , 'job_type': job_type
+                , 'phone_num': phone_num
+                , 'device_num': device_num
             }, function (res) {
                 if (1 == res.code) {
                     layer.alert(res.msg, {title: '友情提示', icon: 1, closeBtn: 0}, function () {
@@ -412,7 +367,7 @@
     function switch_status(id, status) {
         layer.confirm('确认切换状态?', {icon: 3, title: '提示'}, function (index) {
             //do something
-            $.getJSON("{:url('sms_phone/switch_status')}", {'sms_phone_id': id, 'status': status}, function (res) {
+            $.getJSON("{:url('sms_phone/switch_status')}", {'id': id, 'status': status}, function (res) {
                 if (1 == res.code) {
                     layer.alert(res.msg, {title: '友情提示', icon: 1, closeBtn: 0}, function () {
                         initTable();

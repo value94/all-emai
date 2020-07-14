@@ -22,44 +22,25 @@
                 <div class="ibox-content">
                     <form class="form-horizontal m-t" id="commentForm" method="post" action="{:url('smsPhone/create')}">
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">编号：</label>
+                            <label class="col-sm-3 control-label">手机号：</label>
                             <div class="input-group col-sm-4">
-                                <input id="number" type="text" class="form-control" name="number" required="" aria-required="true" value="">
+                                <input id="phone_num" type="text" class="form-control" name="phone_num" required="" aria-required="true" value="">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">手机SN：</label>
+                            <label class="col-sm-3 control-label">设备编号：</label>
                             <div class="input-group col-sm-4">
-                                <input id="smsPhone_sn" type="text" class="form-control" name="smsPhone_sn" required="" aria-required="true" >
+                                <input id="device_num" type="text" class="form-control" name="device_num" required="" aria-required="true" >
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Apple账号：</label>
-                            <div class="input-group col-sm-4">
-                                <input id="account_name" type="text" class="form-control" name="account_name" required="" aria-required="true" >
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">Apple密码：</label>
-                            <div class="input-group col-sm-4">
-                                <input id="account_pass" type="text" class="form-control" name="account_pass" required="" aria-required="true" >
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">备注：</label>
-                            <div class="input-group col-sm-4">
-                                <input id="ModelNumber" type="text" class="form-control" name="des">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">运行状态：</label>
+                            <label class="col-sm-3 control-label">设备状态：</label>
                             <div class="input-group col-sm-9">
                                 <div class="radio i-checks col-sm-6">
                                     <label>
                                         <input type="radio" value="0" name="status">
-                                        <i></i>未运行</label>
-                                    <input type="radio" value="1" name="status"> <i></i>正在运行</label>
-                                    <input type="radio" value="2" name="status"> <i></i>停止使用</label>
+                                        <i></i>空闲</label>
+                                    <input type="radio" value="1" name="status"> <i></i>接码中</label>
                                 </div>
                             </div>
                         </div>

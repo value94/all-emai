@@ -15,6 +15,9 @@ use think\Validate;
 class SmsPhoneValidate extends Validate
 {
     protected $rule = [
+        'phone_num' => 'require',
+        'device_num' => 'require',
+        'status' => 'require|in:0,1,2',
     ];
 
 }

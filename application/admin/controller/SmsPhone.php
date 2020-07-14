@@ -47,34 +47,20 @@ class SmsPhone extends Base
     protected function getWhereByParams($params)
     {
         $where = [];
-        // 任务设备 udid 搜索
-        if (!empty($params['udid'])) {
-            $where[] = ['udid', 'like', '%' . $params['udid'] . '%'];
-        }
 
-        // 任务设备 sn 搜索
-        if (!empty($params['phone_sn'])) {
-            $where[] = ['phone_sn', 'like', '%' . $params['phone_sn'] . '%'];
+        // 手机号搜索
+        if (!empty($params['phone_num'])) {
+            $where[] = ['phone_num', 'like', '%' . $params['phone_num'] . '%'];
         }
 
         // 机器编号搜索
-        if (!empty($params['number'])) {
-            $where[] = ['number', 'like', '%' . $params['number'] . '%'];
+        if (!empty($params['device_num'])) {
+            $where[] = ['device_num', 'like', '%' . $params['device_num'] . '%'];
         }
 
         // 状态搜索
         if ($params['status'] != '') {
             $where[] = ['status', '=', $params['status']];
-        }
-
-        // 工作类型搜索
-        if ($params['job_type'] != '') {
-            $where[] = ['job_type', '=', $params['job_type']];
-        }
-
-        // 状态搜索
-        if ($params['test_status'] != '') {
-            $where[] = ['test_status', '=', $params['test_status']];
         }
 
         //时间搜索
@@ -107,7 +93,7 @@ class SmsPhone extends Base
             $SmsPhone = new SmsPhoneModel();
             // 查询是否被软删除
             $check = SmsPhoneModel::onlyTrashed()->find(function ($query) use ($param) {
-                $query->where('phone_sn', '=', $param['phone_sn']);
+                $query->where('device_num', '=', $param['device_num']);
             });
             if ($check) {
                 $check->restore();
@@ -186,25 +172,25 @@ class SmsPhone extends Base
 
             // 切换成停止状态
             if (isset($params['status']) && $params['status'] == 2) {
-                SmsPhoneModel::update(['status' => 2], ['id' => $params['phone_id']]);
+                SmsPhoneModel::update(['status' => 2], ['id' => $params['id']]);
                 return $result;
             }
             // 切换成指定状态
             if (isset($params['change_status'])) {
-                SmsPhoneModel::update(['status' => $params['change_status']], ['id' => $params['phone_id']]);
+                SmsPhoneModel::update(['status' => $params['change_status']], ['id' => $params['id']]);
                 return $result;
             }
 
             // 切换任务设备状态
             $used_id = SmsPhoneModel::where([
                 ['status', 'in', '1,2'],
-                ['id', 'in', $params['phone_id']]
+                ['id', 'in', $params['id']]
 
             ])->column('id');
 
             $un_use = SmsPhoneModel::where([
                 ['status', 'in', '0,2'],
-                ['id', 'in', $params['phone_id']]
+                ['id', 'in', $params['id']]
             ])->column('id');
 
             if (!empty($used_id)) {
@@ -330,26 +316,26 @@ class SmsPhone extends Base
     {
         return [
             '切换' => [
-                'auth' => 'phone/switch_status',
+                'auth' => 'smsPhone/switch_status',
                 'href' => "javascript:switch_status(" . $id . ")",
                 'btnStyle' => 'info',
                 'icon' => 'fa fa-check-circle',
             ],
             '停止' => [
-                'auth' => 'phone/switch_status',
+                'auth' => 'smsPhone/switch_status',
                 'href' => "javascript:switch_status(" . $id . ",2)",
                 'btnStyle' => 'warning',
                 'icon' => 'fa fa-close',
             ],
             '编辑' => [
-                'auth' => 'phone/edit',
-                'href' => url('phone/edit', ['id' => $id]),
+                'auth' => 'smsPhone/edit',
+                'href' => url('smsPhone/edit', ['id' => $id]),
                 'btnStyle' => 'primary',
                 'icon' => 'fa fa-paste',
             ],
             '删除' => [
-                'auth' => 'phone/delete',
-                'href' => "javascript:phoneDel(" . $id . ")",
+                'auth' => 'smsPhone/delete',
+                'href' => "javascript:sms_phoneDel(" . $id . ")",
                 'btnStyle' => 'danger',
                 'icon' => 'fa fa-trash-o',
             ],
