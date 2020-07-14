@@ -31,6 +31,11 @@ Route::post('api/SetRegAccountStatus', 'api/RegApple/setRegAccountStatus');
 // 程序版本
 Route::post('api/CheckVersions', 'api/Versions/CheckVersions');
 
+// sms手机
+Route::post('api/GetSmsPhone', 'api/SmsPhone/getSmsPhone');
+Route::post('api/UploadSMS', 'api/Sms/uploadSMS');
+Route::post('api/GetSMSCode', 'api/Sms/getSMSCode');
+
 
 Route::post('api/SendPhoneInfo', 'api/Phone/sendPhoneInfo');
 Route::post('api/GetAccountBySN', 'api/Phone/getAccountBySN');
