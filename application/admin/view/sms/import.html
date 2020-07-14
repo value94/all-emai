@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>导入SMS手机</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="__CSS__/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="__CSS__/font-awesome.min.css?v=4.4.0" rel="stylesheet">
+    <link href="__CSS__/animate.min.css" rel="stylesheet">
+    <link href="__CSS__/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="__CSS__/style.min.css?v=4.1.0" rel="stylesheet">
+</head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-8">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>导入SMS手机</h5>
+                </div>
+                <div class="ibox-content">
+                    <form class="form-horizontal m-t" id="commentForm" enctype="multipart/form-data" method="post" action="{:url('smsPhone/import')}">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">SMS手机数据：</label>
+                            <div class="input-group col-sm-6">
+                                <input id="phone_file" type="file" class="form-control" name="phone_file" required="" aria-required="true">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-4 col-sm-offset-6">
+                                <button class="btn btn-primary" type="submit">提交</button>
+                                <button type="button" class="btn btn-w-m btn-info" ><a href="/upload/files/sms_phone_example.xls" style="color: white">示例下载</a></button>
+
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script src="__JS__/bootstrap.min.js?v=3.3.6"></script>
+<script src="__JS__/content.min.js?v=1.0.0"></script>
+<script src="__JS__/plugins/validate/jquery.validate.min.js"></script>
+<script src="__JS__/plugins/validate/messages_zh.min.js"></script>
+<script src="__JS__/plugins/iCheck/icheck.min.js"></script>
+<script src="__JS__/plugins/layer-new/layer.min.js"></script>
+<script type="text/javascript">
+
+    var index = '';
+    function showStart(){
+        index = layer.load(0, {shade: false});
+        return true;
+    }
+
+    function showSuccess(res){
+
+        layer.ready(function(){
+            layer.close(index);
+            if(1 == res.code){
+                layer.alert(res.msg, {title: '友情提示', icon: 1, closeBtn: 0}, function(){
+                    window.location.href = res.data;
+                });
+            }else if(111 == res.code){
+                window.location.reload();
+            }else{
+                layer.msg(res.msg, {anim: 6});
+            }
+        });
+    }
+
+
+    $(document).ready(function(){
+        $(".i-checks").iCheck({checkboxClass:"icheckbox_square-green",radioClass:"iradio_square-green",});
+
+        // 编辑管理员
+        var options = {
+            beforeSubmit:showStart,
+            success:showSuccess
+        };
+
+        $('#commentForm').submit(function(){
+            $(this).ajaxSubmit(options);
+            return false;
+        });
+    });
+
+    // 表单验证
+    $.validator.setDefaults({
+        highlight: function(e) {
+            $(e).closest(".form-group").removeClass("has-success").addClass("has-error")
+        },
+        success: function(e) {
+            e.closest(".form-group").removeClass("has-error").addClass("has-success")
+        },
+        errorElement: "span",
+        errorPlacement: function(e, r) {
+            e.appendTo(r.is(":radio") || r.is(":checkbox") ? r.parent().parent().parent() : r.parent())
+        },
+        errorClass: "help-block m-b-none",
+        validClass: "help-block m-b-none"
+    });
+    /*var BsSuggest = $("#BankShortName").bsSuggest({
+        indexId: 2,
+        indexKey: 1,
+        data: {
+            "value": [
+                {"id": "1", "word": "PBC", "description": "中国人民银行"},
+                {"id": "2", "word": "NYYH", "description": "中国农业银行"},
+                {"id": "3", "word": "CCB", "description": "中国建设银行"},
+                {"id": "4", "word": "SPDB", "description": "浦东发展银行"},
+                {"id": "5", "word": "ICBC", "description": "中国工商银行"},
+                {"id": "6", "word": "BOC", "description": "中国银行"},
+                {"id": "7", "word": "CMBC", "description": "中国民生银行"},
+                {"id": "8", "word": "CMB", "description": "招商银行"},
+                {"id": "9", "word": "CIB", "description": "兴业银行"},
+                {"id": "10", "word": "BCM", "description": "交通银行"},
+                {"id": "11", "word": "CEB", "description": "中国光大银行"},
+                {"id": "12", "word": "CCB", "description": "中信银行"},
+                {"id": "13", "word": "HXB", "description": "华夏银行"},
+                {"id": "14", "word": "HSBC", "description": "汇丰银行"},
+                {"id": "15", "word": "PAB", "description": "平安银行"},
+                {"id": "15", "word": "PSBC", "description": "邮政银行"},
+            ]
+        }
+    });*/
+</script>
+</body>
+</html>
