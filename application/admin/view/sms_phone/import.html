@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>导入机器</title>
+    <title>导入SMS手机</title>
     <link rel="shortcut icon" href="favicon.ico">
     <link href="__CSS__/bootstrap.min.css?v=3.3.6" rel="stylesheet">
     <link href="__CSS__/font-awesome.min.css?v=4.4.0" rel="stylesheet">
@@ -17,12 +17,12 @@
         <div class="col-sm-8">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
-                    <h5>导入机器</h5>
+                    <h5>导入SMS手机</h5>
                 </div>
                 <div class="ibox-content">
-                    <form class="form-horizontal m-t" id="commentForm" enctype="multipart/form-data" method="post" action="{:url('phone/import_phone')}">
+                    <form class="form-horizontal m-t" id="commentForm" enctype="multipart/form-data" method="post" action="{:url('smsPhone/import')}">
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">手机数据：</label>
+                            <label class="col-sm-3 control-label">SMS手机数据：</label>
                             <div class="input-group col-sm-6">
                                 <input id="phone_file" type="file" class="form-control" name="phone_file" required="" aria-required="true">
                             </div>
@@ -30,7 +30,7 @@
                         <div class="form-group">
                             <div class="col-sm-4 col-sm-offset-6">
                                 <button class="btn btn-primary" type="submit">提交</button>
-                                <button type="button" class="btn btn-w-m btn-info" ><a href="/upload/files/phone_example.xls" style="color: white">示例下载</a></button>
+                                <button type="button" class="btn btn-w-m btn-info" ><a href="/upload/files/sms_phone_example.xls" style="color: white">示例下载</a></button>
 
                             </div>
                         </div>

@@ -255,7 +255,7 @@ class SmsPhone extends Base
     }
 
     // 批量导入手机
-    public function import_SmsPhone()
+    public function import()
     {
         if (request()->isPost()) {
             // 获取表单上传文件
@@ -285,17 +285,12 @@ class SmsPhone extends Base
                     continue;
                 }
                 $email_data = [
-                    'number' => $c[0],
-                    'phone_sn' => $c[1],
-                    'des' => $c[2],
-                    'account_name' => empty($c[3]) ? null : $c[3],
-                    'account_pass' => empty($c[4]) ? null : $c[4],
-                    'phone_num' => $c[5],
-                    'job_type' => in_array($c[6], [1, 2, 3, 4]) ? $c[6] : 1,
+                    'device_num' => $c[0],
+                    'phone_num' => $c[1],
                     'create_time' => $create_time,
                     'update_time' => $update_time,
                 ];
-                $result = Db::table('s_phone')->insert($email_data, "IGNORE");
+                $result = Db::table('s_sms_phone')->insert($email_data, "IGNORE");
                 if ($result == 1) {
                     $success_count++;
                 } else {

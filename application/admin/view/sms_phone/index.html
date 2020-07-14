@@ -72,12 +72,12 @@
                     {/if}
                 </div>
                 <div class="form-group clearfix col-sm-3" style="float: right;margin-top: 1rem;">
-                    {if authCheck('sms_phone/create') }
+                    {if authCheck('smsPhone/create') }
                     <a href="{:url('sms_phone/create')}">
                         <button class="btn btn-outline btn-primary" type="button">添加{$title}</button>
                     </a>
                     {/if}
-                    {if authCheck('sms_phone/import') }
+                    {if authCheck('smsPhone/import') }
                     <a href="{:url('smsPhone/import')}">
                         <button class="btn btn-outline btn-success" type="button">导入{$title}</button>
                     </a>
@@ -149,8 +149,8 @@
                         <thead>
                         <th data-field="box_id" data-checkbox="true"></th>
                         <th data-field="id">ID</th>
-                        <th data-field="phone_num">手机号</th>
                         <th data-field="device_num">设备编号</th>
+                        <th data-field="phone_num">手机号</th>
                         <th data-field="status">状态</th>
                         <th data-field="get_phone_count">请求号码数</th>
                         <th data-field="get_sms_count">获取短信数</th>
