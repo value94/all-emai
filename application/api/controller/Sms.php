@@ -9,6 +9,7 @@ use app\api\validate\UploadSmsValidate;
 use app\lib\exception\SmsException;
 use app\lib\exception\SuccessMessage;
 use think\Controller;
+use think\facade\Cache;
 
 class Sms extends Controller
 {
@@ -64,6 +65,9 @@ class Sms extends Controller
             ]);
             // 释放手机
             SmsPhoneModel::where(['id' => $sms_data['sms_phone_id']])->update(['status' => 0]);
+
+            // 删除token缓存
+            Cache::clear('sms_' . $sms_data['receiving_phone_num']);
 
             return [
                 'status' => 1,

@@ -15,6 +15,11 @@ class SmsPhoneModel extends Model
         return self::where('token', '=', $token)->find();
     }
 
+    public static function getPhoneByNum($phone_num)
+    {
+        return self::where('phone_num', '=', $phone_num)->find();
+    }
+
     public static function getOneNotUsingPhone()
     {
         return self::where('status', '=', 0)->order('get_phone_count asc')->find();

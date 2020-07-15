@@ -33,6 +33,7 @@ Route::post('api/CheckVersions', 'api/Versions/CheckVersions');
 
 // sms手机
 Route::post('api/GetSmsPhone', 'api/SmsPhone/getSmsPhone');
+Route::post('api/GetTaskToken', 'api/SmsPhone/getTaskToken');
 Route::post('api/UploadSMS', 'api/Sms/uploadSMS');
 Route::post('api/GetSMSCode', 'api/Sms/getSMSCode');
 

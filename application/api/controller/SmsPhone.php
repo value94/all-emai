@@ -4,9 +4,13 @@ namespace app\api\controller;
 
 use app\api\model\SmsModel;
 use app\api\model\SmsPhoneModel;
+use app\api\validate\GetTaskTokenValidate;
 use app\api\validate\SmsPhoneValidate;
 use app\lib\exception\SmsPhoneException;
+use app\lib\exception\SuccessMessage;
 use think\Controller;
+use think\facade\Cache;
+use think\facade\Config;
 
 class SmsPhone extends Controller
 {
@@ -21,8 +25,15 @@ class SmsPhone extends Controller
         if (!$sms_phone) {
             throw new SmsPhoneException(['msg' => "do't have can use phone"]);
         }
+
         // 生成token
         $token = $sms_phone['phone_num'] . $this->msectime();
+
+        $phone_time_interval = Config::get('setting.release_phone_time');
+
+        // 缓存token
+        Cache::set('sms_' . $sms_phone['phone_num'], 1, $phone_time_interval * 60);
+
         // 返回数据
         $return_data = [
             'status' => 1,
@@ -46,6 +57,25 @@ class SmsPhone extends Controller
         ]);
 
         return $return_data;
+    }
+
+    // 验证是否需要查询短信
+    public function getTaskToken()
+    {
+        // 验证参数
+        $params = (new GetTaskTokenValidate())->goCheck();
+
+        // 验证手机号
+//        $check_phone = SmsPhoneModel::checkSmsPhone($params['phone_num']);
+        $check_phone = Cache::get('sms_' . $params['phone_num']);
+
+        if (!$check_phone) {
+            throw new SmsPhoneException(['msg' => "No need to get SMS"]);
+        }
+
+        throw new SuccessMessage(['msg' => 'Need to get SMS']);
+
+
     }
 
     // 获取当前毫秒时间
