@@ -74,7 +74,7 @@ class Sms extends Controller
             return [
                 'status' => 1,
                 'msg' => 'Success',
-                'code' => $sms_data['code'],
+                'code' => (string)$sms_data['code'],
                 'upload_sms_time' => $sms_data['upload_sms_time']
             ];
         }
