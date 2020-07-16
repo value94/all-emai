@@ -12,8 +12,7 @@ namespace app\api\validate;
 class GetTaskTokenValidate extends BaseValidate
 {
     protected $rule = [
-        'phone_num' => 'require',
-        'device_num' => 'require',
+        'phone_sn' => 'require'
     ];
 
 }

@@ -13,6 +13,7 @@ use think\facade\Cache;
 
 class Sms extends Controller
 {
+    // 步骤3:上传短信验证码
     public function uploadSMS()
     {
         // 获取参数
@@ -41,6 +42,7 @@ class Sms extends Controller
 
     }
 
+    // 步骤3:返回短信验证码
     public function getSMSCode()
     {
         // 获取参数
@@ -67,7 +69,7 @@ class Sms extends Controller
             SmsPhoneModel::where(['id' => $sms_data['sms_phone_id']])->update(['status' => 0]);
 
             // 删除token缓存
-            Cache::clear('sms_' . $sms_data['receiving_phone_num']);
+            Cache::clear('sms_' . $sms_data['receiving_phone_sn']);
 
             return [
                 'status' => 1,

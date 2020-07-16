@@ -20,6 +20,7 @@ class SmsPhoneModel extends Model
         return self::where('phone_num', '=', $phone_num)->find();
     }
 
+    // 获取一个空闲手机
     public static function getOneNotUsingPhone()
     {
         return self::where('status', '=', 0)->order('get_phone_count asc')->find();

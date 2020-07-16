@@ -14,6 +14,7 @@ use think\facade\Config;
 
 class SmsPhone extends Controller
 {
+    // 步骤1:获取一个空闲接收验证码手机
     public function getSmsPhone()
     {
         // 验证参数
@@ -29,10 +30,9 @@ class SmsPhone extends Controller
         // 生成token
         $token = $sms_phone['phone_num'] . $this->msectime();
 
+        // 缓存token,并设置过期时间
         $phone_time_interval = Config::get('setting.release_phone_time');
-
-        // 缓存token
-        Cache::set('sms_' . $sms_phone['phone_num'], 1, $phone_time_interval * 60);
+        Cache::set('sms_' . $sms_phone['phone_sn'], 1, $phone_time_interval * 60);
 
         // 返回数据
         $return_data = [
@@ -44,14 +44,17 @@ class SmsPhone extends Controller
             'device_num' => $sms_phone['device_num'],
         ];
 
-        // 更新设备状态
+        // 设置短信手机状态为接码中
         SmsPhoneModel::update(['status' => 1], ['id' => $sms_phone['id']]);
+
         // 自增获取次数
         SmsPhoneModel::where(['id' => $sms_phone['id']])->setInc('get_phone_count');
-        // 添加任务记录
+
+        // 添加一条短信记录
         SmsModel::create([
             'token' => $token,
             'sms_phone_id' => $sms_phone['id'],
+            'receiving_phone_sn' => $sms_phone['phone_sn'],
             'get_phone_num' => $sms_phone['phone_num'],
             'receiving_phone_num' => $params['phone_sn']
         ]);
@@ -59,23 +62,23 @@ class SmsPhone extends Controller
         return $return_data;
     }
 
-    // 验证是否需要查询短信
+    // 步骤2:短信手机验证是否需要查询短信
     public function getTaskToken()
     {
         // 验证参数
         $params = (new GetTaskTokenValidate())->goCheck();
 
         // 验证手机号
-//        $check_phone = SmsPhoneModel::checkSmsPhone($params['phone_num']);
-        $check_phone = Cache::get('sms_' . $params['phone_num']);
+        $check_phone = Cache::get('sms_' . $params['phone_sn']);
 
         if (!$check_phone) {
-            throw new SmsPhoneException(['msg' => "No need to get SMS"]);
+            throw new SmsPhoneException([
+                'msg' => "No need to get SMS",
+                'errorCode' => 44100
+            ]);
         }
 
         throw new SuccessMessage(['msg' => 'Need to get SMS']);
-
-
     }
 
     // 获取当前毫秒时间
