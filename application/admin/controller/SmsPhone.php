@@ -287,6 +287,7 @@ class SmsPhone extends Base
                 $email_data = [
                     'device_num' => $c[0],
                     'phone_num' => $c[1],
+                    'phone_sn' => $c[2],
                     'create_time' => $create_time,
                     'update_time' => $update_time,
                 ];

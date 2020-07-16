@@ -15,6 +15,7 @@ class SmsModel extends Model
     public function getReceivingStatusAttr($value)
     {
         $status = [
+            null => '未知',
             0 => '<p style="color: red">失败</p>',
             1 => '<p style="color: yellowgreen">成功</p>',
             2 => '<p style="color: blue">下发</p>'
