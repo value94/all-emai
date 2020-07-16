@@ -32,7 +32,7 @@ class SmsPhone extends Controller
 
         // 缓存token,并设置过期时间
         $phone_time_interval = Config::get('setting.release_phone_time');
-        Cache::set('sms_' . $sms_phone['phone_sn'], 1, $phone_time_interval * 60);
+        Cache::set('sms_' . $sms_phone['phone_sn'], $token, $phone_time_interval * 60);
 
         // 返回数据
         $return_data = [
@@ -78,7 +78,13 @@ class SmsPhone extends Controller
             ]);
         }
 
-        throw new SuccessMessage(['msg' => 'Need to get SMS']);
+        return [
+            'token' => $check_phone,
+            'msg' => 'Need to get SMS',
+            "status" => 1,
+            "error_code" => 0,
+            "request_url" => "/api/GetTaskToken"
+        ];
     }
 
     // 获取当前毫秒时间
