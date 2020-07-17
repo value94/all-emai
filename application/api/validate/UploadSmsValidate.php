@@ -15,7 +15,7 @@ class UploadSmsValidate extends BaseValidate
         'phone_sn' => 'require',
         'token' => 'require',
         'status' => 'require|in:0,1',
-        'code' => 'require|integer',
+        'code' => 'require',
 //       'sms_content' => 'require'
 //       fail_reason
     ];
