@@ -2,6 +2,7 @@
 
 namespace app\api\controller;
 
+use app\api\model\PhoneModel;
 use app\api\model\SmsModel;
 use app\api\model\SmsPhoneModel;
 use app\api\validate\GetTaskTokenValidate;
@@ -49,13 +50,16 @@ class SmsPhone extends Controller
         // 自增获取次数
         SmsPhoneModel::where(['id' => $sms_phone['id']])->setInc('get_phone_count');
 
+        // 获取任务设备信息
+        $job_phone = PhoneModel::checkPhone($params['phone_sn']);
+
         // 添加一条短信记录
         SmsModel::create([
             'token' => $token,
             'sms_phone_id' => $sms_phone['id'],
             'receiving_phone_sn' => $sms_phone['phone_sn'],
-            'get_phone_num' => $sms_phone['phone_num'],
-            'receiving_phone_num' => $params['phone_sn']
+            'get_phone_num' => $sms_phone['device_num'],
+            'receiving_phone_num' => empty($job_phone['number']) ? null : $job_phone['number']
         ]);
 
         return $return_data;
