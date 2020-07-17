@@ -7,7 +7,6 @@ use app\api\model\SmsPhoneModel;
 use app\api\validate\GetTaskTokenValidate;
 use app\api\validate\SmsPhoneValidate;
 use app\lib\exception\SmsPhoneException;
-use app\lib\exception\SuccessMessage;
 use think\Controller;
 use think\facade\Cache;
 use think\facade\Config;

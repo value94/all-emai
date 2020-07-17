@@ -69,7 +69,7 @@ class Sms extends Controller
             SmsPhoneModel::where(['id' => $sms_data['sms_phone_id']])->update(['status' => 0]);
 
             // 删除token缓存
-            Cache::clear('sms_' . $sms_data['receiving_phone_sn']);
+            Cache::rm('sms_' . $sms_data['receiving_phone_sn']);
 
             return [
                 'status' => 1,
