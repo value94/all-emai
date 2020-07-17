@@ -288,6 +288,7 @@ class SmsPhone extends Base
                     'device_num' => $c[0],
                     'phone_num' => $c[1],
                     'phone_sn' => $c[2],
+                    'remarks' => $c[3],
                     'create_time' => $create_time,
                     'update_time' => $update_time,
                 ];
