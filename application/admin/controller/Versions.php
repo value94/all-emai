@@ -11,6 +11,7 @@
 namespace app\admin\controller;
 
 use app\admin\model\Versions as VersionsModel;
+use think\facade\Env;
 
 class Versions extends Base
 {
@@ -69,6 +70,8 @@ class Versions extends Base
             if ($info) {
                 // 上传后
                 $param['file_url'] = '/uploads/' . $info->getSaveName();
+                $param['file_md5'] = md5_file(Env::get('root_path') . $param['file_url']);
+
             } else {
                 // 上传失败获取错误信息
                 return json(msg(0, 0, $file->getError()));
@@ -103,14 +106,14 @@ class Versions extends Base
                 if ($info) {
                     // 上传后
                     $param['file_url'] = '/uploads/' . $info->getSaveName();
+                    $param['file_md5'] = md5_file(Env::get('root_path') . $param['file_url']);
                 } else {
                     // 上传失败获取错误信息
                     return json(msg(0, 0, $file->getError()));
                 }
-            }else{
+            } else {
                 unset($param['file_url']);
             }
-
             $flag = $versions->editVersions($param);
 
             return json(msg($flag['code'], $flag['data'], $flag['msg']));
