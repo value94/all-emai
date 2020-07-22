@@ -14,7 +14,7 @@ class SmsPhoneModel extends Model
     // 运行状态
     public function getStatusAttr($value)
     {
-        $status = [0 => '空闲', 1 => '<p style="color: blue">接码中</p>', 2 => '<p style="color: red">停止使用</p>'];
+        $status = [0 => '空闲', 1 => '<p style="color: blue">接码中</p>', 2 => '<p style="color: red">设备异常</p>'];
         return $status[$value];
     }
 

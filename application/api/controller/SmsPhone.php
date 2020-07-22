@@ -74,6 +74,9 @@ class SmsPhone extends Controller
         // 验证手机号
         $check_phone = Cache::get('sms_' . $params['phone_sn']);
 
+        // 更新最后一次验证时间
+        SmsPhoneModel::update(['last_get_time' => date('Y-m-d H:i:s')], ['phone_sn' => $params['phone_sn']]);
+
         if (!$check_phone) {
             throw new SmsPhoneException([
                 'msg' => "No need to get SMS",
