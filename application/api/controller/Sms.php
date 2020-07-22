@@ -9,6 +9,7 @@ use app\api\validate\UploadSmsValidate;
 use app\lib\exception\SmsException;
 use app\lib\exception\SuccessMessage;
 use think\Controller;
+use think\Db;
 use think\facade\Cache;
 
 class Sms extends Controller
@@ -67,7 +68,14 @@ class Sms extends Controller
             ]);
             // 释放手机
             SmsPhoneModel::where(['id' => $sms_data['sms_phone_id']])->update(['status' => 0]);
-
+            // 更新自增字段
+            SmsPhoneModel::where(['id' => $sms_data['sms_phone_id']])->update([
+                'get_sms_count' => SmsPhoneModel::raw('get_sms_count+1'),
+                'received_sms_count' => SmsPhoneModel::raw('received_sms_count+1')
+            ]);
+            if ($sms_data['receiving_status'] == 1) {
+                SmsPhoneModel::where(['id' => $sms_data['sms_phone_id']])->setInc('success_sms_count');
+            }
             // 删除token缓存
             Cache::rm('sms_' . $sms_data['receiving_phone_sn']);
 

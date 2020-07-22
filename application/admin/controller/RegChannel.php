@@ -39,7 +39,7 @@ class RegChannel extends Base
             return json($return);
         }
         $this->assign([
-            'title' => '激活通道'
+            'title' => '注册通道'
         ]);
         return $this->fetch();
     }
