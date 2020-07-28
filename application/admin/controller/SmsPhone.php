@@ -276,8 +276,7 @@ class SmsPhone extends Base
             }
             $success_count = 0;
             $error_count = 0;
-            $update_time = date('Y-m-d H:i:s');
-            $create_time = date('Y-m-d H:i:s');
+            $now_time = date('Y-m-d H:i:s');
             // 添加数据
             foreach ($excel_data as $c) {
                 // 判断行是否为空
@@ -289,8 +288,9 @@ class SmsPhone extends Base
                     'phone_num' => $c[1],
                     'phone_sn' => $c[2],
                     'remarks' => $c[3],
-                    'create_time' => $create_time,
-                    'update_time' => $update_time,
+                    'last_get_time' => $now_time,
+                    'create_time' => $now_time,
+                    'update_time' => $now_time,
                 ];
                 $result = Db::table('s_sms_phone')->insert($email_data, "IGNORE");
                 if ($result == 1) {

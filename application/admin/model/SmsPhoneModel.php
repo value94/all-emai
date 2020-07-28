@@ -71,6 +71,7 @@ class SmsPhoneModel extends Model
                 // 验证失败 输出错误信息
                 return msg(-1, '', $SmsPhoneValidate->getError());
             }
+            $param['last_get_time'] = date('Y-m-d H:i:s');
 
             $this->save($param);
 
