@@ -24,9 +24,6 @@ class AutoReleaseSMSPhoneStatus extends Command
         $phone_time_interval = Config::get('setting.release_phone_time');
         $can_time = date("Y-m-d H:i:s", strtotime("-{$phone_time_interval} minute"));
 
-        $phone_time_interval = Config::get('setting.unusual_phone_time');
-        $unusual_can_time = date("Y-m-d H:i:s", strtotime("-{$phone_time_interval} minute"));
-
         // 设置未运行
         $result = SmsPhoneModel::where([
                 ['status', '=', 1],
