@@ -78,10 +78,14 @@ class SmsPhone extends Controller
         // 更新最后一次验证时间
         SmsPhoneModel::update([
             'last_get_time' => date('Y-m-d H:i:s'),
-            'status' => 0,
         ], ['phone_sn' => $params['phone_sn']]);
 
         if (!$check_phone) {
+            // 设置手机解除异常
+            SmsPhoneModel::update([
+                'status' => 0,
+            ], ['phone_sn' => $params['phone_sn']]);
+
             throw new SmsPhoneException([
                 'msg' => "No need to get SMS",
                 'errorCode' => 44100
