@@ -9,7 +9,6 @@ use app\api\validate\UploadSmsValidate;
 use app\lib\exception\SmsException;
 use app\lib\exception\SuccessMessage;
 use think\Controller;
-use think\Db;
 use think\facade\Cache;
 
 class Sms extends Controller
@@ -20,7 +19,7 @@ class Sms extends Controller
         // 获取参数
         $params = (new UploadSmsValidate())->goCheck();
 
-        // 验证手机
+        // 验证token
         $sms_phone = SmsModel::checkSms($params['token']);
         if (!$sms_phone) {
             throw new SmsException(['msg' => 'token not exist']);
@@ -43,7 +42,7 @@ class Sms extends Controller
 
     }
 
-    // 步骤3:返回短信验证码
+    // 步骤4:返回短信验证码
     public function getSMSCode()
     {
         // 获取参数

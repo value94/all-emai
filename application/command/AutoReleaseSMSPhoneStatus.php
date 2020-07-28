@@ -26,9 +26,9 @@ class AutoReleaseSMSPhoneStatus extends Command
 
         // 设置未运行
         $result = SmsPhoneModel::where([
-            ['status', '=', 1],
-            ['update_time', '<', $can_time]]
-        )->update(['status' => 0]);
+                ['status', '=', 1],
+                ['update_time', '<', $can_time]
+            ])->where('last_get_time', 'is null')->update(['status' => 0]);
 
         // 指令输出
         if ($result) {

@@ -27,7 +27,7 @@ class AutoUnusualSMSPhone extends Command
         // 设置异常
         $result = SmsPhoneModel::where('last_get_time', '<', $can_time)
             ->where('last_get_time', 'not null')
-            ->update(['status' => 2]);
+            ->update(['status' => 2, 'last_get_time' => null]);
 
         // 指令输出
         if ($result) {
