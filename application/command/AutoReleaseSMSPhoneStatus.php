@@ -31,8 +31,7 @@ class AutoReleaseSMSPhoneStatus extends Command
         $result = SmsPhoneModel::where([
                 ['status', '=', 1],
                 ['update_time', '<', $can_time]
-            ])->where('last_get_time', 'is null')
-            ->where('last_get_time', '>', $unusual_can_time)
+            ])->where('last_get_time', '>', $unusual_can_time)
             ->update(['status' => 0]);
 
         // 指令输出
