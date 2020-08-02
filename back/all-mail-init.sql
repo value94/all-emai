@@ -10,10 +10,68 @@ Target Server Type    : MYSQL
 Target Server Version : 50726
 File Encoding         : 65001
 
-Date: 2020-06-16 17:57:05
+Date: 2020-08-02 14:16:23
 */
 
 SET FOREIGN_KEY_CHECKS=0;
+
+-- ----------------------------
+-- Table structure for s_address
+-- ----------------------------
+DROP TABLE IF EXISTS `s_address`;
+CREATE TABLE `s_address` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `country` varchar(128) DEFAULT NULL COMMENT '国家',
+  `province` varchar(128) DEFAULT NULL COMMENT '省份',
+  `city` varchar(128) DEFAULT NULL COMMENT '城市',
+  `street_one` varchar(255) DEFAULT NULL COMMENT '街道1',
+  `street_two` varchar(255) DEFAULT NULL COMMENT '街道1',
+  `street_three` varchar(255) DEFAULT NULL COMMENT '街道1',
+  `postal_code` varchar(64) DEFAULT NULL COMMENT '邮编',
+  `use_status` tinyint(2) DEFAULT '0' COMMENT '使用状态:0/未使用 1/已使用',
+  `used_count` int(8) DEFAULT '0' COMMENT '使用次数',
+  `create_time` datetime DEFAULT NULL,
+  `update_time` datetime DEFAULT NULL,
+  `delete_time` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=22535 DEFAULT CHARSET=utf8mb4;
+
+-- ----------------------------
+-- Table structure for s_apple
+-- ----------------------------
+DROP TABLE IF EXISTS `s_apple`;
+CREATE TABLE `s_apple` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `apple_account` varchar(128) NOT NULL COMMENT '账号',
+  `apple_pass` varchar(64) DEFAULT NULL COMMENT '密码',
+  `use_status` tinyint(2) DEFAULT '0' COMMENT '使用状态:0/未使用 1/已使用',
+  `used_count` int(8) DEFAULT '0' COMMENT '使用次数',
+  `used_time` datetime DEFAULT NULL COMMENT '最后一次使用时间',
+  `create_time` datetime DEFAULT NULL,
+  `update_time` datetime DEFAULT NULL,
+  `delete_time` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unique_account` (`apple_account`) USING BTREE
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4;
+
+-- ----------------------------
+-- Table structure for s_channel
+-- ----------------------------
+DROP TABLE IF EXISTS `s_channel`;
+CREATE TABLE `s_channel` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `channel_name` varchar(128) DEFAULT NULL COMMENT '通道名称',
+  `process_name` varchar(128) DEFAULT NULL COMMENT '进程名',
+  `bid` varchar(32) DEFAULT '0' COMMENT '进程标识',
+  `remark` varchar(128) DEFAULT NULL COMMENT '备注',
+  `rank` tinyint(3) DEFAULT '1' COMMENT '排序',
+  `used_count` int(12) DEFAULT '0' COMMENT '使用次数',
+  `create_time` datetime DEFAULT NULL,
+  `update_time` datetime DEFAULT NULL,
+  `delete_time` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unique_channel_name` (`channel_name`) USING BTREE
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 -- Table structure for s_email
@@ -21,9 +79,11 @@ SET FOREIGN_KEY_CHECKS=0;
 DROP TABLE IF EXISTS `s_email`;
 CREATE TABLE `s_email` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `email_type_id` int(11) NOT NULL COMMENT '邮箱类型',
+  `email_type_id` int(11) NOT NULL DEFAULT '1' COMMENT '邮箱类型',
   `phone_id` int(11) DEFAULT NULL COMMENT '手机id',
   `machine_id` int(11) DEFAULT NULL COMMENT '机器id',
+  `channel_id` int(11) DEFAULT NULL COMMENT '注册通道id',
+  `channel_name` varchar(128) DEFAULT NULL COMMENT '频道名',
   `email_name` varchar(128) NOT NULL COMMENT '邮箱名',
   `udid` varchar(128) DEFAULT NULL COMMENT 'udid',
   `phone_sn` varchar(128) DEFAULT NULL,
@@ -32,20 +92,12 @@ CREATE TABLE `s_email` (
   `use_status` tinyint(2) DEFAULT '0' COMMENT '使用状态:0/未使用 1/已使用 2/停止使用',
   `is_get` tinyint(2) DEFAULT '0' COMMENT '是否已导出: 0/未 1/已 导出',
   `fail_msg` varchar(128) DEFAULT NULL COMMENT '失败原因',
-  `imapsvr` varchar(128) DEFAULT NULL COMMENT 'imap地址',
-  `pop3svr` varchar(128) DEFAULT NULL COMMENT '接收服务器',
-  `smtpsvr` varchar(128) DEFAULT NULL COMMENT '发送服务器',
   `create_time` datetime DEFAULT NULL,
   `update_time` datetime DEFAULT NULL,
   `delete_time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `unq_email` (`email_type_id`,`email_name`) USING BTREE
-) ENGINE=MyISAM AUTO_INCREMENT=4001 DEFAULT CHARSET=utf8mb4;
-
--- ----------------------------
--- Records of s_email
--- ----------------------------
-INSERT INTO `s_email` VALUES ('3', '1',null, null, 'noashashehkau@outlook.com', '','', '7dh18XTu', '2', '0', '0', '', 'imap.rambler.ru', 'pop.rambler.ru', 'smtp.rambler.ru', '2020-06-16 17:55:12', null, null);
+) ENGINE=MyISAM AUTO_INCREMENT=5002 DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 -- Table structure for s_email_type
@@ -54,19 +106,17 @@ DROP TABLE IF EXISTS `s_email_type`;
 CREATE TABLE `s_email_type` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(128) DEFAULT NULL COMMENT '邮箱名',
+  `connection_method` tinyint(2) DEFAULT '1' COMMENT '取件方式:1/imap 2/pop3',
   `imapsvr` varchar(128) DEFAULT NULL COMMENT 'imap地址',
+  `imap_port` int(8) DEFAULT '993' COMMENT 'imap端口',
   `pop3svr` varchar(128) DEFAULT NULL COMMENT '接收服务器',
+  `pop3_port` int(8) DEFAULT '465' COMMENT 'pop3端口号',
   `smtpsvr` varchar(128) DEFAULT NULL COMMENT '发送服务器',
   `create_time` datetime DEFAULT NULL,
   `update_time` datetime DEFAULT NULL,
   `delete_time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
-
--- ----------------------------
--- Records of s_email_type
--- ----------------------------
-INSERT INTO `s_email_type` VALUES ('1', '俄罗斯邮箱', 'imap.rambler.ru', 'pop.rambler.ru', 'smtp.rambler.ru', '2020-05-27 16:46:25', '2020-05-27 16:55:11', null);
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 -- Table structure for s_ip_address
@@ -80,14 +130,9 @@ CREATE TABLE `s_ip_address` (
   `create_time` datetime DEFAULT NULL,
   `update_time` datetime DEFAULT NULL,
   `delete_time` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
-
--- ----------------------------
--- Records of s_ip_address
--- ----------------------------
-INSERT INTO `s_ip_address` VALUES ('1', '192.168.0.1', '0', null, '2020-06-15 16:43:40', '2020-06-15 18:51:49', null);
-INSERT INTO `s_ip_address` VALUES ('2', '127.0.0.1', '0', null, '2020-06-15 17:07:16', '2020-06-15 18:52:10', null);
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `ip_unique` (`ip`) USING BTREE
+) ENGINE=MyISAM AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 -- Table structure for s_job_log
@@ -105,10 +150,6 @@ CREATE TABLE `s_job_log` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
--- Records of s_job_log
--- ----------------------------
-
--- ----------------------------
 -- Table structure for s_machine
 -- ----------------------------
 DROP TABLE IF EXISTS `s_machine`;
@@ -123,18 +164,14 @@ CREATE TABLE `s_machine` (
   `bt` varchar(128) DEFAULT NULL,
   `imei` varchar(128) DEFAULT NULL,
   `sn` varchar(255) DEFAULT NULL,
-  `udid` varchar(255) DEFAULT NULL,
+  `udid` varchar(128) DEFAULT NULL,
   `wifi` varchar(255) DEFAULT NULL,
   `create_time` datetime DEFAULT NULL,
   `update_time` datetime DEFAULT NULL,
   `delete_time` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4;
-
--- ----------------------------
--- Records of s_machine
--- ----------------------------
-INSERT INTO `s_machine` VALUES ('11', null, '', 'ME342LL/A', 'iphone5s', 'iPhone6,2', '0', 'e4:98:d6:55:ba:8b', '', 'DNPLHRHCFNJK', 'bc5beec36e81753f31bce97ec3ec7cf006f3a071', 'e4:98:d6:55:ba:8a', '2020-05-27 16:18:13', '2020-06-09 15:56:59', null);
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `udid_unique` (`udid`) USING BTREE
+) ENGINE=MyISAM AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 -- Table structure for s_migrations
@@ -150,13 +187,6 @@ CREATE TABLE `s_migrations` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
--- Records of s_migrations
--- ----------------------------
-INSERT INTO `s_migrations` VALUES ('20181226023705', 'Role', '2020-05-24 19:41:53', '2020-05-24 19:41:53', '0');
-INSERT INTO `s_migrations` VALUES ('20181226023922', 'Node', '2020-05-24 19:41:53', '2020-05-24 19:41:54', '0');
-INSERT INTO `s_migrations` VALUES ('20181226024737', 'User', '2020-05-24 19:41:54', '2020-05-24 19:41:54', '0');
-
--- ----------------------------
 -- Table structure for s_node
 -- ----------------------------
 DROP TABLE IF EXISTS `s_node`;
@@ -169,7 +199,7 @@ CREATE TABLE `s_node` (
   `type_id` int(11) NOT NULL COMMENT '父级节点id',
   `style` varchar(255) NOT NULL COMMENT '菜单样式',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=91 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of s_node
@@ -224,6 +254,46 @@ INSERT INTO `s_node` VALUES ('47', '切换状态', 'phone', 'switch_status', '1'
 INSERT INTO `s_node` VALUES ('48', '导入', 'phone', 'import_phone', '1', '46', '');
 INSERT INTO `s_node` VALUES ('49', '删除', 'phone', 'delete', '1', '46', '');
 INSERT INTO `s_node` VALUES ('50', '编辑', 'phone', 'edit', '1', '46', '');
+INSERT INTO `s_node` VALUES ('51', '添加', 'phone', 'create', '1', '46', '');
+INSERT INTO `s_node` VALUES ('52', '地址管理', '#', '#', '2', '0', 'fa fa-map-signs');
+INSERT INTO `s_node` VALUES ('53', '地址列表', 'address', 'index', '2', '52', '');
+INSERT INTO `s_node` VALUES ('54', '导入', 'address', 'import', '1', '53', '');
+INSERT INTO `s_node` VALUES ('55', '添加', 'address', 'create', '1', '53', '');
+INSERT INTO `s_node` VALUES ('56', '修改', 'address', 'edit', '1', '53', '');
+INSERT INTO `s_node` VALUES ('57', '删除', 'address', 'delete', '1', '53', '');
+INSERT INTO `s_node` VALUES ('58', '切换', 'address', 'switch_status', '1', '53', '');
+INSERT INTO `s_node` VALUES ('59', 'Apple账号管理', '#', '#', '2', '0', 'fa fa-apple');
+INSERT INTO `s_node` VALUES ('60', '备用账号列表', 'apple', 'index', '2', '59', '');
+INSERT INTO `s_node` VALUES ('61', '添加', 'apple', 'create', '1', '60', '');
+INSERT INTO `s_node` VALUES ('62', '导入', 'apple', 'import', '1', '60', '');
+INSERT INTO `s_node` VALUES ('63', '删除', 'apple', 'delete', '1', '60', '');
+INSERT INTO `s_node` VALUES ('64', '编辑', 'apple', 'edit', '1', '60', '');
+INSERT INTO `s_node` VALUES ('65', '切换状态', 'apple', 'switch_status', '1', '60', '');
+INSERT INTO `s_node` VALUES ('66', '待激活账号', 'regApple', 'index', '2', '59', '');
+INSERT INTO `s_node` VALUES ('67', '添加', 'regApple', 'create', '1', '66', '');
+INSERT INTO `s_node` VALUES ('68', '导入', 'regApple', 'import', '1', '66', '');
+INSERT INTO `s_node` VALUES ('69', '删除', 'regApple', 'delete', '1', '66', '');
+INSERT INTO `s_node` VALUES ('70', '编辑', 'regApple', 'edit', '1', '66', '');
+INSERT INTO `s_node` VALUES ('71', '切换状态', 'regApple', 'switch_status', '1', '66', '');
+INSERT INTO `s_node` VALUES ('72', '导出', 'regApple', 'download_excel', '1', '66', '');
+INSERT INTO `s_node` VALUES ('73', '注册通道', 'regChannel', 'index', '2', '11', '');
+INSERT INTO `s_node` VALUES ('74', '添加', 'regChannel', 'create', '1', '73', '');
+INSERT INTO `s_node` VALUES ('75', '编辑', 'regChannel', 'update', '1', '73', '');
+INSERT INTO `s_node` VALUES ('76', '删除', 'regChannel', 'delete', '1', '73', '');
+INSERT INTO `s_node` VALUES ('77', '版本管理', '#', '#', '2', '0', 'fa fa-tree');
+INSERT INTO `s_node` VALUES ('78', '版本管理', 'versions', 'index', '2', '77', '');
+INSERT INTO `s_node` VALUES ('79', '添加', 'versions', 'versionsadd', '1', '78', '');
+INSERT INTO `s_node` VALUES ('80', '编辑', 'versions', 'versionsedit', '1', '78', '');
+INSERT INTO `s_node` VALUES ('81', '删除', 'versions', 'versionsDel', '1', '78', '');
+INSERT INTO `s_node` VALUES ('82', '短信管理', '#', '#', '2', '0', 'fa fa-envelope');
+INSERT INTO `s_node` VALUES ('83', '短信设备', 'smsPhone', 'index', '2', '82', '');
+INSERT INTO `s_node` VALUES ('84', '短信管理', 'sms', 'index', '2', '82', '');
+INSERT INTO `s_node` VALUES ('85', '添加', 'smsPhone', 'create', '1', '83', '');
+INSERT INTO `s_node` VALUES ('86', '删除', 'smsPhone', 'delete', '1', '83', '');
+INSERT INTO `s_node` VALUES ('87', '编辑', 'smsPhone', 'edit', '1', '83', '');
+INSERT INTO `s_node` VALUES ('88', '导入', 'smsPhone', 'import', '1', '83', '');
+INSERT INTO `s_node` VALUES ('89', '切换状态', 'smsPhone', 'switch_status', '1', '83', '');
+INSERT INTO `s_node` VALUES ('90', '删除', 'sms', 'delete', '1', '84', '');
 
 -- ----------------------------
 -- Table structure for s_phone
@@ -233,32 +303,43 @@ CREATE TABLE `s_phone` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `email_id` int(11) DEFAULT NULL,
   `number` varchar(64) DEFAULT NULL COMMENT '编号',
+  `account_name` varchar(128) DEFAULT NULL COMMENT '邮箱名称',
+  `account_pass` varchar(64) DEFAULT NULL COMMENT '账号密码',
   `phone_sn` varchar(128) DEFAULT NULL COMMENT '手机sn',
-  `status` tinyint(2) DEFAULT '0' COMMENT '运行状态: 0/未使用 1/已使用',
-  `job_count` int(8) DEFAULT NULL COMMENT '任务次数',
-  `success_job_count` int(8) DEFAULT NULL COMMENT '成功任务次数',
+  `phone_num` varchar(32) DEFAULT NULL COMMENT '手机号',
+  `job_type` tinyint(2) DEFAULT '1' COMMENT '工作类型:1/接码 2/注册 3/激活 4/双重',
+  `status` tinyint(2) DEFAULT '0' COMMENT '运行状态: 0/未运行 1/在运行 2/停止运行',
+  `test_status` tinyint(2) DEFAULT '0' COMMENT '是否为测试账号:0/不是 1/是',
+  `failed_job_count` int(8) DEFAULT '0' COMMENT '失败任务次数',
+  `success_job_count` int(8) DEFAULT '0' COMMENT '成功任务次数',
   `program_version` varchar(32) DEFAULT NULL COMMENT '程序版本',
   `udid` varchar(128) DEFAULT NULL,
   `run_steps` varchar(64) DEFAULT NULL COMMENT '运行步骤',
   `des` varchar(255) DEFAULT NULL COMMENT '备注',
-  `HWModelStr` varchar(255) DEFAULT NULL,
-  `ModelNumber` varchar(128) DEFAULT NULL,
-  `PhoneModel` varchar(64) DEFAULT NULL,
-  `ProductType` varchar(128) DEFAULT NULL,
-  `bt` varchar(128) DEFAULT NULL,
-  `imei` varchar(128) DEFAULT NULL,
-  `sn` varchar(255) DEFAULT NULL,
-  `wifi` varchar(255) DEFAULT NULL,
   `create_time` datetime DEFAULT NULL,
   `update_time` datetime DEFAULT NULL,
   `delete_time` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `phone_sn_unique` (`phone_sn`) USING BTREE
+) ENGINE=MyISAM AUTO_INCREMENT=47 DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
--- Records of s_phone
+-- Table structure for s_reg_apple
 -- ----------------------------
-INSERT INTO `s_phone` VALUES ('1', null, 'A01', 'DNPS2454HFLQ', '0', null, null, '', '', '', '小林', '', '', '', '', '', '', '', '', '2020-06-15 17:45:54', '2020-06-15 17:45:54', null);
+DROP TABLE IF EXISTS `s_reg_apple`;
+CREATE TABLE `s_reg_apple` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `apple_account` varchar(128) NOT NULL COMMENT '账号',
+  `apple_pass` varchar(64) DEFAULT NULL COMMENT '密码',
+  `use_status` tinyint(2) DEFAULT '0' COMMENT '使用状态:0/未使用 1/已使用',
+  `reg_status` tinyint(2) DEFAULT '2' COMMENT '激活状态:0/失败 1/成功 2/未使用',
+  `fail_reason` varchar(128) DEFAULT NULL COMMENT '失败原因',
+  `create_time` datetime DEFAULT NULL,
+  `update_time` datetime DEFAULT NULL,
+  `delete_time` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unique_account` (`apple_account`) USING BTREE
+) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 -- Table structure for s_role
@@ -278,6 +359,53 @@ INSERT INTO `s_role` VALUES ('1', '超级管理员', '*');
 INSERT INTO `s_role` VALUES ('2', '系统维护员', '1,2,3,4,5,6,7,8,9,10');
 
 -- ----------------------------
+-- Table structure for s_sms
+-- ----------------------------
+DROP TABLE IF EXISTS `s_sms`;
+CREATE TABLE `s_sms` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `sms_phone_id` int(11) NOT NULL COMMENT '短信设备id',
+  `token` varchar(64) NOT NULL COMMENT '任务token',
+  `receiving_phone_sn` varchar(64) DEFAULT NULL COMMENT 'sms手机sn',
+  `receiving_phone_num` varchar(32) DEFAULT NULL COMMENT '接码手机编号',
+  `get_phone_num` varchar(32) DEFAULT NULL COMMENT '获取sms手机号',
+  `sms_content` varchar(128) DEFAULT NULL,
+  `code` varchar(16) DEFAULT NULL COMMENT '验证码',
+  `receiving_status` tinyint(2) DEFAULT NULL COMMENT '接码状态:0/失败 1/成功',
+  `fail_reason` varchar(255) DEFAULT NULL COMMENT '失败原因',
+  `upload_sms_time` datetime DEFAULT NULL COMMENT '上传时间',
+  `sending_sms_time` datetime DEFAULT NULL COMMENT '接收时间',
+  `create_time` datetime DEFAULT NULL,
+  `update_time` datetime DEFAULT NULL,
+  `delete_time` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4;
+
+-- ----------------------------
+-- Table structure for s_sms_phone
+-- ----------------------------
+DROP TABLE IF EXISTS `s_sms_phone`;
+CREATE TABLE `s_sms_phone` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `phone_num` varchar(32) NOT NULL COMMENT '手机号',
+  `device_num` varchar(32) NOT NULL COMMENT '设备编号',
+  `phone_sn` varchar(64) NOT NULL COMMENT '手机sn',
+  `status` tinyint(2) NOT NULL DEFAULT '0' COMMENT '设备状态: 0/空闲 1/接码中 2/停止使用',
+  `remarks` varchar(128) DEFAULT NULL COMMENT '备注',
+  `get_phone_count` int(10) DEFAULT '0' COMMENT '取码端请求号码数',
+  `get_sms_count` int(10) DEFAULT '0' COMMENT '取码端获取短信数',
+  `received_sms_count` int(10) DEFAULT '0' COMMENT '接码端总接收短信数',
+  `success_sms_count` int(10) DEFAULT '0' COMMENT '成功接收短信数',
+  `last_get_time` datetime DEFAULT NULL,
+  `create_time` datetime DEFAULT NULL,
+  `update_time` datetime DEFAULT NULL,
+  `delete_time` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unique_phone` (`phone_num`,`device_num`) USING BTREE,
+  UNIQUE KEY `unique_phone_sn` (`phone_sn`) USING BTREE
+) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4;
+
+-- ----------------------------
 -- Table structure for s_user
 -- ----------------------------
 DROP TABLE IF EXISTS `s_user`;
@@ -295,7 +423,24 @@ CREATE TABLE `s_user` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
+
 -- ----------------------------
 -- Records of s_user
 -- ----------------------------
-INSERT INTO `s_user` VALUES ('1', 'admin', '4b181ed53816327f3bf149ef1dd1c219', '/static/admin/images/profile_small.jpg', '5', '127.0.0.1', '1592211141', 'admin', '1', '1');
+INSERT INTO `s_user` VALUES ('1', 'admin', '4b181ed53816327f3bf149ef1dd1c219', '/static/admin/images/profile_small.jpg', '18', '127.0.0.1', '1595918958', 'admin', '1', '1');
+
+-- ----------------------------
+-- Table structure for s_versions
+-- ----------------------------
+DROP TABLE IF EXISTS `s_versions`;
+CREATE TABLE `s_versions` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `file_name` varchar(64) NOT NULL COMMENT '文件名称',
+  `file_versions` varchar(32) DEFAULT NULL COMMENT '版本号',
+  `file_url` varchar(128) DEFAULT NULL COMMENT '文件路径',
+  `file_md5` varchar(128) DEFAULT NULL COMMENT '文件md5值',
+  `create_time` int(11) DEFAULT NULL,
+  `update_time` int(11) DEFAULT NULL,
+  `delete_time` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
