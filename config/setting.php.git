@@ -1,3 +1,12 @@
-<?php return array(
-    "email_time_interval" => 1
+<?php return array (
+    'email_time_interval' => '1',
+    'phone_time_interval' => '1',
+    'release_phone_time' => '10',
+    'unusual_phone_time' => '10',
+    'payment_method' => '0',
+    'change_machine' => '0',
+    'openVPN' => '0',
+    'clean_files' => '0',
+    'restart_process' => '0',
+    'account_operation' => '0',
 );
