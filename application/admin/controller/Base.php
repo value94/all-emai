@@ -40,7 +40,9 @@ class Base extends Controller
         // 检测权限
         $control = lcfirst(request()->controller());
         $action = lcfirst(request()->action());
-
+        /*dump($control);
+        dump($action);
+        die();*/
         if(empty(authCheck($control . '/' . $action))){
             if(request()->isAjax()){
                 return msg(403, '', '您没有权限');

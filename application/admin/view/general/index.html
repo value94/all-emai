@@ -95,6 +95,13 @@
                                 <label><input type="radio" value="1" name="account_operation" {$config_data.account_operation==1?'checked':''}> <i></i>YES</label>
                             </div>
                         </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">是/否激活：</label>
+                            <div class="radio i-checks col-sm-6">
+                                <label><input type="radio" value="0" name="account_activated" {$config_data.account_activated==0?'checked':''}> <i></i>NO</label>
+                                <label><input type="radio" value="1" name="account_activated" {$config_data.account_activated==1?'checked':''}> <i></i>YES</label>
+                            </div>
+                        </div>
 
                         <div class="form-group">
                             <div class="col-sm-4 col-sm-offset-4">

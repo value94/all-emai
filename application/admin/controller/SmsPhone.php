@@ -3,6 +3,7 @@
 namespace app\admin\controller;
 
 use app\admin\model\SmsPhoneModel;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use think\Db;
 
 class SmsPhone extends Base
@@ -302,6 +303,72 @@ class SmsPhone extends Base
             $this->success('批量添加成功,共导入' . $success_count . ' 条,已存在' . $error_count . ' 条');
         }
         return $this->fetch();
+    }
+
+    // 导出搜索的SMS设备账号
+    public function download_excel()
+    {
+        // 获取搜索参数
+        $params = input('param.');
+
+        $where = $this->getWhereByParams($params);
+
+        // 导出文件
+        if (!empty($where)) {
+            // 搜索数据
+            $SmsPhone = new SmsPhoneModel();
+            // 判断是否有行数限制
+            $rows = '';
+            $offset = '';
+            if (!empty($params['rows'])) {
+                $offset = 0;
+                $rows = $params['rows'];
+            }
+            $excel_data = $SmsPhone->getSmsPhoneByWhere($where, $offset, $rows);
+            if ($excel_data) {
+                // 创建表
+                $newExcel = new Spreadsheet();  //创建一个新的excel文档
+                $objSheet = $newExcel->getActiveSheet();  //获取当前操作sheet的对象
+                $objSheet->setTitle('SMS设备信息表');  //设置当前sheet的标题
+
+                //设置宽度为true,不然太窄了
+                $newExcel->getActiveSheet()->getColumnDimension('A')->setAutoSize(true);
+                $newExcel->getActiveSheet()->getColumnDimension('B')->setWidth(20);
+                $newExcel->getActiveSheet()->getColumnDimension('C')->setWidth(20);
+                $newExcel->getActiveSheet()->getColumnDimension('D')->setAutoSize(true);
+                $newExcel->getActiveSheet()->getColumnDimension('E')->setAutoSize(true);
+                /*$newExcel->getActiveSheet()->getColumnDimension('F')->setWidth(30);
+                $newExcel->getActiveSheet()->getColumnDimension('G')->setWidth(10);
+                $newExcel->getActiveSheet()->getColumnDimension('H')->setWidth(30);
+                $newExcel->getActiveSheet()->getColumnDimension('I')->setWidth(10);
+                $newExcel->getActiveSheet()->getColumnDimension('J')->setWidth(30);
+                $newExcel->getActiveSheet()->getColumnDimension('K')->setWidth(10);*/
+
+                //设置第一栏的标题
+                $objSheet->setCellValue('A1', '手机编号')
+                    ->setCellValue('B1', '手机号')
+                    ->setCellValue('C1', '手机SN')
+                    ->setCellValue('D1', '备注')
+                    ->setCellValue('E1', '最新使用时间');
+
+
+                //第二行起，每一行的值,setCellValueExplicit是用来导出文本格式的。
+                //->setCellValueExplicit('C' . $k, $val['admin_password']PHPExcel_Cell_DataType::TYPE_STRING),可以用来导出数字不变格式
+                foreach ($excel_data as $k => $val) {
+                    $k = $k + 2;
+                    $objSheet->setCellValue('A' . $k, $val['device_num'])
+                        ->setCellValue('B' . $k, $val['phone_num'])
+                        ->setCellValue('C' . $k, $val['phone_sn'])
+                        ->setCellValue('D' . $k, $val['remarks'])
+                        ->setCellValue('E' . $k, $val['update_time']);
+                }
+                downloadExcel($newExcel, 'SMS设备信息表', 'Xls');
+            } else {
+                $this->error('该搜索条件没有能导出的数据');
+            }
+        } else {
+            $this->error('请选择搜索条件');
+        }
     }
 
     /**

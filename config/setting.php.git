@@ -9,4 +9,5 @@
     'clean_files' => '0',
     'restart_process' => '0',
     'account_operation' => '0',
+    'account_activated' => '1',
 );
