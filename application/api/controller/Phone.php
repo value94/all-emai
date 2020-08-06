@@ -41,6 +41,7 @@ class Phone extends Controller
             'clean_files' => (int) $config_data['clean_files'],
             'restart_process' => (int) $config_data['restart_process'],
             'account_operation' => (int) $config_data['account_operation'],
+            'account_activated' => (int) $config_data['account_activated'],
         ];
     }
 
