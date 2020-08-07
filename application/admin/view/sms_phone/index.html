@@ -394,7 +394,7 @@
     function switch_status(id, status) {
         layer.confirm('确认切换状态?', {icon: 3, title: '提示'}, function (index) {
             //do something
-            $.getJSON("{:url('sms_phone/switch_status')}", {'id': id, 'status': status}, function (res) {
+            $.getJSON("{:url('sms_phone/switch_status')}", {'id': id, 'change_status': status}, function (res) {
                 if (1 == res.code) {
                     layer.alert(res.msg, {title: '友情提示', icon: 1, closeBtn: 0}, function () {
                         initTable();

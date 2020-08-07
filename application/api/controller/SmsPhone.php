@@ -82,9 +82,10 @@ class SmsPhone extends Controller
 
         if (!$check_phone) {
             // 设置手机解除异常
-            SmsPhoneModel::update([
-                'status' => 0,
-            ], ['phone_sn' => $params['phone_sn']]);
+            SmsPhoneModel::update(['status' => 0,], [
+                ['phone_sn', '=', $params['phone_sn']],
+                ['status', 'neq', 3]
+            ]);
 
             throw new SmsPhoneException([
                 'msg' => "No need to get SMS",

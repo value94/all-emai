@@ -176,6 +176,7 @@ class SmsPhone extends Base
                 SmsPhoneModel::update(['status' => 2], ['id' => $params['id']]);
                 return $result;
             }
+
             // 切换成指定状态
             if (isset($params['change_status'])) {
                 SmsPhoneModel::update(['status' => $params['change_status']], ['id' => $params['id']]);
@@ -385,9 +386,9 @@ class SmsPhone extends Base
                 'btnStyle' => 'info',
                 'icon' => 'fa fa-check-circle',
             ],
-            '停止' => [
+            '禁用' => [
                 'auth' => 'smsPhone/switch_status',
-                'href' => "javascript:switch_status(" . $id . ",2)",
+                'href' => "javascript:switch_status(" . $id . ",3)",
                 'btnStyle' => 'warning',
                 'icon' => 'fa fa-close',
             ],
