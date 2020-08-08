@@ -34,12 +34,12 @@ class AutoReleaseSMSPhoneStatus extends Command
 
         if ($sms_phone) {
             foreach ($sms_phone as $item) {
+
                 // 设置短信状态失败
-                SmsModel::update(['receiving_status' => 0, 'fail_reason' => '返回超时'], [
-                    ['sms_phone_id', '=', $item['id']],
-                    ['receiving_status', '=', null],
-                    ['create_time', '<', $can_time]
-                ]);
+                SmsModel::where('sms_phone_id', '=', $item['id'])
+                    ->where('receiving_status', '=', null)
+                    ->where('create_time', '<', $can_time)
+                    ->update(['receiving_status' => 0, 'fail_reason' => '返回超时']);
 
                 // 释放设备
                 SmsPhoneModel::where(['id' => $item['id']])->update(['status' => 0]);
