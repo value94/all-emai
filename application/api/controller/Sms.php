@@ -20,8 +20,8 @@ class Sms extends Controller
         $params = (new UploadSmsValidate())->goCheck();
 
         // 验证token
-        $sms_phone = SmsModel::checkSms($params['token']);
-        if (!$sms_phone) {
+        $sms_data = SmsModel::checkSms($params['token']);
+        if (!$sms_data) {
             throw new SmsException(['msg' => 'token not exist']);
         }
 
@@ -32,6 +32,10 @@ class Sms extends Controller
             'fail_reason' => $params['fail_reason'],
             'upload_sms_time' => date('Y-m-d H:i:s')
         ]);
+
+        // 自增上传次数
+        SmsPhoneModel::where('id', '=', $sms_data['sms_phone_id'])->setInc('received_sms_count');
+
 
         if ($result) {
             throw new SuccessMessage(['msg' => 'Upload SMS data successfully']);
@@ -67,11 +71,11 @@ class Sms extends Controller
             ]);
             // 释放手机
             SmsPhoneModel::where(['id' => $sms_data['sms_phone_id']])->update(['status' => 0]);
-            // 更新自增字段
-            SmsPhoneModel::where(['id' => $sms_data['sms_phone_id']])->update([
-                'get_sms_count' => SmsPhoneModel::raw('get_sms_count+1'),
-                'received_sms_count' => SmsPhoneModel::raw('received_sms_count+1')
-            ]);
+
+            // 自增获取次数
+            SmsPhoneModel::where(['id' => $sms_data['sms_phone_id']])->setInc('get_sms_count');
+
+            // 自增成功获取次数
             if ($sms_data['receiving_status'] == 1) {
                 SmsPhoneModel::where(['id' => $sms_data['sms_phone_id']])->setInc('success_sms_count');
             }

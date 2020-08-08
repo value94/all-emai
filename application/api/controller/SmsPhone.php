@@ -34,16 +34,6 @@ class SmsPhone extends Controller
         $phone_time_interval = Config::get('setting.release_phone_time');
         Cache::set('sms_' . $sms_phone['phone_sn'], $token, $phone_time_interval * 60);
 
-        // 返回数据
-        $return_data = [
-            'status' => 1,
-            'error_code' => 0,
-            'msg' => '',
-            'token' => $token,
-            'phone_num' => $sms_phone['phone_num'],
-            'device_num' => $sms_phone['device_num'],
-        ];
-
         // 设置短信手机状态为接码中
         SmsPhoneModel::update(['status' => 1], ['id' => $sms_phone['id']]);
 
@@ -61,6 +51,16 @@ class SmsPhone extends Controller
             'get_phone_num' => $sms_phone['device_num'],
             'receiving_phone_num' => empty($job_phone['number']) ? null : $job_phone['number']
         ]);
+
+        // 返回数据
+        $return_data = [
+            'status' => 1,
+            'error_code' => 0,
+            'msg' => '',
+            'token' => $token,
+            'phone_num' => $sms_phone['phone_num'],
+            'device_num' => $sms_phone['device_num'],
+        ];
 
         return $return_data;
     }

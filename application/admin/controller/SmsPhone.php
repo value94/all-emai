@@ -29,7 +29,7 @@ class SmsPhone extends Base
 
             // 拼装参数
             foreach ($selectResult as $key => $vo) {
-                $selectResult[$key]['fail_sms_count'] = $vo['received_sms_count'] - $vo['success_sms_count'];
+                $selectResult[$key]['fail_sms_count'] = $vo['get_phone_count'] - $vo['success_sms_count'];
                 $selectResult[$key]['operate'] = showOperate($this->makeButton($vo['id']));
             }
 
