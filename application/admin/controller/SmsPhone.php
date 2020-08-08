@@ -2,6 +2,7 @@
 
 namespace app\admin\controller;
 
+use app\admin\model\SmsModel;
 use app\admin\model\SmsPhoneModel;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use think\Db;
@@ -31,6 +32,44 @@ class SmsPhone extends Base
             foreach ($selectResult as $key => $vo) {
                 $selectResult[$key]['fail_sms_count'] = $vo['get_phone_count'] - $vo['success_sms_count'];
                 $selectResult[$key]['operate'] = showOperate($this->makeButton($vo['id']));
+            }
+
+            //时间搜索
+            if (!empty($param['start_time']) && !empty($param['end_time'])) {
+                // 循环搜索每个手机,时间范围内的成功/失败次数
+                $smsModel = new  SmsModel();
+                foreach ($selectResult as $key => $vo) {
+                    $fail_sms_where = [
+                        ['sms_phone_id', '=', $selectResult[$key]['id']],
+                        ['update_time', 'between', [$param['start_time'], $param['end_time']]],
+                        ['receiving_status', '=', 0]
+                    ];
+                    $success_sms_where = [
+                        ['sms_phone_id', '=', $selectResult[$key]['id']],
+                        ['update_time', 'between', [$param['start_time'], $param['end_time']]],
+                        ['receiving_status', '=', 1]
+                    ];
+                    $get_sms_where = [
+                        ['sms_phone_id', '=', $selectResult[$key]['id']],
+                        ['update_time', 'between', [$param['start_time'], $param['end_time']]],
+                        ['receiving_status', '=', 2]
+                    ];
+                    $received_sms_where = [
+                        ['sms_phone_id', '=', $selectResult[$key]['id']],
+                        ['update_time', 'between', [$param['start_time'], $param['end_time']]],
+                        ['receiving_status', 'NOT NULL', '']
+                    ];
+                    $sms_where = [
+                        ['sms_phone_id', '=', $selectResult[$key]['id']],
+                        ['update_time', 'between', [$param['start_time'], $param['end_time']]],
+                    ];
+
+                    $selectResult[$key]['fail_sms_count'] = $smsModel->getCountByWhere($fail_sms_where);
+                    $selectResult[$key]['success_sms_count'] = $smsModel->getCountByWhere($success_sms_where);
+                    $selectResult[$key]['get_sms_count'] = $smsModel->getCountByWhere($get_sms_where);
+                    $selectResult[$key]['get_phone_count'] = $smsModel->getCountByWhere($sms_where);
+                    $selectResult[$key]['received_sms_count'] = $smsModel->getCountByWhere($received_sms_where);
+                }
             }
 
             $return['total'] = $SmsPhone->getAllSmsPhone($where);  //总数据
@@ -63,7 +102,6 @@ class SmsPhone extends Base
         if ($params['status'] != '') {
             $where[] = ['status', '=', $params['status']];
         }
-
         //时间搜索
         if (!empty($params['start_time']) && !empty($params['end_time'])) {
             if ($params['time_field'] != '') {

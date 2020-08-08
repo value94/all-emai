@@ -24,7 +24,7 @@ class SmsModel extends Model
     }
 
     /**
-     * 查询任务设备
+     * 查询短信
      * @param $where
      * @param $offset
      * @param $limit
@@ -45,7 +45,7 @@ class SmsModel extends Model
     }
 
     /**
-     * 根据任务设备id获取任务设备信息
+     * 根据短信id获取短信信息
      * @param $id
      */
     public function getOneSms($id)
@@ -54,7 +54,7 @@ class SmsModel extends Model
     }
 
     /**
-     * 查询所有任务设备数量
+     * 查询所有短信数量
      * @param $where
      * @return int|string
      */
@@ -64,7 +64,7 @@ class SmsModel extends Model
     }
 
     /**
-     * 添加一个任务设备
+     * 添加一个短信
      * @param $data
      * @return mixed
      */
@@ -87,7 +87,7 @@ class SmsModel extends Model
     }
 
     /**
-     * 编辑商户
+     * 编辑短信
      * @param $param
      * @return array
      */
@@ -106,5 +106,10 @@ class SmsModel extends Model
         } catch (\Exception $e) {
             return msg(-2, '', $e->getMessage());
         }
+    }
+
+    public function getCountByWhere($where)
+    {
+        return $this->where($where)->count();
     }
 }

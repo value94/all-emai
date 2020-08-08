@@ -71,7 +71,11 @@ class Sms extends Base
 
         // 状态搜索
         if ($params['receiving_status'] != '') {
-            $where[] = ['receiving_status', '=', $params['receiving_status']];
+            if ($params['receiving_status'] == 'null') {
+                $where[] = ['receiving_status', 'null', ''];
+            }else{
+                $where[] = ['receiving_status', '=', $params['receiving_status']];
+            }
         }
 
         //时间搜索

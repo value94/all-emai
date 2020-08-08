@@ -67,12 +67,13 @@ class Sms extends Controller
         } else {
             // 更新获取短信状态
             SmsModel::where('token', $params['token'])->update([
-                'sending_sms_time' => date('Y-m-d H:i:s')
+                'sending_sms_time' => date('Y-m-d H:i:s'),
+                'receiving_status' => 2
             ]);
             // 释放手机
             SmsPhoneModel::where(['id' => $sms_data['sms_phone_id']])->update(['status' => 0]);
 
-            // 自增获取次数
+            // 自增下发次数
             SmsPhoneModel::where(['id' => $sms_data['sms_phone_id']])->setInc('get_sms_count');
 
             // 自增成功获取次数
