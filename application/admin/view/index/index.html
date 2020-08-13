@@ -29,6 +29,86 @@
 </form>
 <!--搜索框结束-->
 <div class="wrapper wrapper-content">
+    <div class="row" id="search_row" style="display: none">
+        <div class="col-sm-2">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-danger pull-right">搜索</span>
+                    <h5>总注册量</h5>
+                </div>
+                <div class="ibox-content">
+                    <h1 class="no-margins" id="all_reg">{$show_data['all_reg']} 个</h1>
+                    <div class="stat-percent font-bold text-navy"></div>
+                    <small></small>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-danger pull-right">搜索</span>
+                    <h5>成功数量</h5>
+                </div>
+                <div class="ibox-content">
+                    <h1 class="no-margins" id="success_reg">{$show_data['success_reg']} 个</h1>
+                    <div class="stat-percent font-bold text-danger"></div>
+                    <small></small>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-danger pull-right">搜索</span>
+                    <h5>失败数量</h5>
+                </div>
+                <div class="ibox-content">
+                    <h1 class="no-margins" id="fail_reg">{$show_data['fail_reg']} 个</h1>
+                    <div class="stat-percent font-bold text-danger"></div>
+                    <small></small>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-danger pull-right">搜索</span>
+                    <h5>总过检量</h5>
+                </div>
+                <div class="ibox-content">
+                    <h1 class="no-margins" id="all_check">{$show_data['all_check']} 个</h1>
+                    <div class="stat-percent font-bold text-navy"></div>
+                    <small></small>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-danger pull-right">搜索</span>
+                    <h5>成功过检数量</h5>
+                </div>
+                <div class="ibox-content">
+                    <h1 class="no-margins" id="success_check">{$show_data['success_check']} 个</h1>
+                    <div class="stat-percent font-bold text-danger"></div>
+                    <small></small>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-danger pull-right">搜索</span>
+                    <h5>失败过检数量</h5>
+                </div>
+                <div class="ibox-content">
+                    <h1 class="no-margins" id="fail_check">{$show_data['fail_check']} 个</h1>
+                    <div class="stat-percent font-bold text-danger"></div>
+                    <small></small>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="row">
         <div class="col-sm-2">
             <div class="ibox float-e-margins">
@@ -90,47 +170,6 @@
                 </div>
                 <div class="ibox-content">
                     <h1 class="no-margins">{$show_data['email_left']} 个</h1>
-                    <div class="stat-percent font-bold text-danger"></div>
-                    <small></small>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row" id="search_row" style="display: none">
-        <div class="col-sm-2">
-            <div class="ibox float-e-margins">
-                <div class="ibox-title">
-                    <span class="label label-danger pull-right">搜索</span>
-                    <h5>总注册量</h5>
-                </div>
-                <div class="ibox-content">
-                    <h1 class="no-margins" id="all_reg">{$show_data['all_reg']} 个</h1>
-                    <div class="stat-percent font-bold text-navy"></div>
-                    <small></small>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-2">
-            <div class="ibox float-e-margins">
-                <div class="ibox-title">
-                    <span class="label label-danger pull-right">搜索</span>
-                    <h5>成功数量</h5>
-                </div>
-                <div class="ibox-content">
-                    <h1 class="no-margins" id="success_reg">{$show_data['success_reg']} 个</h1>
-                    <div class="stat-percent font-bold text-danger"></div>
-                    <small></small>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-2">
-            <div class="ibox float-e-margins">
-                <div class="ibox-title">
-                    <span class="label label-danger pull-right">搜索</span>
-                    <h5>失败数量</h5>
-                </div>
-                <div class="ibox-content">
-                    <h1 class="no-margins" id="fail_reg">{$show_data['fail_reg']} 个</h1>
                     <div class="stat-percent font-bold text-danger"></div>
                     <small></small>
                 </div>
@@ -217,6 +256,153 @@
             </div>
         </div>
     </div>
+    <div class="row">
+        <div class="col-sm-2">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-primary pull-right">所有</span>
+                    <h5>总过检量</h5>
+                </div>
+                <div class="ibox-content">
+                    <h1 class="no-margins">{$show_data['all_check']} 个</h1>
+                    <div class="stat-percent font-bold text-navy"></div>
+                    <small></small>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-primary pull-right">所有</span>
+                    <h5>成功数量</h5>
+                </div>
+                <div class="ibox-content">
+                    <h1 class="no-margins">{$show_data['success_check']} 个</h1>
+                    <div class="stat-percent font-bold text-danger"></div>
+                    <small></small>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-primary pull-right">所有</span>
+                    <h5>失败数量</h5>
+                </div>
+                <div class="ibox-content">
+                    <h1 class="no-margins">{$show_data['fail_check']} 个</h1>
+                    <div class="stat-percent font-bold text-danger"></div>
+                    <small></small>
+                </div>
+            </div>
+        </div>
+        <!--<div class="col-sm-3">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-primary pull-right">所有</span>
+                    <h5>剩余机器量</h5>
+                </div>
+                <div class="ibox-content">
+                    <h1 class="no-margins">{$show_data['machine_left']} 台</h1>
+                    <div class="stat-percent font-bold text-danger"></div>
+                    <small></small>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-primary pull-right">所有</span>
+                    <h5>剩余邮箱量</h5>
+                </div>
+                <div class="ibox-content">
+                    <h1 class="no-margins">{$show_data['email_left']} 个</h1>
+                    <div class="stat-percent font-bold text-danger"></div>
+                    <small></small>
+                </div>
+            </div>
+        </div>-->
+    </div>
+    <div class="row">
+        <div class="col-sm-2">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-info pull-right">今天</span>
+                    <h5>总过检量</h5>
+                </div>
+                <div class="ibox-content">
+                    <h1 class="no-margins">{$show_data['today_check']} 个</h1>
+                    <div class="stat-percent font-bold text-navy"></div>
+                    <small></small>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-info pull-right">今天</span>
+                    <h5>成功数量</h5>
+                </div>
+                <div class="ibox-content">
+                    <h1 class="no-margins">{$show_data['today_success_check']} 个</h1>
+                    <div class="stat-percent font-bold text-danger"></div>
+                    <small></small>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-info pull-right">今天</span>
+                    <h5>失败数量</h5>
+                </div>
+                <div class="ibox-content">
+                    <h1 class="no-margins">{$show_data['today_fail_check']} 个</h1>
+                    <div class="stat-percent font-bold text-danger"></div>
+                    <small></small>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-warning pull-right">上小时</span>
+                    <h5>总过检量</h5>
+                </div>
+                <div class="ibox-content">
+                    <h1 class="no-margins">{$show_data['hour_check']} 个</h1>
+                    <div class="stat-percent font-bold text-navy"></div>
+                    <small></small>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-warning pull-right">上小时</span>
+                    <h5>成功数量</h5>
+                </div>
+                <div class="ibox-content">
+                    <h1 class="no-margins">{$show_data['hour_success_check']} 个</h1>
+                    <div class="stat-percent font-bold text-danger"></div>
+                    <small></small>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-warning pull-right">上小时</span>
+                    <h5>失败数量</h5>
+                </div>
+                <div class="ibox-content">
+                    <h1 class="no-margins">{$show_data['hour_fail_check']} 个</h1>
+                    <div class="stat-percent font-bold text-danger"></div>
+                    <small></small>
+                </div>
+            </div>
+        </div>
+    </div>
     <!--<div class="row">
         <div class="col-sm-8">
             <div class="ibox float-e-margins">
@@ -268,6 +454,9 @@
                 $('#all_reg').html(res.all_reg + " 个");
                 $('#fail_reg').html(res.fail_reg + " 个");
                 $('#success_reg').html(res.success_reg + " 个");
+                $('#all_check').html(res.all_check + " 个");
+                $('#fail_check').html(res.fail_check + " 个");
+                $('#success_check').html(res.success_check + " 个");
             } else {
                 layer.alert(res.msg, {title: '请重试', icon: 2});
             }
