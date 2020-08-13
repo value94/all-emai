@@ -107,6 +107,7 @@ class Index extends Base
                 'all_check' => $all_check,
                 'fail_check' => $fail_check,
                 'success_check' => $success_check,
+                'left_check' => $left_check,
                 'today_check' => $today_check,
                 'today_fail_check' => $today_fail_check,
                 'today_success_check' => $today_check - $today_fail_check,
