@@ -226,7 +226,7 @@ class CheckApple extends Base
                 }
                 $save_data = [
                     'apple_account' => $c[0],
-                    'apple_pass' => $c[1],
+                    'apple_pass' => $c[3],
                     'create_time' => $create_time,
                     'update_time' => $update_time,
                 ];
@@ -272,33 +272,39 @@ class CheckApple extends Base
 
                 //设置宽度为true,不然太窄了
                 $newExcel->getActiveSheet()->getColumnDimension('A')->setAutoSize(true);
-                $newExcel->getActiveSheet()->getColumnDimension('B')->setWidth(20);
-                $newExcel->getActiveSheet()->getColumnDimension('C')->setWidth(20);
                 $newExcel->getActiveSheet()->getColumnDimension('D')->setAutoSize(true);
                 $newExcel->getActiveSheet()->getColumnDimension('E')->setAutoSize(true);
-                /*$newExcel->getActiveSheet()->getColumnDimension('F')->setWidth(30);
-                $newExcel->getActiveSheet()->getColumnDimension('G')->setWidth(10);
-                $newExcel->getActiveSheet()->getColumnDimension('H')->setWidth(30);
-                $newExcel->getActiveSheet()->getColumnDimension('I')->setWidth(10);
-                $newExcel->getActiveSheet()->getColumnDimension('J')->setWidth(30);
-                $newExcel->getActiveSheet()->getColumnDimension('K')->setWidth(10);*/
+                $newExcel->getActiveSheet()->getColumnDimension('F')->setAutoSize(true);
+                $newExcel->getActiveSheet()->getColumnDimension('G')->setAutoSize(true);
+                $newExcel->getActiveSheet()->getColumnDimension('H')->setAutoSize(true);
+                $newExcel->getActiveSheet()->getColumnDimension('I')->setAutoSize(true);
+                $newExcel->getActiveSheet()->getColumnDimension('J')->setAutoSize(true);
+                $newExcel->getActiveSheet()->getColumnDimension('K')->setAutoSize(true);
 
                 //设置第一栏的标题
                 $objSheet->setCellValue('A1', '账号')
-                    ->setCellValue('B1', '密码')
-                    ->setCellValue('C1', '过检状态')
-                    ->setCellValue('D1', '使用状态')
-                    ->setCellValue('E1', '过检时间');
+                    ->setCellValue('D1', '密码')
+                    ->setCellValue('E1', '出生年月')
+                    ->setCellValue('F1', '密码问题1')
+                    ->setCellValue('G1', '答案1')
+                    ->setCellValue('H1', '密码问题2')
+                    ->setCellValue('I1', '答案2')
+                    ->setCellValue('J1', '密码问题3')
+                    ->setCellValue('K1', '答案3');
 
                 //第二行起，每一行的值,setCellValueExplicit是用来导出文本格式的。
                 //->setCellValueExplicit('C' . $k, $val['admin_password']PHPExcel_Cell_DataType::TYPE_STRING),可以用来导出数字不变格式
                 foreach ($excel_data as $k => $val) {
                     $k = $k + 2;
                     $objSheet->setCellValue('A' . $k, $val['apple_account'])
-                        ->setCellValue('B' . $k, $val['apple_pass'])
-                        ->setCellValue('C' . $k, $val['check_status'])
-                        ->setCellValue('D' . $k, $val['use_status'])
-                        ->setCellValue('E' . $k, $val['update_time']);
+                        ->setCellValue('D' . $k, $val['apple_pass'])
+                        ->setCellValue('E' . $k, '1988/7/15')
+                        ->setCellValue('F' . $k, '你少年时代最好的朋友叫什么名字？')
+                        ->setCellValue('G' . $k, 'qaz135136')
+                        ->setCellValue('H' . $k, '你的理想工作是什么？')
+                        ->setCellValue('I' . $k, 'zxc135136')
+                        ->setCellValue('J' . $k, '你的父母是在哪里认识的？')
+                        ->setCellValue('K' . $k, 'wsx135136');
                 }
                 // 修改check_apple过检账号下载状态
                 $CheckAppleModel = new CheckAppleModel();
