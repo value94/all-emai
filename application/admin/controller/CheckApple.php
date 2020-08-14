@@ -227,6 +227,13 @@ class CheckApple extends Base
                 $save_data = [
                     'apple_account' => $c[0],
                     'apple_pass' => $c[3],
+                    'birth_day' => $c[4],
+                    'question_1' => $c[5],
+                    'answer_1' => $c[6],
+                    'question_2' => $c[7],
+                    'answer_2' => $c[8],
+                    'question_3' => $c[9],
+                    'answer_3' => $c[10],
                     'create_time' => $create_time,
                     'update_time' => $update_time,
                 ];
@@ -298,13 +305,13 @@ class CheckApple extends Base
                     $k = $k + 2;
                     $objSheet->setCellValue('A' . $k, $val['apple_account'])
                         ->setCellValue('D' . $k, $val['apple_pass'])
-                        ->setCellValue('E' . $k, '1988/7/15')
-                        ->setCellValue('F' . $k, '你少年时代最好的朋友叫什么名字？')
-                        ->setCellValue('G' . $k, 'qaz135136')
-                        ->setCellValue('H' . $k, '你的理想工作是什么？')
-                        ->setCellValue('I' . $k, 'zxc135136')
-                        ->setCellValue('J' . $k, '你的父母是在哪里认识的？')
-                        ->setCellValue('K' . $k, 'wsx135136');
+                        ->setCellValue('E' . $k, $val['birth_day'])
+                        ->setCellValue('F' . $k, $val['question_1'])
+                        ->setCellValue('G' . $k, $val['answer_1'])
+                        ->setCellValue('H' . $k, $val['question_2'])
+                        ->setCellValue('I' . $k, $val['answer_2'])
+                        ->setCellValue('J' . $k, $val['question_3'])
+                        ->setCellValue('K' . $k, $val['answer_3']);
                 }
                 // 修改check_apple过检账号下载状态
                 $CheckAppleModel = new CheckAppleModel();
