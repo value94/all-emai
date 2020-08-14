@@ -15,15 +15,16 @@
 
 return [
     // 驱动方式
-    'type'   => 'redis',
+    'type' => 'redis',
     // ip
-    'host'	=>	'127.0.0.1',
+    'host' => '127.0.0.1',
     // port
     'port' => 6379,
     // 缓存保存目录
-    'path'   => '',
+    'path' => '',
     // 缓存前缀
     'prefix' => '',
     // 缓存有效期 0表示永久缓存
     'expire' => 0,
+    'select' => env('cache.select', 0),
 ];
