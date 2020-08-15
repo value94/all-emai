@@ -75,7 +75,7 @@ class Index extends Base
         // 过检成功
         $success_check = CheckAppleModel::where(['check_status' => 1])->count('id');
         // 剩余过检数
-        $left_check = CheckAppleModel::where(['check_status' => 2])->count('id');
+        $left_check = CheckAppleModel::where(['use_status' => 0])->count('id');
         // 今天过检总数，成功，失败总数
         $today_check = CheckAppleModel::where(['check_status' => [0, 1]])
             ->whereTime('update_time', 'today')
