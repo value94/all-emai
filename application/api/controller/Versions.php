@@ -34,6 +34,7 @@ class Versions extends Controller
                 $nowVersion['msg'] = '需要更新';
                 $nowVersion['status'] = 1;
                 $nowVersion['error_code'] = 0;
+                $nowVersion['file_url'] = env('pro_url') . $nowVersion['file_url'];
 
                 return $nowVersion;
             }

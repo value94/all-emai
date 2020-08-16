@@ -88,9 +88,9 @@ class Versions extends Model
                 $old_cash = Cache::tag('versions')->get($param['file_name']);
 
                 if ($old_cash && !isset($param['file_url'])) {
-                    $versions['file_url'] = $old_cash['file_name'];
+                    $versions['file_url'] = $old_cash['file_url'];
                 }else{
-                    $versions['file_url'] = $param['file_name'];
+                    $versions['file_url'] = $param['file_url'];
                 }
 
                 //添加缓存数据

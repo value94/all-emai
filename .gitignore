@@ -6,6 +6,6 @@ thinkphp
 .env
 .DS_Store
 composer.lock
-/public/upload
+/public/upload/versions_file
 /uploads
 /config/setting.php

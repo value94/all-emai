@@ -66,11 +66,11 @@ class Versions extends Base
             // 保存上传文件
             $file = request()->file('file_url');
             // 移动到框架应用根目录/uploads/ 目录下
-            $info = $file->move('../uploads', '');
+            $info = $file->move('upload/versions_file', '');
             if ($info) {
                 // 上传后
-                $param['file_url'] = '/uploads/' . $info->getSaveName();
-                $param['file_md5'] = md5_file(Env::get('root_path') . $param['file_url']);
+                $param['file_url'] = '/upload/versions_file/' . $info->getSaveName();
+                $param['file_md5'] = md5_file(Env::get('root_path') . 'public/' . $param['file_url']);
 
             } else {
                 // 上传失败获取错误信息
@@ -102,11 +102,11 @@ class Versions extends Base
             $file = request()->file('file_url');
             if ($file) {
                 // 移动到框架应用根目录/uploads/ 目录下
-                $info = $file->move('../uploads', '');
+                $info = $file->move('upload/versions_file', '');
                 if ($info) {
                     // 上传后
-                    $param['file_url'] = '/uploads/' . $info->getSaveName();
-                    $param['file_md5'] = md5_file(Env::get('root_path') . $param['file_url']);
+                    $param['file_url'] = '/upload/versions_file/' . $info->getSaveName();
+                    $param['file_md5'] = md5_file(Env::get('root_path') . 'public/' . $param['file_url']);
                 } else {
                     // 上传失败获取错误信息
                     return json(msg(0, 0, $file->getError()));
