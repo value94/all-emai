@@ -100,6 +100,7 @@ class Versions extends Base
 
             // 更新上传文件
             $file = request()->file('file_url');
+
             if ($file) {
                 // 移动到框架应用根目录/uploads/ 目录下
                 $info = $file->move('upload/versions_file', '');
@@ -114,6 +115,7 @@ class Versions extends Base
             } else {
                 unset($param['file_url']);
             }
+
             $flag = $versions->editVersions($param);
 
             return json(msg($flag['code'], $flag['data'], $flag['msg']));

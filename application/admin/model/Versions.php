@@ -50,13 +50,6 @@ class Versions extends Model
                 // 验证失败 输出错误信息
                 return msg(-1, '', $VersionsValidate->getError());
             } else {
-                $versions = [
-                    'file_versions' => $param['file_versions'],
-                    'file_name' => $param['file_name'],
-                    'file_url' => $param['file_url'],
-                ];
-                //添加缓存数据
-                Cache::tag('versions')->set($param['file_name'], json_encode($versions), 0);
                 $this->save($param);
 
                 return msg(1, url('versions/index'), '添加程序版本成功');
@@ -80,21 +73,6 @@ class Versions extends Model
                 // 验证失败 输出错误信息
                 return msg(-1, '', $this->getError());
             } else {
-                $versions = [
-                    'file_versions' => $param['file_versions'],
-                    'file_name' => $param['file_name'],
-                ];
-                // 没有更新文件,获取原来的路径
-                $old_cash = Cache::tag('versions')->get($param['file_name']);
-
-                if ($old_cash && !isset($param['file_url'])) {
-                    $versions['file_url'] = $old_cash['file_url'];
-                }else{
-                    $versions['file_url'] = $param['file_url'];
-                }
-
-                //添加缓存数据
-                Cache::tag('versions')->set($param['file_name'], json_encode($versions), 0);
 
                 $this->save($param, ['id' => $param['id']]);
                 return msg(1, url('versions/index'), '编辑版本成功');
@@ -120,13 +98,9 @@ class Versions extends Model
     public function delversions($id)
     {
         try {
-            $version = $this->find(['id' => $id]);
-            $result = $this->where('id', $id)->delete();
-            if ($result) {
-                //删除缓存数据
-                Cache::tag('versions')->rm($version['file_name']);
-                return msg(1, '', '删除版本成功');
-            }
+            $this->where('id', $id)->delete();
+
+            return msg(1, '', '删除版本成功');
         } catch (PDOException $e) {
             return msg(-1, '', $e->getMessage());
         }

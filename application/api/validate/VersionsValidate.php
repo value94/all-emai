@@ -12,6 +12,7 @@ class VersionsValidate extends BaseValidate
 {
     protected $rule = [
         'app_name' => 'require',
-        'version_num' => 'require',
+//        'version_num' => 'require',
+//        'file_md5' => 'require',
     ];
 }

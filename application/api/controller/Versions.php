@@ -11,7 +11,7 @@ namespace app\api\controller;
 
 use app\api\validate\VersionsValidate;
 use think\Controller;
-use think\facade\Cache;
+use app\api\model\Versions as VersionsModel;
 
 class Versions extends Controller
 {
@@ -25,19 +25,27 @@ class Versions extends Controller
     {
         // 解密及验证参数
         $params = (new VersionsValidate())->goCheck();
-        // 从redis缓存中判断版本号是否正确
-        $nowVersion = Cache::tag('versions')->get($params['app_name']);
-        if ($nowVersion) {
-            $nowVersion = json_decode($nowVersion, true);
-            if ($nowVersion['file_versions'] != $params['version_num']) {
-                // 返回结果
-                $nowVersion['msg'] = '需要更新';
-                $nowVersion['status'] = 1;
-                $nowVersion['error_code'] = 0;
-                $nowVersion['file_url'] = env('pro_url') . $nowVersion['file_url'];
 
-                return $nowVersion;
+        // 查询文件版本是否正确
+        $check_versions = VersionsModel::where('file_name', '=', $params['app_name'])->field('file_name,file_versions,file_url,file_md5')->find();
+        if ($check_versions) {
+            // 返回结果
+            $check_versions['msg'] = '需要更新';
+            $check_versions['status'] = 1;
+            $check_versions['error_code'] = 0;
+            $check_versions['file_url'] = env('pro_url') . $check_versions['file_url'];
+            if (isset($params['version_num']) &&
+                isset($params['file_md5']) &&
+                $check_versions['file_versions'] != $params['version_num'] &&
+                $check_versions['file_md5'] != $params['file_md5']
+            ) {
+                return $check_versions;
+            } elseif (isset($params['version_num']) && $check_versions['file_versions'] != $params['version_num']) {
+                return $check_versions;
+            } elseif (isset($params['file_md5']) && $check_versions['file_md5'] != $params['file_md5']) {
+                return $check_versions;
             }
+
             // 返回结果
             return [
                 'msg' => '该程序不需要更新',
