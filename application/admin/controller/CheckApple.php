@@ -234,6 +234,7 @@ class CheckApple extends Base
                     'answer_2' => $c[8],
                     'question_3' => $c[9],
                     'answer_3' => $c[10],
+                    'remark' => empty($c[11]) ? null : $c[11],
                     'create_time' => $create_time,
                     'update_time' => $update_time,
                 ];
@@ -287,6 +288,7 @@ class CheckApple extends Base
                 $newExcel->getActiveSheet()->getColumnDimension('I')->setAutoSize(true);
                 $newExcel->getActiveSheet()->getColumnDimension('J')->setAutoSize(true);
                 $newExcel->getActiveSheet()->getColumnDimension('K')->setAutoSize(true);
+                $newExcel->getActiveSheet()->getColumnDimension('L')->setAutoSize(true);
 
                 //设置第一栏的标题
                 $objSheet->setCellValue('A1', '账号')
@@ -297,7 +299,8 @@ class CheckApple extends Base
                     ->setCellValue('H1', '密码问题2')
                     ->setCellValue('I1', '答案2')
                     ->setCellValue('J1', '密码问题3')
-                    ->setCellValue('K1', '答案3');
+                    ->setCellValue('K1', '答案3')
+                    ->setCellValue('L1', '备注');
 
                 //第二行起，每一行的值,setCellValueExplicit是用来导出文本格式的。
                 //->setCellValueExplicit('C' . $k, $val['admin_password']PHPExcel_Cell_DataType::TYPE_STRING),可以用来导出数字不变格式
@@ -311,7 +314,8 @@ class CheckApple extends Base
                         ->setCellValue('H' . $k, $val['question_2'])
                         ->setCellValue('I' . $k, $val['answer_2'])
                         ->setCellValue('J' . $k, $val['question_3'])
-                        ->setCellValue('K' . $k, $val['answer_3']);
+                        ->setCellValue('K' . $k, $val['answer_3'])
+                        ->setCellValue('L' . $k, $val['remark']);
                 }
                 // 修改check_apple过检账号下载状态
                 $CheckAppleModel = new CheckAppleModel();
