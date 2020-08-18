@@ -227,6 +227,7 @@ class RegApple extends Base
                 $save_data = [
                     'apple_account' => $c[0],
                     'apple_pass' => $c[1],
+                    'remark' => empty($c[2]) ? null : $c[2],
                     'create_time' => $create_time,
                     'update_time' => $update_time,
                 ];
@@ -276,6 +277,7 @@ class RegApple extends Base
                 $newExcel->getActiveSheet()->getColumnDimension('C')->setWidth(20);
                 $newExcel->getActiveSheet()->getColumnDimension('D')->setAutoSize(true);
                 $newExcel->getActiveSheet()->getColumnDimension('E')->setAutoSize(true);
+                $newExcel->getActiveSheet()->getColumnDimension('F')->setAutoSize(true);
                 /*$newExcel->getActiveSheet()->getColumnDimension('F')->setWidth(30);
                 $newExcel->getActiveSheet()->getColumnDimension('G')->setWidth(10);
                 $newExcel->getActiveSheet()->getColumnDimension('H')->setWidth(30);
@@ -288,7 +290,8 @@ class RegApple extends Base
                     ->setCellValue('B1', '密码')
                     ->setCellValue('C1', '激活状态')
                     ->setCellValue('D1', '使用状态')
-                    ->setCellValue('E1', '激活时间');
+                    ->setCellValue('E1', '激活时间')
+                    ->setCellValue('F1', '备注');
 
                 //第二行起，每一行的值,setCellValueExplicit是用来导出文本格式的。
                 //->setCellValueExplicit('C' . $k, $val['admin_password']PHPExcel_Cell_DataType::TYPE_STRING),可以用来导出数字不变格式
@@ -298,7 +301,8 @@ class RegApple extends Base
                         ->setCellValue('B' . $k, $val['apple_pass'])
                         ->setCellValue('C' . $k, $val['reg_status'])
                         ->setCellValue('D' . $k, $val['use_status'])
-                        ->setCellValue('E' . $k, $val['update_time']);
+                        ->setCellValue('E' . $k, $val['update_time'])
+                        ->setCellValue('F' . $k, $val['remark']);
                 }
                 // 修改reg_apple备用账号下载状态
                 $RegAppleModel = new RegAppleModel();
