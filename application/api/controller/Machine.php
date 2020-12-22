@@ -53,7 +53,7 @@ class Machine extends Controller
             "ProductType" => $machine_data['ProductType'],
         ];
 
-        return ['status' => 1, 'msg' => '成功获取新设备', 'machine_data' => $returnData];
+        return ['status' => 1, 'msg' => '成功获取新设备', 'data' => $returnData];
     }
 
     public function SendDeviceCert()
@@ -128,7 +128,7 @@ class Machine extends Controller
             'DeviceCert' => $machine_data['device_cert'],
         ];
 
-        return ['status' => 1, 'msg' => '成功获取新设备', 'machine_data' => $returnData];
+        return ['status' => 1, 'msg' => '成功获取新设备', 'data' => $returnData];
     }
 
 }
