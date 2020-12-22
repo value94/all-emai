@@ -274,6 +274,7 @@ class Machine extends Base
                     'ModelNumber' => $c[6],
                     'HWModelStr' => $c[7],
                     'ProductType' => $c[8],
+                    'ecid' => $c[9],
                     'create_time' => $create_time,
                     'update_time' => $update_time,
                 ];
