@@ -80,12 +80,13 @@ class MachineModel extends Model
         }
     }
 
-    public static function getDeviceByUsedCount($used_count, $sn = '')
+    public static function getDeviceByUsedCount($used_count, $sn = '', $check_cert = '')
     {
         $where = [
             ['use_count', '<=', $used_count]
         ];
         if ($sn) $where[] = ['sn', '=', $sn];
+        if ($check_cert) $where[] = ['device_cert', '!=', null];
 
 
         Db::startTrans();

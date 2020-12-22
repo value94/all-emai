@@ -9,6 +9,7 @@ use think\model\concern\SoftDelete;
 class MachineModel extends Model
 {
     use SoftDelete;
+
     protected $table = 's_machine';
 
     public function email()
@@ -21,6 +22,14 @@ class MachineModel extends Model
         $status = [0 => '未使用', 1 => '<p style="color: blue">已使用</p>', 2 => '<p style="color: red">停止使用</p>'];
         return $status[$value];
     }
+
+    /*public function getDeviceCert($value)
+    {
+        empty($value) ? $value = 1 : $value = 0;
+        $status = [0 => '未上传', 1 => '<p style="color: blue">已上传</p>', 2 => '<p style="color: red">停止使用</p>'];
+
+        return $status[$value];
+    }*/
 
     /**
      * 查询机器

@@ -106,6 +106,7 @@ class Machine extends Controller
 
         // 验证设备是否存在
         isset($params['Serial']) ? $sn = $params['Serial'] : $sn = '';
+        isset($params['ExistCert']) ? $check_cert = $params['ExistCert'] : $check_cert = '';
         if ($sn) {
             $check = MachineModel::checkMachineBySn($sn);
             if (!$check) {
@@ -114,7 +115,7 @@ class Machine extends Controller
         }
 
 
-        $machine_data = MachineModel::getDeviceByUsedCount($params['MaxUsedCount'], $sn);
+        $machine_data = MachineModel::getDeviceByUsedCount($params['MaxUsedCount'], $sn, $check_cert);
 
         $returnData = [
             "Serial" => $machine_data['sn'],

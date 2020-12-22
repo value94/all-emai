@@ -29,6 +29,12 @@ class Machine extends Base
 
             // 拼装参数
             foreach ($selectResult as $key => $vo) {
+                if (empty($vo['device_cert'])) {
+                    $selectResult[$key]['device_cert'] = '未上传';
+                }else{
+                    $selectResult[$key]['device_cert'] = '<p style="color: blue">已上传</p>';
+                }
+
                 $selectResult[$key]['email_name'] = $vo['email']['email_name'];
                 $selectResult[$key]['operate'] = showOperate($this->makeButton($vo['id']));
             }
