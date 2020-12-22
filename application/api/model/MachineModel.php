@@ -86,7 +86,7 @@ class MachineModel extends Model
             ['use_count', '<=', $used_count]
         ];
         if ($sn) $where[] = ['sn', '=', $sn];
-        if ($check_cert) $where[] = ['device_cert', '=', 'not null'];
+        if ($check_cert) $where[] = ['device_cert', 'not null',''];
 
 
         Db::startTrans();
