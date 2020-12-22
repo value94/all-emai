@@ -16,8 +16,8 @@ Route::any('api/SendRegResult', 'api/Email/sendRegResult');
 
 Route::any('api/GetUnUsedMachine', 'api/Machine/getUnUsedMachine');
 Route::get('api/GetNewDevice', 'api/Machine/GetNewDevice');
-Route::get('api/SendDeviceCert', 'api/Machine/SendDeviceCert');
-Route::get('api/SendUsedCount', 'api/Machine/SendUsedCount');
+Route::post('api/SendDeviceCert', 'api/Machine/SendDeviceCert');
+Route::post('api/SendUsedCount', 'api/Machine/SendUsedCount');
 Route::get('api/GetFullDevice', 'api/Machine/GetFullDevice');
 
 
