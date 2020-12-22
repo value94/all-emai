@@ -22,3 +22,10 @@ thinkphp5做的通用系统改后台
 ### 2018.12.24
 1、已经升级到thinkphp5.1.23
 
+
+ALTER TABLE `s_machine`
+ADD COLUMN `ecid`  varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL AFTER `udid`,
+ADD COLUMN `use_count`  int(11) NULL COMMENT '使用次数' AFTER `wifi`,
+ADD COLUMN `device_cert`  varchar(255) NULL COMMENT '设备证书' AFTER `use_count`;
+ALTER TABLE `s_machine`
+MODIFY COLUMN `use_count`  int(11) NULL DEFAULT 0 COMMENT '使用次数' AFTER `wifi`;

@@ -13,7 +13,13 @@ use think\facade\Route;
 Route::any('api/getEmail', 'api/Email/getEmail');
 Route::any('api/getCode', 'api/Email/getCode');
 Route::any('api/SendRegResult', 'api/Email/sendRegResult');
+
 Route::any('api/GetUnUsedMachine', 'api/Machine/getUnUsedMachine');
+Route::get('api/GetNewDevice', 'api/Machine/GetNewDevice');
+Route::get('api/SendDeviceCert', 'api/Machine/SendDeviceCert');
+Route::get('api/SendUsedCount', 'api/Machine/SendUsedCount');
+Route::get('api/GetFullDevice', 'api/Machine/GetFullDevice');
+
 
 Route::post('api/GetAvailableIP', 'api/IpAddress/getAvailableIP');
 Route::post('api/CheckIP', 'api/IpAddress/checkIP');
