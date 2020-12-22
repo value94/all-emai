@@ -29,3 +29,7 @@ ADD COLUMN `use_count`  int(11) NULL COMMENT '使用次数' AFTER `wifi`,
 ADD COLUMN `device_cert`  text NULL COMMENT '设备证书' AFTER `use_count`;
 ALTER TABLE `s_machine`
 MODIFY COLUMN `use_count`  int(11) NULL DEFAULT 0 COMMENT '使用次数' AFTER `wifi`;
+
+ALTER TABLE `s_machine`
+ADD COLUMN `bluetooth`  varchar(128) NULL COMMENT '蓝牙' AFTER `wifi`;
+
