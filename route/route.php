@@ -19,6 +19,7 @@ Route::get('api/GetNewDevice', 'api/Machine/GetNewDevice');
 Route::post('api/SendDeviceCert', 'api/Machine/SendDeviceCert');
 Route::post('api/SendUsedCount', 'api/Machine/SendUsedCount');
 Route::get('api/GetFullDevice', 'api/Machine/GetFullDevice');
+Route::get('api/BadDevice', 'api/Machine/BadDevice');
 
 
 Route::post('api/GetAvailableIP', 'api/IpAddress/getAvailableIP');

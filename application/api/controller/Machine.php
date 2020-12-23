@@ -10,6 +10,7 @@ namespace app\api\controller;
 
 
 use app\api\model\MachineModel;
+use app\api\validate\BadDevice;
 use app\api\validate\GetFullDevice;
 use app\api\validate\GetMachineValidate;
 use app\api\validate\SendDeviceCert;
@@ -132,4 +133,23 @@ class Machine extends Controller
         return ['status' => 1, 'msg' => '成功获取新设备', 'data' => $returnData];
     }
 
+    public function BadDevice()
+    {
+        // 数据验证
+        $params = (new BadDevice())->goCheck();
+
+        // 验证设备是否存在
+        $check = MachineModel::checkMachineBySn($params['Serial']);
+        if (!$check) {
+            throw new MachineException(['msg' => '不存在该序列号的机器信息', 'error_code' => 40004]);
+        }
+
+        // 更新设备状态
+        $result = MachineModel::update(['use_status' => 3], ['sn' => $params['Serial']]);
+        if ($result) {
+            return ['status' => 1, 'msg' => '成功'];
+        } else {
+            return ['status' => 0, 'msg' => '失败'];
+        }
+    }
 }
