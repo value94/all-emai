@@ -69,7 +69,9 @@ class MachineModel extends Model
     public static function GetNewDevice()
     {
         Db::startTrans();
-        $machine_data = self::where('device_cert', '=', null)->order('id asc')->find();
+        $machine_data = self::where('device_cert', '=', null)
+            ->where('use_status', '=', 0)
+            ->order('id asc')->find();
         if ($machine_data) {
             self::update(['use_status' => 1], ['id' => $machine_data['id']]);
             Db::commit();
