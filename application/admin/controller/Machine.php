@@ -58,6 +58,10 @@ class Machine extends Base
         if (!empty($params['udid'])) {
             $where[] = ['udid', 'like', '%' . $params['udid'] . '%'];
         }
+
+        if (!empty($params['sn'])) {
+            $where[] = ['sn', 'like', '%' . $params['sn'] . '%'];
+        }
         // 状态搜索
         if ($params['use_status'] != '') {
             $where[] = ['use_status', '=', $params['use_status']];
