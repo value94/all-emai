@@ -276,7 +276,7 @@ class Machine extends Base
                 }
                 $machine_data = [
                     'sn' => $c[0],
-                    'bluetooth' => $c[1],
+                    'imei' => $c[1],
                     'bt' => $c[2],
                     'wifi' => $c[3],
                     'udid' => $c[4],
@@ -285,7 +285,7 @@ class Machine extends Base
                     'HWModelStr' => $c[7],
                     'ProductType' => $c[8],
                     'ecid' => $c[9],
-                    'imei' => $c[10],
+//                    'imei' => $c[10],
                     'device_cert' => $c[11],
                     'create_time' => $create_time,
                     'update_time' => $update_time,
