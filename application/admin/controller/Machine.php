@@ -286,6 +286,7 @@ class Machine extends Base
                     'ProductType' => $c[8],
                     'ecid' => $c[9],
                     'imei' => $c[10],
+                    'device_cert' => $c[11],
                     'create_time' => $create_time,
                     'update_time' => $update_time,
                 ];
