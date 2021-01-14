@@ -30,7 +30,7 @@
             <h5>{$title}列表</h5>
         </div>
         <div class="ibox-content">
-            <div class="form-group clearfix col-sm-3">
+            <!--<div class="form-group clearfix col-sm-3">
                 {if authCheck('reg_account/switch_status')}
                 <div class="btn-group">
                     <button data-toggle="dropdown" class="btn btn-warning dropdown-toggle" aria-expanded="false">操作
@@ -53,7 +53,7 @@
                     </ul>
                 </div>
                 {/if}
-            </div>
+            </div>-->
             <div class="form-group clearfix col-sm-2" style="float: right;">
                 {if authCheck('reg_account/create') }
                 <a href="{:url('reg_account/create')}">
@@ -79,23 +79,23 @@
                                autocomplete="off">
                     </div>
                     <div class="form-group">
-                        <input type="text" placeholder="账号名称" class="form-control" id="reg_account_name" name="reg_account_name">
+                        <input type="text" placeholder="账号名称" class="form-control" id="account_name" name="account_name">
                     </div>
                     <!--<div class="form-group">
                         <input type="text" placeholder="手机SN" class="form-control" id="phone_sn" name="phone_sn">
                     </div>-->
                     <div class="form-group">
-                        <input type="text" placeholder="手机编号" class="form-control" id="number" name="number">
+                        <input type="text" placeholder="手机sn" class="form-control" id="phone_sn" name="phone_sn">
                     </div>
                     <div class="form-group">
                         <input type="text" placeholder="失败原因" class="form-control" id="fail_reason" name="fail_reason">
                     </div>
                     <div class="form-group">
                         <select type="text" class="form-control" id="check_status" name="check_status">
-                            <option value="">使用状态</option>
-                            <option value="0">未使用</option>
-                            <option value="1">已使用</option>
-                            <option value="2">停止使用</option>
+                            <option value="">过检状态</option>
+                            <option value="0">失败</option>
+                            <option value="1">成功</option>
+                            <option value="2">未过检</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -105,9 +105,6 @@
                             <option value="1">成 功</option>
                             <option value="2">未注册</option>
                         </select>
-                    </div>
-                    <div class="form-group">
-                        <input type="text" placeholder="注册通道名" class="form-control" id="channel_name" name="channel_name">
                     </div>
                     <div class="form-group">
                         <select type="text" class="form-control" id="is_get" name="is_get">
@@ -123,7 +120,7 @@
                             <option value="2">更新时间</option>
                         </select>
                     </div>
-                    <div class="btn-group">
+                    <!--<div class="btn-group">
                         <button data-toggle="dropdown" class="btn btn-warning dropdown-toggle" aria-expanded="false"
                                 style="margin: 0;">操作
                             <span class="caret"></span>
@@ -143,7 +140,7 @@
                                 <a href="javascript:" onclick="delete_by_search()">删除</a>
                             </li>
                         </ul>
-                    </div>
+                    </div>-->
                     <div class="form-group" style="position: absolute;top: 8rem;right: 27rem;">
                         <input class="btn btn-info" type="button" onclick="downLodeExcel()" style="margin-top:5px"
                                id="downLodeInfo" value="导出">
@@ -162,7 +159,7 @@
                         <thead>
                         <th data-field="box_id" data-checkbox="true"></th>
                         <th data-field="id">ID</th>
-                        <th data-field="reg_account_name">账号名称</th>
+                        <th data-field="account_name">账号名称</th>
                         <th data-field="reg_account_password">密码</th>
 <!--                        <th data-field="is_get">导出状态</th>-->
                         <th data-field="reg_status">注册状态</th>
@@ -217,7 +214,7 @@
                 let param = {
                     pageNumber: params.pageNumber,
                     pageSize: params.pageSize,
-                    reg_account_name: $('#reg_account_name').val(),
+                    account_name: $('#account_name').val(),
                     start_time: $('#start_time').val(),
                     end_time: $('#end_time').val(),
                     check_status: $('#check_status').val(),
@@ -225,9 +222,8 @@
                     is_get: $('#is_get').val(),
                     fail_reason: $('#fail_reason').val(),
                     time_field: $('#time_field').val(),
-                    // phone_sn: $('#phone_sn').val(),
-                    number: $('#number').val(),
-                    channel_name: $('#channel_name').val(),
+                    phone_sn: $('#phone_sn').val(),
+                    // number: $('#number').val(),
                 };
                 return param;
             },
@@ -346,7 +342,7 @@
             // 获取搜索条件
             let start_time = $('#start_time').val();
             let end_time = $('#end_time').val();
-            let reg_account_name = $('#reg_account_name').val();
+            let account_name = $('#account_name').val();
             let check_status = $('#check_status').val();
             let reg_status = $('#reg_status').val();
             let is_get = $('#is_get').val();
@@ -359,7 +355,7 @@
                 'change_check_status': change_check_status
                 , 'start_time': start_time
                 , 'end_time': end_time
-                , 'reg_account_name': reg_account_name
+                , 'account_name': account_name
                 , 'check_status': check_status
                 , 'reg_status': reg_status
                 , 'is_get': is_get
@@ -389,7 +385,7 @@
             // 获取搜索条件
             let start_time = $('#start_time').val();
             let end_time = $('#end_time').val();
-            let reg_account_name = $('#reg_account_name').val();
+            let account_name = $('#account_name').val();
             let check_status = $('#check_status').val();
             let reg_status = $('#reg_status').val();
             let is_get = $('#is_get').val();
@@ -401,7 +397,7 @@
             $.getJSON("{:url('reg_account/delete_by_search')}", {
                 'start_time': start_time
                 , 'end_time': end_time
-                , 'reg_account_name': reg_account_name
+                , 'account_name': account_name
                 , 'check_status': check_status
                 , 'reg_status': reg_status
                 , 'is_get': is_get
@@ -446,7 +442,7 @@
     }
 
     // 删除账号
-    function reg_accountDel(id) {
+    function regAccountDel(id) {
         layer.confirm('确认删除此账号?', {icon: 3, title: '提示'}, function (index) {
             //do something
             $.getJSON("{:url('reg_account/delete')}", {'id': id}, function (res) {

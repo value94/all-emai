@@ -362,26 +362,26 @@ class RegAccount extends Base
 
             // 切换成停止状态
             if (isset($data['check_status']) && $data['check_status'] == 2) {
-                RegAccountModel::update(['check_status' => 2], ['id' => $data['id']]);
+                RegAccountModel::update(['check_status' => 2], ['id' => $data['reg_account_id']]);
                 return $result;
             }
 
             // 切换选中账号状态
             if (isset($data['change_check_status'])) {
                 RegAccountModel::update(['check_status' => $data['change_check_status']],
-                    ['id' => $data['id']]);
+                    ['id' => $data['reg_account_id']]);
                 return $result;
             }
 
             // 切换账号状态
             $used_id = RegAccountModel::where([
                 ['check_status', 'in', '1,2'],
-                ['id', 'in', $data['id']]
+                ['id', 'in', $data['reg_account_id']]
             ])->column('id');
 
             $un_use = RegAccountModel::where([
                 ['check_status', 'in', '0,2'],
-                ['id', 'in', $data['id']]
+                ['id', 'in', $data['reg_account_id']]
             ])->column('id');
 
             if (!empty($used_id)) {
@@ -424,7 +424,7 @@ class RegAccount extends Base
             ],
             '删除' => [
                 'auth' => 'reg_account/delete',
-                'href' => "javascript:reg_accountDel(" . $id . ")",
+                'href' => "javascript:regAccountDel(" . $id . ")",
                 'btnStyle' => 'danger',
                 'icon' => 'fa fa-trash-o',
             ],
