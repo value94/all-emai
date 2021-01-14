@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{$title}列表</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="__CSS__/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="__CSS__/font-awesome.min.css?v=4.4.0" rel="stylesheet">
+    <link href="__CSS__/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <link href="__CSS__/animate.min.css" rel="stylesheet">
+    <link href="__CSS__/style.min.css?v=4.1.0" rel="stylesheet">
+    <link href="__CSS__/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+</head>
+<style>
+    .jumpto input {
+        height: 31px;
+        width: 50px;
+        margin-left: 5px;
+        margin-right: 5px;
+        text-align: center;
+        display: inline-block;
+    }
+</style>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <!-- Panel Other -->
+    <div class="ibox float-e-margins">
+        <div class="ibox-title">
+            <h5>{$title}列表</h5>
+        </div>
+        <div class="ibox-content">
+            <div class="form-group clearfix col-sm-3">
+                {if authCheck('reg_account/switch_status')}
+                <div class="btn-group">
+                    <button data-toggle="dropdown" class="btn btn-warning dropdown-toggle" aria-expanded="false">操作
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" style="left: 0">
+                        <li>
+                            <a href="javascript:" onclick="switch_choice_status(0)">未使用</a>
+                        </li>
+                        <li>
+                            <a href="javascript:" onclick="switch_choice_status(1)">已使用</a>
+                        </li>
+                        <li>
+                            <a href="javascript:" onclick="switch_choice_status(2)">停止使用</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="javascript:" onclick="reg_accountDelMore()">删除</a>
+                        </li>
+                    </ul>
+                </div>
+                {/if}
+            </div>
+            <div class="form-group clearfix col-sm-2" style="float: right;">
+                {if authCheck('reg_account/create') }
+                <a href="{:url('reg_account/create')}">
+                    <button class="btn btn-outline btn-primary" type="button">添加{$title}</button>
+                </a>
+                {/if}
+                {if authCheck('reg_account/import_reg_account') }
+                <a href="{:url('reg_account/import_reg_account')}">
+                    <button class="btn btn-outline btn-success" type="button">导入{$title}</button>
+                </a>
+                {/if}
+            </div>
+            <!--搜索框开始-->
+            <form id='commentForm' role="form" method="post" action="{:url('reg_account/download_excel')}"
+                  class="form-inline pull-right">
+                <input type="hidden" name="rows" id="rows">
+                <input type="hidden" name="down_password" id="down_password_new">
+                <div class="content clearfix m-b">
+                    <div class="form-group">
+                        <input placeholder="开始时间" class="form-control layer-date" id="start_time" name="start_time"
+                               autocomplete="off">
+                        <input placeholder="结束时间" class="form-control layer-date" id="end_time" name="end_time"
+                               autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" placeholder="账号名称" class="form-control" id="reg_account_name" name="reg_account_name">
+                    </div>
+                    <!--<div class="form-group">
+                        <input type="text" placeholder="手机SN" class="form-control" id="phone_sn" name="phone_sn">
+                    </div>-->
+                    <div class="form-group">
+                        <input type="text" placeholder="手机编号" class="form-control" id="number" name="number">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" placeholder="失败原因" class="form-control" id="fail_reason" name="fail_reason">
+                    </div>
+                    <div class="form-group">
+                        <select type="text" class="form-control" id="check_status" name="check_status">
+                            <option value="">使用状态</option>
+                            <option value="0">未使用</option>
+                            <option value="1">已使用</option>
+                            <option value="2">停止使用</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <select type="text" class="form-control" id="reg_status" name="reg_status">
+                            <option value="">注册状态</option>
+                            <option value="0">失 败</option>
+                            <option value="1">成 功</option>
+                            <option value="2">未注册</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" placeholder="注册通道名" class="form-control" id="channel_name" name="channel_name">
+                    </div>
+                    <div class="form-group">
+                        <select type="text" class="form-control" id="is_get" name="is_get">
+                            <option value="">导出状态</option>
+                            <option value="0">未导出</option>
+                            <option value="1">已导出</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <select type="text" class="form-control" id="time_field" name="time_field">
+                            <option value="">时间字段</option>
+                            <option value="1">创建时间</option>
+                            <option value="2">更新时间</option>
+                        </select>
+                    </div>
+                    <div class="btn-group">
+                        <button data-toggle="dropdown" class="btn btn-warning dropdown-toggle" aria-expanded="false"
+                                style="margin: 0;">操作
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" style="left: 0">
+                            <li>
+                                <a href="javascript:" onclick="switch_by_search(0)">未使用</a>
+                            </li>
+                            <li>
+                                <a href="javascript:" onclick="switch_by_search(1)">已使用</a>
+                            </li>
+                            <li>
+                                <a href="javascript:" onclick="switch_by_search(2)">停止使用</a>
+                            </li>
+                            <li class="divider"></li>
+                            <li>
+                                <a href="javascript:" onclick="delete_by_search()">删除</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="form-group" style="position: absolute;top: 8rem;right: 27rem;">
+                        <input class="btn btn-info" type="button" onclick="downLodeExcel()" style="margin-top:5px"
+                               id="downLodeInfo" value="导出">
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-primary" type="button" style="margin-top:5px" id="search">
+                            <strong>搜索</strong>
+                        </button>
+                    </div>
+                </div>
+            </form>
+            <!--搜索框结束-->
+            <div class="example-wrap">
+                <div class="example">
+                    <table id="cusTable" data-show-jumpto="true" class="table table-hover">
+                        <thead>
+                        <th data-field="box_id" data-checkbox="true"></th>
+                        <th data-field="id">ID</th>
+                        <th data-field="reg_account_name">账号名称</th>
+                        <th data-field="reg_account_password">密码</th>
+<!--                        <th data-field="is_get">导出状态</th>-->
+                        <th data-field="reg_status">注册状态</th>
+                        <th data-field="fail_reason">失败原因</th>
+                        <th data-field="phone_sn">手机编号</th>
+                        <th data-field="phone_number">手机号</th>
+                        <th data-field="create_time">创建时间</th>
+                        <th data-field="update_time">更新时间</th>
+                        <th data-field="operate">操作</th>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+            <!-- End Example Pagination -->
+        </div>
+    </div>
+</div>
+<!-- End Panel Other -->
+<script src="__JS__/jquery.min.js?v=2.1.4"></script>
+<script src="__JS__/bootstrap.min.js?v=3.3.6"></script>
+<script src="__JS__/content.min.js?v=1.0.0"></script>
+<script src="__JS__/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="__JS__/plugins/bootstrap-table/bootstrap-table-jumpto.js"></script>
+<script src="__JS__/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+<script src="__JS__/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<!--<script src="__JS__/plugins/suggest/bootstrap-suggest.min.js"></script>-->
+<script src="__JS__/plugins/layer-new/layer.min.js"></script>
+<script src="__JS__/plugins/layer-new/laydate/laydate.js"></script>
+<!--<script src="__JS__/plugins/sweetalert/sweetalert.min.js"></script>-->
+<script type="text/javascript">
+    function initTable() {
+        //先销毁表格
+        $('#cusTable').bootstrapTable('destroy');
+        //初始化表格,动态从服务器加载数据
+        $("#cusTable").bootstrapTable({
+            method: "get",  //使用get请求到服务器获取数据
+            url: "./index", //获取数据的地址
+            striped: true,  //表格显示条纹
+            pagination: true, //启动分页
+            pageSize: 10,  //每页显示的记录数
+            pageNumber: 1, //当前第几页
+            pageList: [5, 10, 15, 20, 25],  //记录数可选列表
+            sidePagination: "server", //表示服务端请求
+            search: false,
+            singleSelect: false,
+            paginationFirstText: "首页",
+            paginationPreText: "上一页",
+            paginationNextText: "下一页",
+            paginationLastText: "尾页",
+            queryParamsType: "undefined",
+            queryParams: function queryParams(params) {   //设置查询参数
+                let param = {
+                    pageNumber: params.pageNumber,
+                    pageSize: params.pageSize,
+                    reg_account_name: $('#reg_account_name').val(),
+                    start_time: $('#start_time').val(),
+                    end_time: $('#end_time').val(),
+                    check_status: $('#check_status').val(),
+                    reg_status: $('#reg_status').val(),
+                    is_get: $('#is_get').val(),
+                    fail_reason: $('#fail_reason').val(),
+                    time_field: $('#time_field').val(),
+                    // phone_sn: $('#phone_sn').val(),
+                    number: $('#number').val(),
+                    channel_name: $('#channel_name').val(),
+                };
+                return param;
+            },
+            onLoadSuccess: function (res) {  //加载成功时执行
+                if (111 == res.code) {
+                    window.location.reload();
+                }
+                layer.msg("加载成功", {time: 1000});
+            },
+            onLoadError: function () {  //加载失败时执行
+                layer.msg("加载数据失败");
+            }
+        });
+    }
+
+    // 页面初始化
+    $(document).ready(function () {
+        //调用函数，初始化表格
+        initTable();
+        //当点击查询按钮的时候执行
+        $("#search").bind("click", initTable);
+    });
+
+    // 导出搜索订单
+    let $table = $('#cusTable');
+
+    function downLodeExcel() {
+        layer.prompt({title: '请输入导出数量,为空导出全部', formType: 0, allowBlank: true,}, function (pass, index, elem) {
+                // 判断是否为正整数
+                if (pass && !(/(^[1-9]\d*$)/.test(pass))) {
+                    layer.msg("请输入正整数");
+                    return;
+                }
+                // 设置行数
+                $('#rows').val(pass);
+                // 获取是否下载密码
+                let down_password =$('input:radio:checked').val();
+                $('#down_password_new').val(down_password);
+
+                let form = document.getElementById('commentForm');
+                form.submit();
+                layer.close(index);
+
+            }
+        );
+        $(".layui-layer-content").append("<br/><div style='font-size: 1.3rem;font-weight: 500;margin-left: 1rem;'>" +
+            "<input id='down_password' type='radio' value='0' name='down_password' checked>不导出密码</label>" +
+            "<input id='down_password' type='radio' value='1' name='down_password' style='margin-left: 1.5rem'>导出密码</label>" +
+            "</div>");
+
+    }
+
+
+    // 切换选中账号状态
+    function switch_choice_status(change_check_status = '') {
+        if ($table.bootstrapTable('getAllSelections').length == 0) {
+            layer.alert('请勾选账号', {title: '友情提示', icon: 2});
+            return;
+        }
+        layer.confirm('确认切换账号状态', {icon: 3, title: '提示'}, function (index) {
+            //do something
+            let reg_account = $table.bootstrapTable('getAllSelections');
+            let reg_account_id = [];
+            for (let i = 0; i < reg_account.length; i++) {
+                reg_account_id[i] = reg_account[i]['id'];
+            }
+            $.getJSON("{:url('reg_account/switch_status')}", {
+                'reg_account_id': reg_account_id, 'change_check_status': change_check_status
+            }, function (res) {
+                if (1 == res.code) {
+                    layer.alert(res.msg, {title: '友情提示', icon: 1, closeBtn: 0}, function () {
+                        initTable();
+                    });
+                } else if (111 == res.code) {
+                    window.location.reload();
+                } else {
+                    layer.alert(res.msg, {title: '友情提示', icon: 2});
+                }
+            });
+
+            layer.close(index);
+        })
+    }
+
+    // 删除选中账号
+    function reg_accountDelMore() {
+        if ($table.bootstrapTable('getAllSelections').length == 0) {
+            layer.alert('请勾选账号', {title: '友情提示', icon: 2});
+            return;
+        }
+        layer.confirm('确认删除账号', {icon: 3, title: '提示'}, function (index) {
+            //do something
+            let reg_account = $table.bootstrapTable('getAllSelections');
+            let reg_account_id = [];
+            for (let i = 0; i < reg_account.length; i++) {
+                reg_account_id[i] = reg_account[i]['id'];
+            }
+            $.getJSON("{:url('reg_account/delete')}", {'ids': reg_account_id}, function (res) {
+                if (1 == res.code) {
+                    layer.alert(res.msg, {title: '友情提示', icon: 1, closeBtn: 0}, function () {
+                        window.location.reload();
+                    });
+                } else if (111 == res.code) {
+                    window.location.reload();
+                } else {
+                    layer.alert(res.msg, {title: '友情提示', icon: 2});
+                }
+            });
+            layer.close(index);
+        })
+    }
+
+    // 切换搜索账号状态
+    function switch_by_search(change_check_status = '') {
+        layer.confirm('确认切换搜素账号状态', {icon: 3, title: '提示'}, function (index) {
+            // 获取搜索条件
+            let start_time = $('#start_time').val();
+            let end_time = $('#end_time').val();
+            let reg_account_name = $('#reg_account_name').val();
+            let check_status = $('#check_status').val();
+            let reg_status = $('#reg_status').val();
+            let is_get = $('#is_get').val();
+            let time_field = $('#time_field').val();
+            // let phone_sn = $('#phone_sn').val();
+            let number = $('#number').val();
+            let channel_name = $('#channel_name').val();
+
+            $.getJSON("{:url('reg_account/switch_by_search')}", {
+                'change_check_status': change_check_status
+                , 'start_time': start_time
+                , 'end_time': end_time
+                , 'reg_account_name': reg_account_name
+                , 'check_status': check_status
+                , 'reg_status': reg_status
+                , 'is_get': is_get
+                , 'time_field': time_field
+                // , 'phone_sn': phone_sn
+                , 'number': number
+                , 'channel_name': channel_name
+            }, function (res) {
+                if (1 == res.code) {
+                    layer.alert(res.msg, {title: '友情提示', icon: 1, closeBtn: 0}, function () {
+                        window.location.reload();
+                    });
+                } else if (111 == res.code) {
+                    window.location.reload();
+                } else {
+                    layer.alert(res.msg, {title: '友情提示', icon: 2});
+                }
+            });
+
+            layer.close(index);
+        })
+    }
+
+    // 删除搜索账号
+    function delete_by_search() {
+        layer.confirm('确认删除搜索账号', {icon: 3, title: '提示'}, function (index) {
+            // 获取搜索条件
+            let start_time = $('#start_time').val();
+            let end_time = $('#end_time').val();
+            let reg_account_name = $('#reg_account_name').val();
+            let check_status = $('#check_status').val();
+            let reg_status = $('#reg_status').val();
+            let is_get = $('#is_get').val();
+            let time_field = $('#time_field').val();
+            // let phone_sn = $('#phone_sn').val();
+            let number = $('#number').val();
+            let channel_name = $('#channel_name').val();
+
+            $.getJSON("{:url('reg_account/delete_by_search')}", {
+                'start_time': start_time
+                , 'end_time': end_time
+                , 'reg_account_name': reg_account_name
+                , 'check_status': check_status
+                , 'reg_status': reg_status
+                , 'is_get': is_get
+                , 'time_field': time_field
+                // , 'phone_sn': phone_sn
+                , 'number': number
+                , 'channel_name': channel_name
+            }, function (res) {
+                if (1 == res.code) {
+                    layer.alert(res.msg, {title: '友情提示', icon: 1, closeBtn: 0}, function () {
+                        initTable();
+                    });
+                } else if (111 == res.code) {
+                    window.location.reload();
+                } else {
+                    layer.alert(res.msg, {title: '友情提示', icon: 2});
+                }
+            });
+            layer.close(index);
+        })
+    }
+
+    // 切换状态
+    function switch_status(id, check_status = '') {
+        layer.confirm('确认切换状态?', {icon: 3, title: '提示'}, function (index) {
+            //do something
+            $.getJSON("{:url('reg_account/switch_status')}", {'reg_account_id': id, 'check_status': check_status}, function (res) {
+                if (1 == res.code) {
+                    layer.alert(res.msg, {title: '友情提示', icon: 1, closeBtn: 0}, function () {
+                        initTable();
+                    });
+                } else if (111 == res.code) {
+                    window.location.reload();
+                } else {
+                    layer.alert(res.msg, {title: '友情提示', icon: 2});
+                }
+            });
+
+            layer.close(index);
+        })
+
+    }
+
+    // 删除账号
+    function reg_accountDel(id) {
+        layer.confirm('确认删除此账号?', {icon: 3, title: '提示'}, function (index) {
+            //do something
+            $.getJSON("{:url('reg_account/delete')}", {'id': id}, function (res) {
+                if (1 == res.code) {
+                    layer.alert(res.msg, {title: '友情提示', icon: 1, closeBtn: 0}, function () {
+                        initTable();
+                    });
+                } else if (111 == res.code) {
+                    window.location.reload();
+                } else {
+                    layer.alert(res.msg, {title: '友情提示', icon: 2});
+                }
+            });
+
+            layer.close(index);
+        })
+
+    }
+
+    // 时间选择
+    laydate.render({
+        elem: "#start_time"
+        , type: 'datetime'
+    });
+
+    laydate.render({
+        elem: "#end_time"
+        , type: 'datetime'
+    });
+</script>
+</body>
+</html>
