@@ -10,10 +10,17 @@
 // +----------------------------------------------------------------------
 use think\facade\Route;
 
+# 邮箱注册
 Route::any('api/getEmail', 'api/Email/getEmail');
 Route::any('api/getCode', 'api/Email/getCode');
-Route::any('api/SendRegResult', 'api/Email/sendRegResult');
+Route::any('api/SendRegByEmailResult', 'api/Email/sendRegResult');
 
+# 账号注册
+Route::any('api/getAccount', 'api/RegAccount/getAccount');
+Route::any('api/SendRegResult', 'api/RegAccount/sendRegResult');
+Route::any('api/SetCheckAccountStatus', 'api/RegAccount/SetCheckAccountStatus');
+
+# 机器操作
 Route::any('api/GetUnUsedMachine', 'api/Machine/getUnUsedMachine');
 Route::get('api/GetNewDevice', 'api/Machine/GetNewDevice');
 Route::post('api/SendDeviceCert', 'api/Machine/SendDeviceCert');
@@ -35,9 +42,9 @@ Route::post('api/SetAccountCanUse', 'api/Apple/setAccountCanUse');
 Route::post('api/GetRegAppleAccount', 'api/RegApple/getRegAppleAccount');
 Route::post('api/SetRegAccountStatus', 'api/RegApple/setRegAccountStatus');
 
-// 带过检账号
+// 待过检账号
 Route::post('api/GetCheckAppleAccount', 'api/CheckApple/getCheckAppleAccount');
-Route::post('api/SetCheckAccountStatus', 'api/CheckApple/setCheckAccountStatus');
+//Route::post('api/SetCheckAccountStatus', 'api/CheckApple/setCheckAccountStatus');
 
 // 程序版本
 Route::post('api/CheckVersions', 'api/Versions/CheckVersions');

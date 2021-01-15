@@ -10,6 +10,27 @@ use think\Request;
 
 class RegAccount extends Base
 {
+    private $apple_questions = [
+        130 => '你少年时代最好的朋友叫什么名字？',
+        131 => '你的第一个宠物叫什么名字？',
+        132 => '你学会做的第一道菜是什么？',
+        133 => '你第一次去电影院看的是哪一部电影？',
+        134 => '你第一次坐飞机是去哪里？',
+        135 => '你上小学时最喜欢的老师姓什么？',
+        136 => '你的理想工作是什么？',
+        137 => '你小时候最喜欢哪一本书？',
+        138 => '你拥有的第一辆车是什么型号？',
+        139 => '你童年时代的绰号是什么？',
+        140 => '你在学生时代最喜欢哪个电影明星或角色？',
+        141 => '你在学生时代最喜欢哪个歌手或乐队？',
+        142 => '你的父母是在哪里认识的？',
+        143 => '你的第一个上司叫什么名字？',
+        144 => '您从小长大的那条街叫什么？',
+        145 => '你去过的第一个海滨浴场是哪一个？',
+        146 => '你购买的第一张专辑是什么？',
+        147 => '您最喜欢哪个球队？',
+    ];
+
     /**
      * 显示资源列表
      *
@@ -128,6 +149,7 @@ class RegAccount extends Base
         }
 
         $this->assign([
+            'apple_questions' => $this->apple_questions,
             'data' => $RegAccount->getOneRegAccount($id),
         ]);
 
@@ -239,24 +261,26 @@ class RegAccount extends Base
                     'account_name' => $c[0],
                     'account_password' => $c[1],
                     'birthday' => $c[2],
-                    'question1' => $c[3],
+                    'question1' => array_search($c[3], $this->apple_questions),
                     'answer1' => $c[4],
-                    'question2' => $c[5],
+                    'question2' => array_search($c[5], $this->apple_questions),
                     'answer2' => $c[6],
-                    'question3' => $c[7],
+                    'question3' => array_search($c[7], $this->apple_questions),
                     'answer3' => $c[8],
                     'create_time' => $create_time,
                     'update_time' => $update_time,
                 ];
-                $result = Db::table('s_reg_account')->insert($reg_accounts, "IGNORE");
-                if ($result == 1) {
-                    $success_count++;
-                } else {
-                    $error_count++;
+                if ($reg_accounts['question1'] && $reg_accounts['question2'] && $reg_accounts['question3']) {
+                    $result = Db::table('s_reg_account')->insert($reg_accounts, "IGNORE");
+                    if ($result == 1) {
+                        $success_count++;
+                    } else {
+                        $error_count++;
+                    }
                 }
             }
 
-            $this->success('批量添加成功,共导入' . $success_count . ' 条,已存在' . $error_count . ' 条。');
+            $this->success('批量添加成功,共导入' . $success_count . ' 条,失败' . $error_count . ' 条。请检查密保问题是否正确');
         }
 
         return $this->fetch();
@@ -271,79 +295,76 @@ class RegAccount extends Base
         $where = $this->getWhereByParams($params);
 
         // 导出文件
-        if (!empty($where)) {
-            // 搜索数据
-            $RegAccount = new RegAccountModel();
-            // 判断是否有行数限制
-            $rows = '';
-            $offset = '';
-            if (!empty($params['rows'])) {
-                $offset = 0;
-                $rows = $params['rows'];
-            }
-            $excel_data = $RegAccount->getRegAccountByWhere($where, $offset, $rows);
-
-            if ($excel_data) {
-                // 创建表
-                $newExcel = new Spreadsheet();  //创建一个新的excel文档
-                $objSheet = $newExcel->getActiveSheet();  //获取当前操作sheet的对象
-                $objSheet->setTitle('账号信息表');  //设置当前sheet的标题
-
-                //设置宽度为true,不然太窄了
-                $newExcel->getActiveSheet()->getColumnDimension('A')->setAutoSize(true);
-                $newExcel->getActiveSheet()->getColumnDimension('B')->setWidth(20);
-                $newExcel->getActiveSheet()->getColumnDimension('C')->setWidth(20);
-                $newExcel->getActiveSheet()->getColumnDimension('D')->setAutoSize(true);
-                $newExcel->getActiveSheet()->getColumnDimension('E')->setAutoSize(true);
-                $newExcel->getActiveSheet()->getColumnDimension('F')->setWidth(30);
-                $newExcel->getActiveSheet()->getColumnDimension('G')->setWidth(10);
-                $newExcel->getActiveSheet()->getColumnDimension('H')->setWidth(30);
-                $newExcel->getActiveSheet()->getColumnDimension('I')->setWidth(10);
-                $newExcel->getActiveSheet()->getColumnDimension('J')->setWidth(30);
-                $newExcel->getActiveSheet()->getColumnDimension('K')->setWidth(10);
-
-                //设置第一栏的标题
-                $objSheet->setCellValue('A1', '账号')
-                    ->setCellValue('B1', '')
-                    ->setCellValue('C1', '')
-                    ->setCellValue('D1', '密码')
-                    ->setCellValue('E1', '出生年月')
-                    ->setCellValue('F1', '问题1')
-                    ->setCellValue('G1', '答案1')
-                    ->setCellValue('H1', '问题2')
-                    ->setCellValue('I1', '答案2')
-                    ->setCellValue('J1', '问题3')
-                    ->setCellValue('K1', '答案3')
-                    ->setCellValue('K1', '绑定手机号');
-
-
-                //第二行起，每一行的值,setCellValueExplicit是用来导出文本格式的。
-                //->setCellValueExplicit('C' . $k, $val['admin_password']PHPExcel_Cell_DataType::TYPE_STRING),可以用来导出数字不变格式
-                foreach ($excel_data as $k => $val) {
-                    $k = $k + 2;
-                    $objSheet->setCellValue('A' . $k, $val['account_name'])
-                        ->setCellValue('B' . $k, '')
-                        ->setCellValue('C' . $k, '')
-                        ->setCellValue('D' . $k, $val['account_password'])
-                        ->setCellValue('E' . $k, $val['birthday'])
-                        ->setCellValue('F' . $k, $val['question1'])
-                        ->setCellValue('G' . $k, $val['answer1'])
-                        ->setCellValue('H' . $k, $val['question2'])
-                        ->setCellValue('I' . $k, $val['answer2'])
-                        ->setCellValue('J' . $k, $val['question3'])
-                        ->setCellValue('K' . $k, $val['phone_number']);
-
-                }
-                // 修改账号下载状态
-                $reg_accountModel = new RegAccountModel();
-                $reg_accountModel->isAutoWriteTimestamp(false)->save(['is_get' => 1], $where);
-                downloadExcel($newExcel, '账号数据表', 'Xls');
-            } else {
-                $this->error('该搜索条件没有能导出的数据');
-            }
-        } else {
-            $this->error('请选择搜索条件');
+        // 搜索数据
+        $RegAccount = new RegAccountModel();
+        // 判断是否有行数限制
+        $rows = '';
+        $offset = '';
+        if (!empty($params['rows'])) {
+            $offset = 0;
+            $rows = $params['rows'];
         }
+        $excel_data = $RegAccount->getRegAccountByWhere($where, $offset, $rows);
+
+        if ($excel_data) {
+            // 创建表
+            $newExcel = new Spreadsheet();  //创建一个新的excel文档
+            $objSheet = $newExcel->getActiveSheet();  //获取当前操作sheet的对象
+            $objSheet->setTitle('账号信息表');  //设置当前sheet的标题
+
+            //设置宽度为true,不然太窄了
+            $newExcel->getActiveSheet()->getColumnDimension('A')->setAutoSize(true);
+            $newExcel->getActiveSheet()->getColumnDimension('B')->setWidth(20);
+            $newExcel->getActiveSheet()->getColumnDimension('C')->setWidth(20);
+            $newExcel->getActiveSheet()->getColumnDimension('D')->setAutoSize(true);
+            $newExcel->getActiveSheet()->getColumnDimension('E')->setAutoSize(true);
+            $newExcel->getActiveSheet()->getColumnDimension('F')->setWidth(30);
+            $newExcel->getActiveSheet()->getColumnDimension('G')->setWidth(10);
+            $newExcel->getActiveSheet()->getColumnDimension('H')->setWidth(30);
+            $newExcel->getActiveSheet()->getColumnDimension('I')->setWidth(10);
+            $newExcel->getActiveSheet()->getColumnDimension('J')->setWidth(30);
+            $newExcel->getActiveSheet()->getColumnDimension('K')->setWidth(10);
+
+            //设置第一栏的标题
+            $objSheet->setCellValue('A1', '账号')
+                ->setCellValue('B1', '')
+                ->setCellValue('C1', '')
+                ->setCellValue('D1', '密码')
+                ->setCellValue('E1', '出生年月')
+                ->setCellValue('F1', '问题1')
+                ->setCellValue('G1', '答案1')
+                ->setCellValue('H1', '问题2')
+                ->setCellValue('I1', '答案2')
+                ->setCellValue('J1', '问题3')
+                ->setCellValue('K1', '答案3')
+                ->setCellValue('K1', '绑定手机号');
+
+
+            //第二行起，每一行的值,setCellValueExplicit是用来导出文本格式的。
+            //->setCellValueExplicit('C' . $k, $val['admin_password']PHPExcel_Cell_DataType::TYPE_STRING),可以用来导出数字不变格式
+            foreach ($excel_data as $k => $val) {
+                $k = $k + 2;
+                $objSheet->setCellValue('A' . $k, $val['account_name'])
+                    ->setCellValue('B' . $k, '')
+                    ->setCellValue('C' . $k, '')
+                    ->setCellValue('D' . $k, $val['account_password'])
+                    ->setCellValue('E' . $k, $val['birthday'])
+                    ->setCellValue('F' . $k, $this->apple_questions[$val['question1']])
+                    ->setCellValue('G' . $k, $val['answer1'])
+                    ->setCellValue('H' . $k, $this->apple_questions[$val['question2']])
+                    ->setCellValue('I' . $k, $val['answer2'])
+                    ->setCellValue('J' . $k, $this->apple_questions[$val['question3']])
+                    ->setCellValue('K' . $k, $val['phone_number']);
+
+            }
+            // 修改账号下载状态
+            $reg_accountModel = new RegAccountModel();
+            $reg_accountModel->isAutoWriteTimestamp(false)->save(['is_get' => 1], $where);
+            downloadExcel($newExcel, '账号数据表', 'Xls');
+        } else {
+            $this->error('该搜索条件没有能导出的数据');
+        }
+
     }
 
     /**
@@ -404,8 +425,8 @@ class RegAccount extends Base
     private function makeButton($id)
     {
         return [
-            '切换' => [
-                'auth' => 'reg_account/switch_status',
+            /*'切换' => [
+                'auth' => 'regAccount/switch_status',
                 'href' => "javascript:switch_status(" . $id . ")",
                 'btnStyle' => 'info',
                 'icon' => 'fa fa-check-circle',
@@ -415,15 +436,15 @@ class RegAccount extends Base
                 'href' => "javascript:switch_status(" . $id . ",2)",
                 'btnStyle' => 'warning',
                 'icon' => 'fa fa-close',
-            ],
+            ],*/
             '编辑' => [
-                'auth' => 'reg_account/edit',
+                'auth' => 'regAccount/edit',
                 'href' => url('reg_account/edit', ['id' => $id]),
                 'btnStyle' => 'primary',
                 'icon' => 'fa fa-paste',
             ],
             '删除' => [
-                'auth' => 'reg_account/delete',
+                'auth' => 'regAccount/delete',
                 'href' => "javascript:regAccountDel(" . $id . ")",
                 'btnStyle' => 'danger',
                 'icon' => 'fa fa-trash-o',

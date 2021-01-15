@@ -12,9 +12,10 @@ namespace app\api\validate;
 class SendRegResultValidate extends BaseValidate
 {
     protected $rule = [
-        "email_name" => "require",
-        "phone_sn" => "require",
-        "reg_status" => "require|in:1,2,0",
+        "account_name" => "require",
+//        "phone_sn" => "require",
+        "check_status" => "in:1,2,0",
+        "reg_status" => "in:1,2,0"
     ];
 
 }

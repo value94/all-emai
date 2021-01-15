@@ -9,6 +9,7 @@ use think\model\concern\SoftDelete;
 class RegAccountModel extends Model
 {
     use SoftDelete;
+
     protected $table = 's_reg_account';
     protected $autoWriteTimestamp = false;
 
@@ -20,7 +21,7 @@ class RegAccountModel extends Model
 
     public function getRegStatusAttr($value)
     {
-        $status = [0 => '<p style="color: red">失败</p>', 1 => '成功', 2 => '未使用'];
+        $status = [0 => '<p style="color: red">失败</p>', 1 => '成功', 2 => '未使用', 3 => '已获取'];
         return $status[$value];
     }
 

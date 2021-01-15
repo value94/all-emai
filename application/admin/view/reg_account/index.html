@@ -54,15 +54,15 @@
                 </div>
                 {/if}
             </div>-->
-            <div class="form-group clearfix col-sm-2" style="float: right;">
+            <div class="form-group clearfix col-sm-1" style="float: right;">
                 {if authCheck('reg_account/create') }
                 <a href="{:url('reg_account/create')}">
-                    <button class="btn btn-outline btn-primary" type="button">添加{$title}</button>
+                    <button class="btn btn-outline btn-primary" type="button">添加</button>
                 </a>
                 {/if}
                 {if authCheck('regAccount/import_reg_account') }
                 <a href="{:url('regAccount/import_reg_account')}">
-                    <button class="btn btn-outline btn-success" type="button">导入{$title}</button>
+                    <button class="btn btn-success" type="button">导入</button>
                 </a>
                 {/if}
             </div>
@@ -141,8 +141,8 @@
                             </li>
                         </ul>
                     </div>-->
-                    <div class="form-group" style="position: absolute;top: 8rem;right: 27rem;">
-                        <input class="btn btn-info" type="button" onclick="downLodeExcel()" style="margin-top:5px"
+                    <div class="form-group" style="position: absolute;top: 8rem;right: 15rem;">
+                        <input class="btn btn-info" type="button" onclick="downLodeExcel()" style="margin-top:4px"
                                id="downLodeInfo" value="导出">
                     </div>
                     <div class="form-group">
@@ -160,11 +160,13 @@
                         <th data-field="box_id" data-checkbox="true"></th>
                         <th data-field="id">ID</th>
                         <th data-field="account_name">账号名称</th>
-                        <th data-field="reg_account_password">密码</th>
+                        <th data-field="account_password">密码</th>
 <!--                        <th data-field="is_get">导出状态</th>-->
                         <th data-field="reg_status">注册状态</th>
+                        <th data-field="check_status">过检状态</th>
                         <th data-field="fail_reason">失败原因</th>
-                        <th data-field="phone_sn">手机编号</th>
+                        <th data-field="phone_sn">手机sn</th>
+                        <th data-field="fake_sn">假sn</th>
                         <th data-field="phone_number">手机号</th>
                         <th data-field="create_time">创建时间</th>
                         <th data-field="update_time">更新时间</th>
@@ -269,11 +271,6 @@
 
             }
         );
-        $(".layui-layer-content").append("<br/><div style='font-size: 1.3rem;font-weight: 500;margin-left: 1rem;'>" +
-            "<input id='down_password' type='radio' value='0' name='down_password' checked>不导出密码</label>" +
-            "<input id='down_password' type='radio' value='1' name='down_password' style='margin-left: 1.5rem'>导出密码</label>" +
-            "</div>");
-
     }
 
 
