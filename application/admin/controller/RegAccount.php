@@ -261,22 +261,20 @@ class RegAccount extends Base
                     'account_name' => $c[0],
                     'account_password' => $c[1],
                     'birthday' => $c[2],
-                    'question1' => array_search($c[3], $this->apple_questions),
+                    'question1' => $c[3],
                     'answer1' => $c[4],
-                    'question2' => array_search($c[5], $this->apple_questions),
+                    'question2' => $c[5],
                     'answer2' => $c[6],
-                    'question3' => array_search($c[7], $this->apple_questions),
+                    'question3' => $c[7],
                     'answer3' => $c[8],
                     'create_time' => $create_time,
                     'update_time' => $update_time,
                 ];
-                if ($reg_accounts['question1'] && $reg_accounts['question2'] && $reg_accounts['question3']) {
-                    $result = Db::table('s_reg_account')->insert($reg_accounts, "IGNORE");
-                    if ($result == 1) {
-                        $success_count++;
-                    } else {
-                        $error_count++;
-                    }
+                $result = Db::table('s_reg_account')->insert($reg_accounts, "IGNORE");
+                if ($result == 1) {
+                    $success_count++;
+                } else {
+                    $error_count++;
                 }
             }
 

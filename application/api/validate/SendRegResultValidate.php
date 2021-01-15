@@ -13,7 +13,7 @@ class SendRegResultValidate extends BaseValidate
 {
     protected $rule = [
         "account_name" => "require",
-//        "phone_sn" => "require",
+        "phone_sn" => "require",
         "check_status" => "in:1,2,0",
         "reg_status" => "in:1,2,0"
     ];

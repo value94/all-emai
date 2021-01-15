@@ -18,27 +18,6 @@ use think\Controller;
 
 class RegAccount extends Controller
 {
-    private $apple_questions = [
-        130 => '你少年时代最好的朋友叫什么名字？',
-        131 => '你的第一个宠物叫什么名字？',
-        132 => '你学会做的第一道菜是什么？',
-        133 => '你第一次去电影院看的是哪一部电影？',
-        134 => '你第一次坐飞机是去哪里？',
-        135 => '你上小学时最喜欢的老师姓什么？',
-        136 => '你的理想工作是什么？',
-        137 => '你小时候最喜欢哪一本书？',
-        138 => '你拥有的第一辆车是什么型号？',
-        139 => '你童年时代的绰号是什么？',
-        140 => '你在学生时代最喜欢哪个电影明星或角色？',
-        141 => '你在学生时代最喜欢哪个歌手或乐队？',
-        142 => '你的父母是在哪里认识的？',
-        143 => '你的第一个上司叫什么名字？',
-        144 => '您从小长大的那条街叫什么？',
-        145 => '你去过的第一个海滨浴场是哪一个？',
-        146 => '你购买的第一张专辑是什么？',
-        147 => '您最喜欢哪个球队？',
-    ];
-
     // 获取未使用账号
     public function getAccount()
     {
@@ -54,11 +33,11 @@ class RegAccount extends Controller
             'account_name' => $account['account_name'],
             'email_password' => $account['account_password'],
             'birthday' => $account['birthday'],
-            'question1' => $this->apple_questions[$account['question1']],
+            'question1' => $account['question1'],
             'answer1' => $account['answer1'],
-            'question2' => $this->apple_questions[$account['question2']],
+            'question2' => $account['question2'],
             'answer2' => $account['answer2'],
-            'question3' => $this->apple_questions[$account['question3']],
+            'question3' => $account['question3'],
             'answer3' => $account['answer3'],
         ];
     }
